@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/zhgstudio/ai-agent-4-n-sdd-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/zhgstudio/ai-agent-4-n-sdd-skill/actions/workflows/ci.yml)
+[![skills.sh](https://skills.sh/b/zhgstudio/ai-agent-4-n-sdd-skill)](https://skills.sh/zhgstudio/ai-agent-4-n-sdd-skill/ai-agent-4-n-sdd)
 
 ---
 
@@ -75,7 +76,10 @@ AI 自主编码时，经常遇到三个死穴：
 ### 1. 安装技能
 
 ```bash
-# 克隆仓库，复制 Skill 目录
+# 推荐：通过 skills CLI 安装（自动识别兼容的 AI 平台）
+npx skills add https://github.com/zhgstudio/ai-agent-4-n-sdd-skill --skill ai-agent-4-n-sdd
+
+# 或手动克隆
 git clone --depth 1 https://github.com/zhgstudio/ai-agent-4-n-sdd-skill.git /tmp/sdd-skill
 cp -r /tmp/sdd-skill/ai-agent-4-n-sdd .opencode/skills/
 rm -rf /tmp/sdd-skill

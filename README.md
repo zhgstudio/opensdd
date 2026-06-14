@@ -7,6 +7,7 @@
 [![Platform: OpenCode](https://img.shields.io/badge/Platform-OpenCode-8A2BE2)](#)
 [![Platform: Claude Code](https://img.shields.io/badge/Platform-Claude%20Code-000)](#)
 [![Platform: Cursor](https://img.shields.io/badge/Platform-Cursor-0078D4)](#)
+[![skills.sh](https://skills.sh/b/zhgstudio/ai-agent-4-n-sdd-skill)](https://skills.sh/zhgstudio/ai-agent-4-n-sdd-skill/ai-agent-4-n-sdd)
 
 ---
 
@@ -80,7 +81,10 @@ Each stage ends with a **human review gate**. Nothing advances without explicit 
 ### 1. Install the skill
 
 ```bash
-# Clone the repository, then copy the skill directory
+# Recommended: install via skills CLI (auto-discovers compatible agents)
+npx skills add https://github.com/zhgstudio/ai-agent-4-n-sdd-skill --skill ai-agent-4-n-sdd
+
+# Or clone manually:
 git clone --depth 1 https://github.com/zhgstudio/ai-agent-4-n-sdd-skill.git /tmp/sdd-skill
 cp -r /tmp/sdd-skill/ai-agent-4-n-sdd .opencode/skills/
 rm -rf /tmp/sdd-skill
