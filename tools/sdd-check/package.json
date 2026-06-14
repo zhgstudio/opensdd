@@ -1,0 +1,15 @@
+{
+  "name": "sdd-check",
+  "version": "1.0.0",
+  "description": "SDD project structure validator — checks SPEC.md, ARCHITECTURE.md, PLAN.md, AGENTS.md and module integrity for 4+N topology compliance",
+  "type": "commonjs",
+  "bin": {
+    "sdd-check": "index.js"
+  },
+  "files": [
+    "index.js",
+    "checks/",
+    "lib/"
+  ],
+  "license": "MIT"
+}

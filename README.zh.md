@@ -44,6 +44,11 @@ AI 自主编码时，经常遇到三个死穴：
 ```
 ├── ai-agent-4-n-sdd/
 │   └── SKILL.md              # 核心工作流 Skill
+├── tools/
+│   └── sdd-check/            # SDD 项目结构校验工具
+│       ├── index.js
+│       ├── lib/
+│       └── checks/
 ├── README.md
 ├── README.zh.md
 ├── CONTRIBUTING.md
@@ -110,6 +115,28 @@ rm -rf /tmp/sdd-skill
 ### 3. 迭代开发
 
 人工评审 → AI 实现 → 测试通过 → Git 提交 → 下一阶段。
+
+---
+
+## 工具：sdd-check
+
+校验项目是否严格遵循 4+N SDD 目录和格式规范：
+
+```bash
+node tools/sdd-check/index.js --path /path/to/project
+```
+
+5 项自动检查：
+
+| 检查项 | 校验内容 |
+|--------|---------|
+| **FILE_EXISTS** | `SPEC.md`、`ARCHITECTURE.md`、`PLAN.md`、`AGENTS.md` 是否存在 |
+| **PLAN_FORMAT** | 任务行格式是否符合 `- [ ] T###: description` 规范 |
+| **DEP_MATRIX** | 依赖矩阵中声明的模块是否有对应的 `docs/modules/{name}/` 目录 |
+| **NO_GARBAGE** | 是否混入了 `_v2.md`、`_final.md` 等版本残留垃圾文件 |
+| **AGENTS_SECTIONS** | `AGENTS.md` 中是否包含全部 5 个必要章节 |
+
+`--json` 可输出 JSON 供 CI 集成，`--strict` 将 Warning 视为 Error。
 
 ---
 

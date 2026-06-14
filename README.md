@@ -96,6 +96,28 @@ Human reviews → AI implements → Tests pass → Git commit → Next stage.
 
 ---
 
+## Tooling: sdd-check
+
+Validate your project's SDD structure compliance with the built-in checker:
+
+```bash
+node tools/sdd-check/index.js --path /path/to/project
+```
+
+It performs 5 checks:
+
+| Check | What it validates |
+|-------|-------------------|
+| **FILE_EXISTS** | `SPEC.md`, `ARCHITECTURE.md`, `PLAN.md`, `AGENTS.md` all present |
+| **PLAN_FORMAT** | Task lines match `- [ ] T###: description` format |
+| **DEP_MATRIX** | Modules in dependency matrix have `docs/modules/{name}/` directories |
+| **NO_GARBAGE** | No `_v2.md`, `_final.md`, `.bak.md` versioned garbage files |
+| **AGENTS_SECTIONS** | All 5 required sections present in `AGENTS.md` |
+
+Use `--json` for CI integration and `--strict` to treat warnings as errors.
+
+---
+
 ## Platform Support
 
 | Platform | Integration |
