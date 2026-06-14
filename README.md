@@ -26,6 +26,8 @@ AI coding agents suffer from three fatal flaws:
 
 ## The 4+N Topology
 
+> *This is the structure generated in **your project** when you use the skill. This repository itself only contains `SKILL.md`.*
+
 ```
 ├── docs/
 │   ├── SPEC.md             # 👑 1. Global Requirements (WHAT)
@@ -37,6 +39,23 @@ AI coding agents suffer from three fatal flaws:
 │       └── {module_b}/     # protocol.md, state.md
 └── AGENTS.md               # 👑 4. Global Agent Behavior Contract
 ```
+
+<details>
+<summary><b>This repo structure</b> (click to expand)</summary>
+
+```
+├── ai-agent-4-n-sdd/
+│   └── SKILL.md              # The core workflow skill
+├── README.md
+├── README.zh.md
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+├── LICENSE
+└── .github/
+    └── workflows/ci.yml
+```
+
+</details>
 
 **Why this works:** Global files stay small and focused. Module files are only loaded when that module is being worked on. No cross-module contamination. No oversized context windows.
 

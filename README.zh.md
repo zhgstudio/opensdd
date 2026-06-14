@@ -23,6 +23,8 @@ AI 自主编码时，经常遇到三个死穴：
 
 ## 4+N 总分拓扑
 
+> *这是你在项目中使用 Skill 后生成的目录结构。本仓库仅包含 `SKILL.md`。*
+
 ```
 ├── docs/
 │   ├── SPEC.md             # 👑 1. 总体需求规格 (WHAT)
@@ -34,6 +36,23 @@ AI 自主编码时，经常遇到三个死穴：
 │       └── {module_b}/     # protocol.md, state.md
 └── AGENTS.md               # 👑 4. 全局行为契约
 ```
+
+<details>
+<summary><b>本仓库实际结构</b>（点击展开）</summary>
+
+```
+├── ai-agent-4-n-sdd/
+│   └── SKILL.md              # 核心工作流 Skill
+├── README.md
+├── README.zh.md
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+├── LICENSE
+└── .github/
+    └── workflows/ci.yml
+```
+
+</details>
 
 ---
 
