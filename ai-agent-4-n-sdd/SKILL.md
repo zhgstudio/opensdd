@@ -1,8 +1,12 @@
-# SKILL: 4+N Topology SDD Workflow (Modular Spec-Driven Development)
+---
+name: ai-agent-4-n-sdd
+description: "4+N Topology SDD Workflow: A lightweight spec-driven development workflow for AI coding agents. Prevents attention dilution, fake progress checkmarks, and historical context pollution through physical context isolation between global specs and module-level designs."
+metadata:
+  author: zhgstudio
+  version: 1.0.0
+---
 
-> **Version:** 1.0.0 | **Author:** zhgstudio
-> **Platforms:** OpenCode, Claude Code, Cursor
-> **Type:** Workflow / Methodology
+# 4+N Topology SDD Workflow (Modular Spec-Driven Development)
 
 ## 👤 技能概述
 本技能用于指导和约束 AI 智能体严格遵循人类与 AI 协同的“4+N 总分拓扑”轻量级规范驱动开发流程。其核心逻辑是通过“全局宏观标准单文件”与“局部模块设计分目录”的物理隔离，实现上下文绝对降噪，支持复杂多模块系统的高质量、自主测试驱动开发（TDD）。
