@@ -66,9 +66,7 @@ describe('reporter', () => {
     const logs = [];
     mock.method(console, 'log', (msg) => logs.push(msg));
 
-    const customResults = [
-      { name: 'FILE_EXISTS', status: 'pass', messages: ['All files ok'], _root: '/custom/path' },
-    ];
+    const customResults = [{ name: 'FILE_EXISTS', status: 'pass', messages: ['All files ok'], _root: '/custom/path' }];
     report(customResults, { json: true, strict: false });
     mock.restoreAll();
 

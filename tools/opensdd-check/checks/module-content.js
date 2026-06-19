@@ -27,9 +27,7 @@ function checkModuleContent(root, config) {
     };
   }
 
-  const moduleDirs = entries
-    .filter((e) => e.isDirectory())
-    .map((e) => e.name);
+  const moduleDirs = entries.filter((e) => e.isDirectory()).map((e) => e.name);
 
   if (moduleDirs.length === 0) {
     return {

@@ -33,12 +33,7 @@ function detectLanguage(text) {
   return 'en';
 }
 
-const REQUIRED_DOCS = [
-  'docs/SPEC.md',
-  'docs/ARCHITECTURE.md',
-  'docs/PLAN.md',
-  'AGENTS.md',
-];
+const REQUIRED_DOCS = ['docs/SPEC.md', 'docs/ARCHITECTURE.md', 'docs/PLAN.md', 'AGENTS.md'];
 
 async function checkLanguageConsistency(root, config) {
   const languages = new Map();

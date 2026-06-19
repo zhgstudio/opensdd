@@ -3,7 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 const { parseDependencyMatrix } = require('./matrix');
+const { getStrategy, detect } = require('./strategies');
 
+/**
+ * Extract interface groupings by heading (kept for backward compatibility).
+ *
+ * @param {string} content - Document content
+ * @returns {Object} Map of heading → list items
+ */
 function extractInterfaces(content) {
   const interfaces = {};
   const lines = content.split('\n');
@@ -23,7 +30,12 @@ function extractInterfaces(content) {
     const headingMatch = trimmed.match(/^#{1,6}\s*(.+)$/);
     if (headingMatch) {
       const heading = headingMatch[1].trim();
-      if (heading.includes('接口') || heading.includes('Interface') || heading.includes('API') || heading.includes('Endpoint')) {
+      if (
+        heading.includes('接口') ||
+        heading.includes('Interface') ||
+        heading.includes('API') ||
+        heading.includes('Endpoint')
+      ) {
         currentInterface = heading;
         interfaces[currentInterface] = [];
       }
@@ -38,44 +50,44 @@ function extractInterfaces(content) {
   return interfaces;
 }
 
+/**
+ * Extract HTTP endpoints from document content (kept for backward compatibility).
+ * Delegates to the HTTP strategy internally.
+ *
+ * @param {string} content - Document content
+ * @returns {Array<{method: string, path: string, raw: string}>} Extracted endpoints
+ */
 function extractEndpoints(content) {
-  const endpoints = [];
-  const lines = content.split('\n');
-
-  for (const raw of lines) {
-    const trimmed = raw.trim();
-
-    // Match METHOD /path at line start, inline, or within markdown table cells
-    // Table cells have leading `|` or trailing `|` — strip them
-    const cellText = trimmed.replace(/^\||\|$/g, '').trim();
-    const candidates = [trimmed, cellText].filter((s, i, a) => a.indexOf(s) === i);
-
-    for (const text of candidates) {
-      const methodPathMatch = text.match(/^(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)/i);
-      if (methodPathMatch) {
-        endpoints.push({
-          method: methodPathMatch[1].toUpperCase(),
-          path: methodPathMatch[2],
-          raw: trimmed,
-        });
-        break;
-      }
-
-      const codeMatch = text.match(/`(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)`/i);
-      if (codeMatch) {
-        endpoints.push({
-          method: codeMatch[1].toUpperCase(),
-          path: codeMatch[2],
-          raw: trimmed,
-        });
-        break;
-      }
-    }
-  }
-
-  return endpoints;
+  const httpStrategy = getStrategy('http');
+  const defs = httpStrategy.extract(content);
+  return defs.map((d) => ({
+    method: d.details.method,
+    path: d.details.path,
+    raw: d.signature,
+  }));
 }
 
+/**
+ * Resolve the interface strategy based on config.
+ *
+ * @param {string} strategyName - Config value (http|grpc|function|auto)
+ * @param {string[]} docContents - Document contents for auto-detection
+ * @returns {{strategy: import('./strategies').InterfaceStrategy, detected: boolean}}
+ */
+function resolveStrategy(strategyName, docContents) {
+  if (strategyName === 'auto' || !strategyName) {
+    return { strategy: detect(docContents), detected: true };
+  }
+  return { strategy: getStrategy(strategyName), detected: false };
+}
+
+/**
+ * Check cross-module interface consistency using the configured strategy.
+ *
+ * @param {string} root - Absolute path to the project root
+ * @param {import('../config').SddConfig} config - SDD configuration
+ * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ */
 async function checkInterfaceConsistency(root, config) {
   const archPath = path.join(root, 'docs/ARCHITECTURE.md');
 
@@ -91,7 +103,11 @@ async function checkInterfaceConsistency(root, config) {
   try {
     content = fs.readFileSync(archPath, 'utf-8');
   } catch (err) {
-    return { name: 'INTERFACE_CONSISTENCY', status: 'fail', messages: [`Failed to read ARCHITECTURE.md: ${err.message}`] };
+    return {
+      name: 'INTERFACE_CONSISTENCY',
+      status: 'fail',
+      messages: [`Failed to read ARCHITECTURE.md: ${err.message}`],
+    };
   }
 
   const depMatrix = parseDependencyMatrix(content);
@@ -104,6 +120,22 @@ async function checkInterfaceConsistency(root, config) {
     };
   }
 
+  // Collect all module document contents for auto-detection
+  const docContents = [];
+  for (const entry of depMatrix) {
+    const modulePath = path.join(root, 'docs/modules', entry.name, 'INTERFACE.md');
+    try {
+      if (fs.existsSync(modulePath)) {
+        docContents.push(fs.readFileSync(modulePath, 'utf-8'));
+      }
+    } catch (_) {
+      // skip unreadable files
+    }
+  }
+
+  const { strategy, detected } = resolveStrategy(config.interfaceStrategy || 'auto', docContents);
+  const strategyLabel = detected ? `auto-detected: ${strategy.name}` : strategy.name;
+
   const issues = [];
 
   for (const entry of depMatrix) {
@@ -114,17 +146,10 @@ async function checkInterfaceConsistency(root, config) {
       continue;
     }
 
-    let callerContent;
-    try {
-      callerContent = fs.readFileSync(callerPath, 'utf-8');
-    } catch (err) {
-      issues.push(`Failed to read ${callerModule}/INTERFACE.md: ${err.message}`);
-      continue;
-    }
-
-    const callerEndpoints = extractEndpoints(callerContent);
-
-    const deps = entry.depends.split(',').map(d => d.trim()).filter(Boolean);
+    const deps = entry.depends
+      .split(',')
+      .map((d) => d.trim())
+      .filter(Boolean);
 
     for (const dep of deps) {
       if (/^(-|none|null|n\/a|)$/i.test(dep)) continue;
@@ -144,25 +169,19 @@ async function checkInterfaceConsistency(root, config) {
         continue;
       }
 
-      const depEndpoints = extractEndpoints(depContent);
+      const depDefs = strategy.extract(depContent);
 
-      const requiredInterfaces = entry.interface.split(',').map(i => i.trim()).filter(Boolean);
+      const requiredInterfaces = entry.interface
+        .split(',')
+        .map((i) => i.trim())
+        .filter(Boolean);
 
       for (const required of requiredInterfaces) {
-        const methodPathMatch = required.match(/^(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)/i);
-        if (!methodPathMatch) continue;
-
-        const requiredMethod = methodPathMatch[1].toUpperCase();
-        const requiredPath = methodPathMatch[2];
-
-        const found = depEndpoints.some(e =>
-          e.method === requiredMethod && e.path === requiredPath
-        );
-
+        const found = strategy.matchRequired(required, depDefs);
         if (!found) {
           issues.push(
-            `Interface mismatch: '${callerModule}' requires ${requiredMethod} ${requiredPath} ` +
-            `from '${dep}' but not found in ${dep}/INTERFACE.md`
+            `Interface mismatch: '${callerModule}' requires '${required}' ` +
+              `from '${dep}' but not found in ${dep}/INTERFACE.md (strategy: ${strategyLabel})`,
           );
         }
       }
@@ -173,7 +192,7 @@ async function checkInterfaceConsistency(root, config) {
     return {
       name: 'INTERFACE_CONSISTENCY',
       status: 'pass',
-      messages: ['Cross-module interface signatures consistent'],
+      messages: [`Cross-module interface signatures consistent (strategy: ${strategyLabel})`],
     };
   }
 
@@ -187,3 +206,7 @@ async function checkInterfaceConsistency(root, config) {
 module.exports = async function check(root, config) {
   return checkInterfaceConsistency(root, config);
 };
+
+// Retained for backward compatibility
+module.exports.extractInterfaces = extractInterfaces;
+module.exports.extractEndpoints = extractEndpoints;

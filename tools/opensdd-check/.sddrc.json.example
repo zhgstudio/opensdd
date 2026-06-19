@@ -12,5 +12,6 @@
   "garbagePatterns": ["_v\\d+", "_final", "_tmp\\w*", "_old", "_backup", "\\.bak", "-v\\d+"],
   "taskRegex": "^\\-\\s+\\[([ x])\\]\\s+(T-\\d+)\\s*:\\s*(.+)$",
   "moduleDirPattern": "^\\d{2}-[a-zA-Z0-9_-]+$",
+  "interfaceStrategy": "auto",
   "skipDirs": ["node_modules", ".git", ".github"]
 }

@@ -15,6 +15,7 @@ const path = require('path');
  * @property {string[]} garbagePatterns - Regex patterns for garbage file detection
  * @property {string} taskRegex - Regex pattern for task line format in PLAN.md
  * @property {string} moduleDirPattern - Regex pattern for module directory names
+ * @property {string} interfaceStrategy - Interface check strategy ('http'|'grpc'|'function'|'auto')
  */
 
 /**
@@ -36,6 +37,7 @@ const DEFAULT_CONFIG = {
   moduleDirPattern: '^\\d{2}-[a-zA-Z0-9_-]+$',
   requiredInterfaceSections: ['模块概述与职责边界', '核心数据结构', '接口定义'],
   requiredInternalsSections: ['核心逻辑流程', '内部实现细节', '功能特性列表'],
+  interfaceStrategy: 'auto',
   skipDirs: ['node_modules', '.git', '.github'],
 };
 
