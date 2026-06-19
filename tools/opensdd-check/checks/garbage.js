@@ -37,12 +37,29 @@ function* walkFiles(dir, garbageRe, skipDirs) {
  * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
  */
 module.exports = async function check(root, config) {
-  const garbageRe = new RegExp(`(${config.garbagePatterns.join('|')})`, 'i');
+  let garbageRe;
+  try {
+    garbageRe = new RegExp(`(${config.garbagePatterns.join('|')})`, 'i');
+  } catch (err) {
+    return {
+      name: 'NO_GARBAGE',
+      status: 'fail',
+      messages: [`Invalid garbage pattern regex: ${err.message}`],
+    };
+  }
   const skipDirs = new Set(config.skipDirs || ['node_modules', '.git', '.github']);
 
   const hits = [];
-  for (const fp of walkFiles(root, garbageRe, skipDirs)) {
-    hits.push(fp);
+  try {
+    for (const fp of walkFiles(root, garbageRe, skipDirs)) {
+      hits.push(fp);
+    }
+  } catch (err) {
+    return {
+      name: 'NO_GARBAGE',
+      status: 'fail',
+      messages: [`Error walking directory tree: ${err.message}`],
+    };
   }
 
   if (hits.length === 0) {

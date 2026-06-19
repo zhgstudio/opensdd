@@ -52,13 +52,7 @@ describe('FRONTMATTER check', () => {
     const check = require('../checks/frontmatter');
     fs.writeFileSync(
       path.join(tmpDir, 'opensdd', 'SKILL.md'),
-      [
-        '---',
-        'name: opensdd',
-        'description: "Test"',
-        'metadata.author: test',
-        'metadata.version: 1.0.0',
-      ].join('\n'),
+      ['---', 'name: opensdd', 'description: "Test"', 'metadata.author: test', 'metadata.version: 1.0.0'].join('\n'),
       'utf-8',
     );
     const result = await check(tmpDir, DEFAULT_CONFIG);
@@ -68,11 +62,7 @@ describe('FRONTMATTER check', () => {
 
   it('should warn when frontmatter lacks required fields', async () => {
     const check = require('../checks/frontmatter');
-    fs.writeFileSync(
-      path.join(tmpDir, 'opensdd', 'SKILL.md'),
-      ['---', 'name: opensdd', '---', ''].join('\n'),
-      'utf-8',
-    );
+    fs.writeFileSync(path.join(tmpDir, 'opensdd', 'SKILL.md'), ['---', 'name: opensdd', '---', ''].join('\n'), 'utf-8');
     const result = await check(tmpDir, DEFAULT_CONFIG);
     assert.strictEqual(result.status, 'warn');
     assert.ok(result.messages.some((m) => m.includes('description')));

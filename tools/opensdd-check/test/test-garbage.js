@@ -74,4 +74,20 @@ describe('NO_GARBAGE check', () => {
       fs.rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it('should fail on invalid garbage pattern regex', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-gb-'));
+    try {
+      const check = require('../checks/garbage');
+      const badConfig = {
+        ...DEFAULT_CONFIG,
+        garbagePatterns: ['[invalid'],
+      };
+      const result = await check(root, badConfig);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('Invalid garbage pattern')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
 });

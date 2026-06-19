@@ -1,0 +1,14 @@
+{
+  "name": "opensdd",
+  "version": "3.3.0",
+  "private": true,
+  "description": "Open Spec-Driven Documentation — pre-development specification workflow for AI coding agents",
+  "scripts": {
+    "test": "cd tools/opensdd-check && npm test",
+    "test:coverage": "cd tools/opensdd-check && npm run test:coverage",
+    "lint": "cd tools/opensdd-check && npm run lint",
+    "format": "cd tools/opensdd-check && npm run format",
+    "format-check": "cd tools/opensdd-check && npm run format-check"
+  },
+  "license": "MIT"
+}

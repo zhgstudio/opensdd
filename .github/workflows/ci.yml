@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: opensdd-check — Install dependencies
         run: npm ci
@@ -45,3 +45,8 @@ jobs:
       - name: opensdd-check — Run tests
         run: npm test
         working-directory: tools/opensdd-check
+
+      - name: opensdd-check — Coverage
+        run: npm run test:coverage
+        working-directory: tools/opensdd-check
+        continue-on-error: true

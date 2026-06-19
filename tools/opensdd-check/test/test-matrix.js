@@ -166,3 +166,101 @@ describe('parseDependencies', () => {
     assert.deepStrictEqual(parseDependencies('   '), []);
   });
 });
+
+describe('DEP_MATRIX full check', () => {
+  const os = require('node:os');
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const { DEFAULT_CONFIG } = require('../config');
+
+  function createProject(archMdContent, modules) {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-matint-'));
+    const docsDir = path.join(root, 'docs');
+    fs.mkdirSync(docsDir, { recursive: true });
+    fs.writeFileSync(path.join(docsDir, 'ARCHITECTURE.md'), archMdContent, 'utf-8');
+    for (const [modDir, files] of Object.entries(modules)) {
+      const modPath = path.join(docsDir, 'modules', modDir);
+      fs.mkdirSync(modPath, { recursive: true });
+      for (const [name, content] of Object.entries(files)) {
+        fs.writeFileSync(path.join(modPath, name), content || '', 'utf-8');
+      }
+    }
+    return root;
+  }
+
+  it('should pass when all modules exist with API.md', async () => {
+    const check = require('../checks/matrix');
+    const arch = `## 模块引用表
+| 编号 | 模块名 | 功能简述 | 详细设计 |
+|------|--------|----------|----------|
+| 01 | auth | Auth | path |
+| 02 | task-core | Tasks | path |
+
+## 模块依赖矩阵
+| 模块 | 依赖 | 所需接口 |
+|------|------|----------|
+| 02-task-core | 01-auth | POST /auth/verify |`;
+    const root = createProject(arch, {
+      '01-auth': { 'API.md': '# auth API' },
+      '02-task-core': { 'API.md': '# task API' },
+    });
+    try {
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'pass');
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('should fail when module directory missing', async () => {
+    const check = require('../checks/matrix');
+    const arch = `## 模块引用表
+| 编号 | 模块名 | 功能简述 | 详细设计 |
+|------|--------|----------|----------|
+| 01 | auth | Auth | path |
+| 99 | missing | Missing | path |`;
+    const root = createProject(arch, { '01-auth': { 'API.md': '# auth API' } });
+    try {
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('missing')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('should warn on orphan module directory not in reference table', async () => {
+    const check = require('../checks/matrix');
+    const arch = `## 模块引用表
+| 编号 | 模块名 | 功能简述 | 详细设计 |
+|------|--------|----------|----------|
+| 01 | auth | Auth | path |`;
+    const root = createProject(arch, {
+      '01-auth': { 'API.md': '# auth API' },
+      '02-orphan': { 'API.md': '# orphan API' },
+    });
+    try {
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('Orphan')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('should fail when API.md missing in declared module', async () => {
+    const check = require('../checks/matrix');
+    const arch = `## 模块引用表
+| 编号 | 模块名 | 功能简述 | 详细设计 |
+|------|--------|----------|----------|
+| 01 | auth | Auth | path |`;
+    const root = createProject(arch, { '01-auth': {} });
+    try {
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('API.md')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
