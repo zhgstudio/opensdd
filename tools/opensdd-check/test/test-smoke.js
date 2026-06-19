@@ -50,7 +50,7 @@ describe('opensdd-check smoke test', () => {
         '## 模块引用表',
         '| 编号 | 模块名 | 功能简述 | 详细设计 |',
         '|------|--------|----------|----------|',
-        '| 01 | auth | 用户认证 | docs/modules/01-auth/INTERFACE.md |',
+        '| 01 | auth | 用户认证 | docs/modules/01-auth/API.md |',
         '',
         '## 模块依赖矩阵',
         '| 模块 | 依赖 | 所需接口 |',
@@ -66,8 +66,8 @@ describe('opensdd-check smoke test', () => {
         '# 任务计划',
         '',
         '## 模块：01-auth',
-        '- [ ] T-001: 实现用户注册接口 [01-auth/INTERNALS.md#01-F001]',
-        '- [ ] T-002: 实现用户登录接口 [01-auth/INTERNALS.md#01-F002]',
+        '- [ ] T-001: 实现用户注册接口 [01-auth/DESIGN.md#01-F001]',
+        '- [ ] T-002: 实现用户登录接口 [01-auth/DESIGN.md#01-F002]',
       ].join('\n'),
       'utf-8',
     );
@@ -90,7 +90,7 @@ describe('opensdd-check smoke test', () => {
         '跨模块接口变更须升级。',
         '',
         '## 跨模块规则',
-        '只读依赖模块的 INTERFACE.md。',
+        '只读依赖模块的 API.md。',
         '',
         '## 任务规范',
         '参考 PLAN.md 完成开发。',
@@ -99,7 +99,7 @@ describe('opensdd-check smoke test', () => {
     );
 
     fs.writeFileSync(
-      path.join(modulesDir, 'INTERFACE.md'),
+      path.join(modulesDir, 'API.md'),
       [
         '# 01-auth 模块接口',
         '',
@@ -117,7 +117,7 @@ describe('opensdd-check smoke test', () => {
     );
 
     fs.writeFileSync(
-      path.join(modulesDir, 'INTERNALS.md'),
+      path.join(modulesDir, 'DESIGN.md'),
       [
         '# 01-auth 模块内部实现',
         '',

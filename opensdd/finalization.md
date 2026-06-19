@@ -6,7 +6,7 @@
 
 ## 输入
 
-全部 5 类已定稿文档：`SPEC.md`、`ARCHITECTURE.md`、各 `INTERFACE.md` / `INTERNALS.md`、`PLAN.md`、`AGENTS.md`
+全部 5 类已定稿文档：`SPEC.md`、`ARCHITECTURE.md`、各 `API.md` / `DESIGN.md`、`PLAN.md`、`AGENTS.md`
 
 ## 输出
 
@@ -31,14 +31,14 @@
 - [ ] 全局编码规范（命名、文件结构、错误格式）明确
 
 **模块设计（每个模块）**
-- [ ] INTERFACE.md 包含模块概述、核心数据结构、接口定义
-- [ ] INTERNALS.md 包含核心逻辑、实现细节、`{NN}-F{NNN}` 特性列表
+- [ ] API.md 包含模块概述、核心数据结构、接口定义
+- [ ] DESIGN.md 包含核心逻辑、实现细节、`{NN}-F{NNN}` 特性列表
 - [ ] 命名与 ARCHITECTURE.md 规范一致
 - [ ] 接口签名与被依赖方声明匹配
 
 **PLAN.md**
 - [ ] `T-{NNN}` 任务覆盖所有 `{NN}-F{NNN}` 特性
-- [ ] 每条任务引用 `[NN-name/INTERNALS.md#{NN}-F{NNN}]`
+- [ ] 每条任务引用 `[NN-name/DESIGN.md#{NN}-F{NNN}]`
 - [ ] 任务按依赖拓扑排序，不包含方案细节
 
 **AGENTS.md**
@@ -75,6 +75,6 @@
 
 1. 先读取 `AGENTS.md` 了解项目规则
 2. 根据当前要开发的模块，读取 `ARCHITECTURE.md`（公共设计部分）
-3. 读取对应模块的 `docs/modules/{NN}-{name}/INTERFACE.md` 和 `INTERNALS.md`
+3. 读取对应模块的 `docs/modules/{NN}-{name}/API.md` 和 `DESIGN.md`
 4. 通过 `PLAN.md` 了解任务优先级和完成状态
-5. 严格遵循 `INTERFACE.md` 中的接口定义和 `INTERNALS.md` 中的实现规范实现代码
+5. 严格遵循 `API.md` 中的接口定义和 `DESIGN.md` 中的实现规范实现代码

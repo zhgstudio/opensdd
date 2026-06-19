@@ -20,4 +20,4 @@ skills-lock.json
 docs/
 
 # Experiment code during design phase (see phase-3.md)
-tmp/
+docs/modules/*/tmp/

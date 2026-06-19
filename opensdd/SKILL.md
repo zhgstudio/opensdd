@@ -27,11 +27,11 @@ docs/
 │
 └── modules/                # N. 模块详细设计
     ├── 01-{name}/
-    │   ├── INTERFACE.md    # 对外接口定义（被依赖方只读）
-    │   └── INTERNALS.md    # 内部实现细节（本模块可读写）
+    │   ├── API.md    # 对外接口定义（被依赖方只读）
+    │   └── DESIGN.md    # 内部实现细节（本模块可读写）
     ├── 02-{name}/
-    │   ├── INTERFACE.md
-    │   └── INTERNALS.md
+    │   ├── API.md
+    │   └── DESIGN.md
     └── ...
 ```
 
@@ -54,8 +54,8 @@ docs/
 |------|------|--------|
 | `SPEC.md` | 原始需求的全面细化，覆盖业务边界、用户旅程、优先级、非功能性约束 | 所有角色 |
 | `ARCHITECTURE.md` | 总体架构设计 + 公共设计（技术栈、命名风格、错误处理），模块引用表指向各模块目录 | Architect、Designer |
-| `modules/{NN}-{name}/INTERFACE.md` + `INTERNALS.md` | 该模块的接口定义与内部实现，代码开发必须严格遵循 | Designer、编码阶段的开发者 |
-| `PLAN.md` | 基于 INTERNALS.md 拆分的开发任务跟踪表，仅含任务条目和完成状态，不含方案细节 | 编码阶段的开发者 |
+| `modules/{NN}-{name}/API.md` + `DESIGN.md` | 该模块的接口定义与内部实现，代码开发必须严格遵循 | Designer、编码阶段的开发者 |
+| `PLAN.md` | 基于 DESIGN.md 拆分的开发任务跟踪表，仅含任务条目和完成状态，不含方案细节 | 编码阶段的开发者 |
 | `AGENTS.md` | 编码阶段的入口指引。包含项目规则、操作范围、任务规范，AI 编码前必读 | 编码阶段的开发者 |
 
 ---
@@ -66,7 +66,7 @@ docs/
 |------|------|----|----|
 | **PM Agent**（产品经理） | 阶段一 | 无（新会话） | `docs/SPEC.md` |
 | **Architect Agent**（架构师） | 阶段二 | `SPEC.md`（只读） | `docs/ARCHITECTURE.md`、写入 `AGENTS.md` 主体 |
-| **Designer Agent**（模块设计师） × N | 阶段三 | `ARCHITECTURE.md` + 被依赖模块的 `INTERFACE.md` | `docs/modules/{NN}-{name}/INTERFACE.md` + `INTERNALS.md` |
+| **Designer Agent**（模块设计师） × N | 阶段三 | `ARCHITECTURE.md` + 被依赖模块的 `API.md` | `docs/modules/{NN}-{name}/API.md` + `DESIGN.md` |
 | **Project Manager Agent**（项目经理） | 阶段四 | 全部已定稿设计文档 | `docs/PLAN.md`、追加 `AGENTS.md` 任务规范 |
 
 每个角色启动新的 AI 会话，只加载职责范围内的文件。每阶段产物经人类评审定稿后，才能进入下一阶段。
@@ -80,8 +80,8 @@ docs/
 ```
 阶段一 ───→ 阶段二 ───→ 阶段三 ───→ 阶段四 ───→ 定稿
 PM Agent    Architect   Designer     PM Agent     人类审查
-SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
-             AGENTS.md   INTERNALS      追加 AGENTS    AGENTS.md
+SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
+             AGENTS.md   DESIGN      追加 AGENTS    AGENTS.md
                         (见下方约束)                   最终定稿
 ```
 
@@ -114,13 +114,13 @@ SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
 
 当需求或设计需要修改时：
 
-1. **标记影响范围**：评估受变更影响的文档（SPEC / ARCH / INTERFACE / INTERNALS / PLAN）
+1. **标记影响范围**：评估受变更影响的文档（SPEC / ARCH / API / DESIGN / PLAN）
 2. **保存旧状态**：在当前分支 `git add -A && git commit -m "snapshot: pre-change backup"`
 3. **修改源头文档**：从受影响的最上游文档开始修改（需求变更 → SPEC.md；架构变更 → ARCHITECTURE.md）
 4. **级联更新**：
-   - `SPEC.md` 变更 → 评审是否需要更新 `ARCHITECTURE.md` → 受影响模块的 `INTERFACE.md` / `INTERNALS.md`
-   - `ARCHITECTURE.md` 变更 → 评审各 `INTERFACE.md` / `INTERNALS.md` 是否需要同步更新
-   - `INTERFACE.md` / `INTERNALS.md` 变更 → 更新 `PLAN.md` 中的引用关系，确保 `[NN-name/INTERNALS.md#{NN}-F{NNN}]` 可追溯链完整
+   - `SPEC.md` 变更 → 评审是否需要更新 `ARCHITECTURE.md` → 受影响模块的 `API.md` / `DESIGN.md`
+   - `ARCHITECTURE.md` 变更 → 评审各 `API.md` / `DESIGN.md` 是否需要同步更新
+   - `API.md` / `DESIGN.md` 变更 → 更新 `PLAN.md` 中的引用关系，确保 `[NN-name/DESIGN.md#{NN}-F{NNN}]` 可追溯链完整
    - `SKILL.md` 变更 → 同步更新 frontmatter 中的 `metadata.version` 字段
 5. **重新评审**：仅重新评审受影响的文档和模块
 
@@ -131,9 +131,9 @@ SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
 本技能产出的 5 类文档作为编码阶段的契约依据：
 
 - 编码阶段的 AI 开发者**必须先读取 `AGENTS.md`** 了解项目规则
-- 然后根据当前要开发的模块，读取 `ARCHITECTURE.md`（公共设计部分）+ 对应模块的 `INTERFACE.md` 和 `INTERNALS.md`
+- 然后根据当前要开发的模块，读取 `ARCHITECTURE.md`（公共设计部分）+ 对应模块的 `API.md` 和 `DESIGN.md`
 - 通过 `PLAN.md` 了解任务优先级和完成状态
-- 严格遵循 `INTERFACE.md` 中的接口定义和 `INTERNALS.md` 中的实现规范实现代码
+- 严格遵循 `API.md` 中的接口定义和 `DESIGN.md` 中的实现规范实现代码
 - **跨模块接口变更必须升级给人类仲裁**，不允许编码阶段私自修改接口契约
 
 ---
@@ -151,7 +151,7 @@ SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
 - **禁止越权**：PM 不讨论技术方案，Architect 不写模块设计细节，Designer 不写代码，Project Manager 不修改设计内容
 - **禁止创建垃圾文件**：不允许创建 `_v2.md`、`_final.md`、`.bak.md` 等版本残留文件，一律物理覆盖
 - **禁止跨模块注意力污染**：Designer 在设计模块 A 时只允许读取被依赖模块的接口部分
-- **禁止脱离引用**：PLAN.md 的每条任务必须引用对应 `INTERNALS.md` 的章节
+- **禁止脱离引用**：PLAN.md 的每条任务必须引用对应 `DESIGN.md` 的章节
 - **禁止 AI 操作远程仓库**：AI 仅允许 `git add` 和 `git commit`、`git push`（仅推送当前分支）。不允许创建/切换分支，不允许 `merge`、`rebase`
 
 ---
@@ -187,7 +187,7 @@ SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
 请以模块设计师（Designer Agent）角色启动阶段三。
 读取 docs/ARCHITECTURE.md。
 当前要设计的模块是：[模块名，如 01-auth]。
-按照 ARCHITECTURE.md 模块引用表顺序依次设计，在 docs/modules/{NN}-{name}/ 下生成本模块的 INTERFACE.md 和 INTERNALS.md。
+按照 ARCHITECTURE.md 模块引用表顺序依次设计，在 docs/modules/{NN}-{name}/ 下生成本模块的 API.md 和 DESIGN.md。
 特征列表以 {NN}-F{NNN} 编号。
 请严格按照技能规范执行，一次只做一个模块。
 ```
@@ -197,9 +197,9 @@ SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
 ```
 请读取 SKILL.md 和 phase-4.md。
 请以项目经理（Project Manager Agent）角色启动阶段四。
-读取所有已定稿的 docs/SPEC.md、docs/ARCHITECTURE.md、docs/modules/*/INTERFACE.md。
+读取所有已定稿的 docs/SPEC.md、docs/ARCHITECTURE.md、docs/modules/*/API.md。
 在 docs/PLAN.md 中生成任务跟踪表。
-每条任务引用对应 INTERNALS.md 的 {NN}-F{NNN} 章节。
+每条任务引用对应 DESIGN.md 的 {NN}-F{NNN} 章节。
 追加 AGENTS.md 的 PLAN.md 任务规范章节。
 请严格按照技能规范执行，不涉及方案细节。
 ```

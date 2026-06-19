@@ -123,7 +123,7 @@ async function checkInterfaceConsistency(root, config) {
   // Collect all module document contents for auto-detection
   const docContents = [];
   for (const entry of depMatrix) {
-    const modulePath = path.join(root, 'docs/modules', entry.name, 'INTERFACE.md');
+    const modulePath = path.join(root, 'docs/modules', entry.name, 'API.md');
     try {
       if (fs.existsSync(modulePath)) {
         docContents.push(fs.readFileSync(modulePath, 'utf-8'));
@@ -140,7 +140,7 @@ async function checkInterfaceConsistency(root, config) {
 
   for (const entry of depMatrix) {
     const callerModule = entry.name;
-    const callerPath = path.join(root, 'docs/modules', callerModule, 'INTERFACE.md');
+    const callerPath = path.join(root, 'docs/modules', callerModule, 'API.md');
 
     if (!fs.existsSync(callerPath)) {
       continue;
@@ -154,10 +154,10 @@ async function checkInterfaceConsistency(root, config) {
     for (const dep of deps) {
       if (/^(-|none|null|n\/a|)$/i.test(dep)) continue;
 
-      const depPath = path.join(root, 'docs/modules', dep, 'INTERFACE.md');
+      const depPath = path.join(root, 'docs/modules', dep, 'API.md');
 
       if (!fs.existsSync(depPath)) {
-        issues.push(`Module '${callerModule}' depends on '${dep}' but INTERFACE.md not found`);
+        issues.push(`Module '${callerModule}' depends on '${dep}' but API.md not found`);
         continue;
       }
 
@@ -165,7 +165,7 @@ async function checkInterfaceConsistency(root, config) {
       try {
         depContent = fs.readFileSync(depPath, 'utf-8');
       } catch (err) {
-        issues.push(`Failed to read ${dep}/INTERFACE.md: ${err.message}`);
+        issues.push(`Failed to read ${dep}/API.md: ${err.message}`);
         continue;
       }
 
@@ -181,7 +181,7 @@ async function checkInterfaceConsistency(root, config) {
         if (!found) {
           issues.push(
             `Interface mismatch: '${callerModule}' requires '${required}' ` +
-              `from '${dep}' but not found in ${dep}/INTERFACE.md (strategy: ${strategyLabel})`,
+              `from '${dep}' but not found in ${dep}/API.md (strategy: ${strategyLabel})`,
           );
         }
       }

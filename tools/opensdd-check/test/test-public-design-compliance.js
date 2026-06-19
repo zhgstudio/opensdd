@@ -121,7 +121,7 @@ describe('public-design-compliance', () => {
       );
 
       fs.writeFileSync(
-        path.join(modulesDir, 'INTERFACE.md'),
+        path.join(modulesDir, 'API.md'),
         [
           '# 01-auth 接口',
           '',
@@ -137,7 +137,7 @@ describe('public-design-compliance', () => {
       );
 
       fs.writeFileSync(
-        path.join(modulesDir, 'INTERNALS.md'),
+        path.join(modulesDir, 'DESIGN.md'),
         ['# 01-auth 内部', '', '## 功能特性列表', '### 01-F001: 注册', '实现用户注册。'].join('\n'),
         'utf-8',
       );
@@ -155,7 +155,7 @@ describe('public-design-compliance', () => {
     it('should fail when identifiers violate naming convention', async () => {
       const modulesDir = path.join(tmpDir, 'docs/modules/01-auth');
       fs.writeFileSync(
-        path.join(modulesDir, 'INTERFACE.md'),
+        path.join(modulesDir, 'API.md'),
         ['# 01-auth 接口', '', '## 核心数据结构', '- user_id: string', '- created_at: Date'].join('\n'),
         'utf-8',
       );
@@ -167,7 +167,7 @@ describe('public-design-compliance', () => {
 
       // Restore
       fs.writeFileSync(
-        path.join(modulesDir, 'INTERFACE.md'),
+        path.join(modulesDir, 'API.md'),
         [
           '# 01-auth 接口',
           '',
@@ -200,7 +200,7 @@ describe('public-design-compliance', () => {
       };
       const modulesDir = path.join(tmpDir, 'docs/modules/01-auth');
       fs.writeFileSync(
-        path.join(modulesDir, 'INTERFACE.md'),
+        path.join(modulesDir, 'API.md'),
         ['# 01-auth 接口', '', '## 核心数据结构', '- user_id: string', '- camelCaseVar: number'].join('\n'),
         'utf-8',
       );
@@ -210,7 +210,7 @@ describe('public-design-compliance', () => {
 
       // Restore
       fs.writeFileSync(
-        path.join(modulesDir, 'INTERFACE.md'),
+        path.join(modulesDir, 'API.md'),
         [
           '# 01-auth 接口',
           '',

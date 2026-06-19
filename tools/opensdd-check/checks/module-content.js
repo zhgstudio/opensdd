@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 
 function checkModuleContent(root, config) {
-  const REQUIRED_INTERFACE_SECTIONS = config.requiredInterfaceSections;
-  const REQUIRED_INTERNALS_SECTIONS = config.requiredInternalsSections;
+  const REQUIRED_API_SECTIONS = config.requiredApiSections;
+  const REQUIRED_DESIGN_SECTIONS = config.requiredDesignSections;
   const modulesDir = path.join(root, 'docs/modules');
 
   if (!fs.existsSync(modulesDir)) {
@@ -46,18 +46,18 @@ function checkModuleContent(root, config) {
     }
 
     const modulePath = path.join(modulesDir, moduleDir);
-    const interfacePath = path.join(modulePath, 'INTERFACE.md');
-    const internalsPath = path.join(modulePath, 'INTERNALS.md');
+    const interfacePath = path.join(modulePath, 'API.md');
+    const internalsPath = path.join(modulePath, 'DESIGN.md');
 
     checkedModules++;
 
     if (!fs.existsSync(interfacePath)) {
-      issues.push(`Module '${moduleDir}': INTERFACE.md not found`);
+      issues.push(`Module '${moduleDir}': API.md not found`);
       continue;
     }
 
     if (!fs.existsSync(internalsPath)) {
-      issues.push(`Module '${moduleDir}': INTERNALS.md not found`);
+      issues.push(`Module '${moduleDir}': DESIGN.md not found`);
       continue;
     }
 
@@ -70,23 +70,23 @@ function checkModuleContent(root, config) {
       continue;
     }
 
-    for (const section of REQUIRED_INTERFACE_SECTIONS) {
+    for (const section of REQUIRED_API_SECTIONS) {
       const headingRegex = new RegExp(`^#{1,6}\\s*${escapeRegex(section)}`, 'm');
       if (!headingRegex.test(interfaceContent)) {
-        issues.push(`Module '${moduleDir}': INTERFACE.md missing required section "${section}"`);
+        issues.push(`Module '${moduleDir}': API.md missing required section "${section}"`);
       }
     }
 
-    for (const section of REQUIRED_INTERNALS_SECTIONS) {
+    for (const section of REQUIRED_DESIGN_SECTIONS) {
       const headingRegex = new RegExp(`^#{1,6}\\s*${escapeRegex(section)}`, 'm');
       if (!headingRegex.test(internalsContent)) {
-        issues.push(`Module '${moduleDir}': INTERNALS.md missing required section "${section}"`);
+        issues.push(`Module '${moduleDir}': DESIGN.md missing required section "${section}"`);
       }
     }
 
     const featureRegex = /^###\s*\d{2}-F\d{3}\b/m;
     if (!featureRegex.test(internalsContent)) {
-      issues.push(`Module '${moduleDir}': INTERNALS.md missing feature list entries (### NN-FNNN)`);
+      issues.push(`Module '${moduleDir}': DESIGN.md missing feature list entries (### NN-FNNN)`);
     }
   }
 

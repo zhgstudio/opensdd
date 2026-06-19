@@ -156,7 +156,7 @@ function extractIdentifiers(content) {
  * Assess naming compliance for a single module file.
  *
  * @param {string} moduleDir - Module directory name (e.g., 01-auth)
- * @param {string} fileType - 'INTERFACE.md' or 'INTERNALS.md'
+ * @param {string} fileType - 'API.md' or 'DESIGN.md'
  * @param {string} content - File content
  * @param {{namingConvention: string|null, namingKeywords: string[]}} design - Extracted public design
  * @param {import('../config').SddConfig} config - SDD configuration
@@ -265,7 +265,7 @@ async function checkPublicDesignCompliance(root, config) {
 
     const modulePath = path.join(modulesDir, moduleDir);
 
-    for (const fileType of ['INTERFACE.md', 'INTERNALS.md']) {
+    for (const fileType of ['API.md', 'DESIGN.md']) {
       const filePath = path.join(modulePath, fileType);
       if (!fs.existsSync(filePath)) continue;
 

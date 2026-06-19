@@ -11,16 +11,16 @@ describe('parseModuleTable', () => {
 ## 模块引用表
 | 编号 | 模块名 | 功能简述 | 详细设计 |
 |------|--------|----------|----------|
-| 01 | auth | 用户认证 | docs/modules/01-auth/INTERFACE.md |
-| 02 | task-core | 任务核心 | docs/modules/02-task-core/INTERFACE.md |
+| 01 | auth | 用户认证 | docs/modules/01-auth/API.md |
+| 02 | task-core | 任务核心 | docs/modules/02-task-core/API.md |
 `;
     const modules = parseModuleTable(content);
     assert.strictEqual(modules.length, 2);
     assert.strictEqual(modules[0].name, '01-auth');
     assert.strictEqual(modules[0].description, 'auth');
-    assert.strictEqual(modules[0].ref, 'docs/modules/01-auth/INTERFACE.md');
+    assert.strictEqual(modules[0].ref, 'docs/modules/01-auth/API.md');
     assert.strictEqual(modules[1].name, '02-task-core');
-    assert.strictEqual(modules[1].ref, 'docs/modules/02-task-core/INTERFACE.md');
+    assert.strictEqual(modules[1].ref, 'docs/modules/02-task-core/API.md');
   });
 
   it('should parse English 3-column module reference table', () => {
@@ -29,12 +29,12 @@ describe('parseModuleTable', () => {
 ## Module Reference Table
 | Module | Name | Design |
 |--------|------|--------|
-| 01 | auth | docs/modules/01-auth/INTERFACE.md |
+| 01 | auth | docs/modules/01-auth/API.md |
 `;
     const modules = parseModuleTable(content);
     assert.strictEqual(modules.length, 1);
     assert.strictEqual(modules[0].name, '01-auth');
-    assert.strictEqual(modules[0].ref, 'docs/modules/01-auth/INTERFACE.md');
+    assert.strictEqual(modules[0].ref, 'docs/modules/01-auth/API.md');
   });
 
   it('should parse English 4-column module reference table', () => {
@@ -43,12 +43,12 @@ describe('parseModuleTable', () => {
 ## Module Reference Table
 | Module | Name | Description | Design |
 |--------|------|-------------|--------|
-| 01 | auth | User authentication | docs/modules/01-auth/INTERFACE.md |
+| 01 | auth | User authentication | docs/modules/01-auth/API.md |
 `;
     const modules = parseModuleTable(content);
     assert.strictEqual(modules.length, 1);
     assert.strictEqual(modules[0].name, '01-auth');
-    assert.strictEqual(modules[0].ref, 'docs/modules/01-auth/INTERFACE.md');
+    assert.strictEqual(modules[0].ref, 'docs/modules/01-auth/API.md');
   });
 
   it('should return empty array when no table found', () => {
@@ -110,13 +110,13 @@ describe('parseDependencyMatrix', () => {
 
 describe('splitRow', () => {
   it('should parse 3-column row', () => {
-    const cells = splitRow('| 01 | auth | docs/modules/01-auth/INTERFACE.md |');
-    assert.deepStrictEqual(cells, ['01', 'auth', 'docs/modules/01-auth/INTERFACE.md']);
+    const cells = splitRow('| 01 | auth | docs/modules/01-auth/API.md |');
+    assert.deepStrictEqual(cells, ['01', 'auth', 'docs/modules/01-auth/API.md']);
   });
 
   it('should parse 4-column row', () => {
-    const cells = splitRow('| 01 | auth | 用户认证 | docs/modules/01-auth/INTERFACE.md |');
-    assert.deepStrictEqual(cells, ['01', 'auth', '用户认证', 'docs/modules/01-auth/INTERFACE.md']);
+    const cells = splitRow('| 01 | auth | 用户认证 | docs/modules/01-auth/API.md |');
+    assert.deepStrictEqual(cells, ['01', 'auth', '用户认证', 'docs/modules/01-auth/API.md']);
   });
 
   it('should handle extra spaces within cells', () => {

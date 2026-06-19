@@ -63,7 +63,7 @@ async function checkLanguageConsistency(root, config) {
       if (!entry.isDirectory()) continue;
       if (!new RegExp(config.moduleDirPattern).test(entry.name)) continue;
 
-      for (const file of ['INTERFACE.md', 'INTERNALS.md']) {
+      for (const file of ['API.md', 'DESIGN.md']) {
         const fullPath = path.join(modulesDir, entry.name, file);
         if (!fs.existsSync(fullPath)) continue;
 

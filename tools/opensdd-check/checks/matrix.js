@@ -207,12 +207,12 @@ module.exports = async function check(root, config) {
     }
 
     const dirPath = path.join(root, 'docs/modules', name);
-    const interfacePath = path.join(dirPath, 'INTERFACE.md');
+    const interfacePath = path.join(dirPath, 'API.md');
 
     if (!fs.existsSync(dirPath) || !fs.statSync(dirPath).isDirectory()) {
       issues.push(`Module '${name}' declared but missing from docs/modules/`);
     } else if (!fs.existsSync(interfacePath)) {
-      issues.push(`Module '${name}' directory exists but INTERFACE.md not found`);
+      issues.push(`Module '${name}' directory exists but API.md not found`);
     }
   }
 
@@ -259,7 +259,7 @@ module.exports = async function check(root, config) {
     return {
       name: 'DEP_MATRIX',
       status: 'pass',
-      messages: [`${moduleNames.size} modules in matrix, all have docs/modules/{NN}-{name}/INTERFACE.md`],
+      messages: [`${moduleNames.size} modules in matrix, all have docs/modules/{NN}-{name}/API.md`],
     };
   }
 

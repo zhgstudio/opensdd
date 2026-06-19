@@ -38,8 +38,8 @@ const DEFAULT_CONFIG = {
   garbagePatterns: ['_v\\d+', '_final', '_tmp\\w*', '_old', '_backup', '\\.bak', '-v\\d+'],
   taskRegex: '^\\-\\s+\\[([ x])\\]\\s+(T-\\d+)\\s*:\\s*(.+)$',
   moduleDirPattern: '^\\d{2}-[a-zA-Z0-9_-]+$',
-  requiredInterfaceSections: ['模块概述与职责边界', '核心数据结构', '接口定义'],
-  requiredInternalsSections: ['核心逻辑流程', '内部实现细节', '功能特性列表'],
+  requiredApiSections: ['模块概述与职责边界', '核心数据结构', '接口定义'],
+  requiredDesignSections: ['核心逻辑流程', '内部实现细节', '功能特性列表'],
   interfaceStrategy: 'auto',
   skipDirs: ['node_modules', '.git', '.github'],
   publicDesignRules: {

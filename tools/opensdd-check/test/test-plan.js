@@ -89,12 +89,12 @@ describe('PLAN_FORMAT check', () => {
   it('should handle tasks with design references', async () => {
     const content = `# Plan
 
-- [ ] T-001: Setup [01-auth/INTERNALS.md#01-F001]
+- [ ] T-001: Setup [01-auth/DESIGN.md#01-F001]
 `;
     const { dir, cleanup } = createPlan(content);
     try {
       const result = await check(dir, DEFAULT_CONFIG);
-      // Should pass or fail depending on whether INTERNALS.md exists
+      // Should pass or fail depending on whether DESIGN.md exists
       assert.ok(result.status === 'pass' || result.status === 'fail');
     } finally {
       cleanup();
