@@ -143,13 +143,18 @@ Human reviews → AI refines → Stage gate passed → Next stage.
 
 ---
 
-## Tooling: sdd-check
+## Tooling: opensdd-check
 
-Validate your project's OpenSDD structure compliance:
+Validate your project's OpenSDD structure compliance with a single command — defaults to the current directory:
 
 ```bash
-node tools/sdd-check/index.js --path /path/to/project
+node tools/opensdd-check/index.js
+
+# Or target a specific project:
+node tools/opensdd-check/index.js --path /path/to/project
 ```
+
+> AI agent can also run validation on request — just say "run validation" or "检查项目结构" during any phase.
 
 5 checks:
 

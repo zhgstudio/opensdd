@@ -15,7 +15,7 @@ const { loadConfig } = require('./config');
  */
 function printHelp() {
   console.log(`
-sdd-check — Validate OpenSDD project structure
+opensdd-check — Validate OpenSDD project structure
 
 USAGE
   node index.js [options]
@@ -90,6 +90,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error('sdd-check error:', err.message);
+  console.error('opensdd-check error:', err.message);
   process.exit(1);
 });

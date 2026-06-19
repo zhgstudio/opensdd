@@ -133,6 +133,14 @@ SPEC.md     ARCHITECTURE.md  模块 DESIGN   PLAN.md      锁定全部文档
 
 ---
 
+## 项目结构验证
+
+本技能自带 OpenSDD 结构合规性检查工具 `opensdd-check`（位于 `tools/opensdd-check/`）：
+
+- **AI 可应人类要求主动执行验证**——人类在任意阶段说"检查项目结构"或"run validation"时，AI 应当执行 `node tools/opensdd-check/index.js`
+- 人类也可手动执行：`node tools/opensdd-check/index.js`（默认检查当前目录）
+- 建议在最终定稿前运行一次全量检查
+
 ## 核心禁令
 
 - **禁止越权**：PM 不讨论技术方案，Architect 不写模块设计细节，Designer 不写代码，Project Manager 不修改设计内容

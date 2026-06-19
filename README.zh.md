@@ -51,7 +51,7 @@ docs/
 │   ├── phase-4.md            # 阶段四：任务计划（Project Manager Agent）
 │   └── finalization.md       # 最终定稿（人类）
 ├── tools/
-│   └── sdd-check/            # OpenSDD 项目结构校验工具
+│   └── opensdd-check/            # OpenSDD 项目结构校验工具
 │       ├── index.js
 │       ├── lib/
 │       └── checks/
@@ -156,13 +156,18 @@ rm -rf /tmp/opensdd-skill
 
 ---
 
-## 工具：sdd-check
+## 工具：opensdd-check
 
-校验项目是否严格遵循 OpenSDD 目录和格式规范：
+校验项目是否严格遵循 OpenSDD 目录和格式规范——默认检查当前目录：
 
 ```bash
-node tools/sdd-check/index.js --path /path/to/project
+node tools/opensdd-check/index.js
+
+# 或指定目标项目：
+node tools/opensdd-check/index.js --path /path/to/project
 ```
+
+> AI 智能体可在任意阶段主动执行验证——只需说"检查项目结构"或"run validation"。
 
 5 项检查：
 
