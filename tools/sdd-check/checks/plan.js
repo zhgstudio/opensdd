@@ -1,27 +1,33 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 
-// Expected: "- [ ] T-001: description [NN-name/DESIGN.md#F-NNN] (depends: T-001)"
-// Breaks down to:
-//   status: " " (todo), "x" (done)
-//   taskId: T-001
-//   description: anything
-//   ref (optional): [NN-name/DESIGN.md#F-NNN]
-//   depends (optional): depends: T-001
-const TASK_RE = /^-\s+\[([ x])\]\s+(T-\d+)\s*:\s*(.+)$/;
 // Optional reference at end: [NN-name/DESIGN.md#F-NNN]
 const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#F-\d+)\]/;
-// Module directory prefix pattern: NN-name
-const MODULE_DIR_RE = /^\d{2}-[a-zA-Z0-9_-]+$/;
 
-// Extract module name from the ref path (e.g., "01-auth" from "01-auth/DESIGN.md#F-001")
+/**
+ * Extract module name from the ref path (e.g., "01-auth" from "01-auth/DESIGN.md#F-001").
+ *
+ * @param {string} ref - Reference string from task line
+ * @returns {string|null} Module name or null
+ */
 function extractModuleFromRef(ref) {
   const parts = ref.split('/');
   if (parts.length >= 1) return parts[0];
   return null;
 }
 
-module.exports = async function check(root) {
+/**
+ * Check that PLAN.md has valid task format and references.
+ *
+ * @param {string} root - Absolute path to the project root
+ * @param {import('../config').SddConfig} config - SDD configuration
+ * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ */
+module.exports = async function check(root, config) {
+  const TASK_RE = new RegExp(config.taskRegex);
+  const MODULE_DIR_RE = /^\d{2}-[a-zA-Z0-9_-]+$/;
   const planPath = path.join(root, 'docs/PLAN.md');
 
   if (!fs.existsSync(planPath)) {
@@ -32,7 +38,7 @@ module.exports = async function check(root) {
   const issues = [];
   let taskCount = 0;
   let refCount = 0;
-  let moduleDirsFound = new Set();
+  const moduleDirsFound = new Set();
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];

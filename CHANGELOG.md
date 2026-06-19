@@ -2,6 +2,18 @@
 
 All notable changes to the OpenSDD Skill will be documented here.
 
+## [3.1.0] - 2026-06-19
+
+### Changed
+- **SKILL.md restructuring**: Split phase execution contracts into 5 independent files (phase-1.md ~ phase-4.md + finalization.md). SKILL.md now only contains overview, topology, role model, constraints, and references to phase files — eliminating significant redundancy
+- **Phase 3 serial constraint relaxed**: Non-dependent modules can now be designed in parallel (previously all modules were strictly serial)
+- **Document language made configurable**: Language is now specified by the human at project start, applied to all phases (previously hardcoded to Chinese)
+- **Module numbering clarified**: Numbers are append-only identifiers (like serial numbers), no insertion allowed — explicitly documented
+- **Git push allowed**: AI is now permitted `git push` (current branch only) in addition to `git add` and `git commit`
+
+### Added
+- **Phase contract files**: `phase-1.md`, `phase-2.md`, `phase-3.md`, `phase-4.md`, `finalization.md` — each contains the full execution contract for its respective stage
+
 ## [3.0.0] - 2026-06-19
 
 ### Changed

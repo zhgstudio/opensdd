@@ -44,7 +44,12 @@ docs/
 
 ```
 ├── opensdd/
-│   └── SKILL.md              # 核心工作流 Skill
+│   ├── SKILL.md              # 核心工作流 Skill（概览）
+│   ├── phase-1.md            # 阶段一：需求规格（PM Agent）
+│   ├── phase-2.md            # 阶段二：总体架构设计（Architect Agent）
+│   ├── phase-3.md            # 阶段三：模块详细设计（Designer Agent）
+│   ├── phase-4.md            # 阶段四：任务计划（Project Manager Agent）
+│   └── finalization.md       # 最终定稿（人类）
 ├── tools/
 │   └── sdd-check/            # OpenSDD 项目结构校验工具
 │       ├── index.js
@@ -137,10 +142,13 @@ rm -rf /tmp/opensdd-skill
 ### 2. 唤醒你的 AI
 
 ```
-请读取 .opencode/skills/opensdd/SKILL.md。
+请读取 .opencode/skills/opensdd/SKILL.md 和 .opencode/skills/opensdd/phase-1.md。
 我的新项目是：[一句话描述]。
+文档语言：[中文/English/...]。
 请严格按照 Skill 规范启动阶段一，在 docs/SPEC.md 中生成需求规格初稿。
 ```
+
+> **语言说明：** 在启动阶段一时指定文档语言，所有阶段将统一使用该语言生成文档。
 
 ### 3. 迭代推进
 

@@ -1,11 +1,28 @@
+'use strict';
+
+/**
+ * @typedef {{name: string, status: string, messages: string[], _root?: string}} CheckResult
+ */
+
 const C = {
+  /** @param {string} s */
   green: s => `\x1b[32m${s}\x1b[0m`,
+  /** @param {string} s */
   red: s => `\x1b[31m${s}\x1b[0m`,
+  /** @param {string} s */
   yellow: s => `\x1b[33m${s}\x1b[0m`,
+  /** @param {string} s */
   dim: s => `\x1b[2m${s}\x1b[0m`,
+  /** @param {string} s */
   bold: s => `\x1b[1m${s}\x1b[0m`,
 };
 
+/**
+ * Return colored status icon for terminal output.
+ *
+ * @param {string} status - One of 'pass', 'fail', 'warn', 'skip'
+ * @returns {string} Colored icon string
+ */
 function statusIcon(status) {
   switch (status) {
     case 'pass': return C.green('[PASS]');
@@ -16,16 +33,13 @@ function statusIcon(status) {
   }
 }
 
-function plainIcon(status) {
-  switch (status) {
-    case 'pass': return '[PASS]';
-    case 'fail': return '[FAIL]';
-    case 'warn': return '[WARN]';
-    case 'skip': return '[SKIP]';
-    default: return `[${status.toUpperCase()}]`;
-  }
-}
-
+/**
+ * Generate colored terminal report from check results.
+ *
+ * @param {CheckResult[]} results - Array of check results
+ * @param {boolean} strict - Whether to treat warnings as errors
+ * @returns {number} Exit code (0 = pass, 1 = fail)
+ */
 function terminalReport(results, strict) {
   const root = results.length > 0 ? results[0]._root || process.cwd() : process.cwd();
   console.log(`\nSDD Check Report — ${root}`);
@@ -57,6 +71,13 @@ function terminalReport(results, strict) {
   return errors > 0 || (strict && warnings > 0) ? 1 : 0;
 }
 
+/**
+ * Generate JSON report from check results.
+ *
+ * @param {CheckResult[]} results - Array of check results
+ * @param {boolean} strict - Whether to treat warnings as errors
+ * @returns {number} Exit code (0 = pass, 1 = fail)
+ */
 function jsonReport(results, strict) {
   let errors = 0;
   let warnings = 0;
@@ -89,6 +110,13 @@ function jsonReport(results, strict) {
   return errors > 0 || (strict && warnings > 0) ? 1 : 0;
 }
 
+/**
+ * Generate report from check results (terminal or JSON).
+ *
+ * @param {CheckResult[]} results - Array of check results
+ * @param {{json?: boolean, strict?: boolean}} [opts] - Reporting options
+ * @returns {number} Exit code (0 = pass, 1 = fail)
+ */
 module.exports.report = function report(results, opts = {}) {
   // attach root for reporting
   for (const r of results) {

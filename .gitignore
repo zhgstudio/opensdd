@@ -8,6 +8,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Dependencies
+node_modules/
+
 # Skills CLI
 .agents/
 skills-lock.json

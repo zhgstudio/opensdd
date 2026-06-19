@@ -1,10 +1,14 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 
-// Match NN-name module directory pattern
-const MODULE_DIR_RE = /^\d{2}-[a-zA-Z0-9_-]+$/;
-
-// Parse markdown table after "模块引用表" or "模块依赖矩阵" heading
+/**
+ * Parse markdown table after "模块引用表" or "模块依赖矩阵" heading.
+ *
+ * @param {string} content - File content
+ * @returns {Array<{name: string, description: string, ref: string}>} Parsed module entries
+ */
 function parseModuleTable(content) {
   const lines = content.split('\n');
   const modules = [];
@@ -48,7 +52,12 @@ function parseModuleTable(content) {
   return modules;
 }
 
-// Also parse dependency matrix columns: | 模块 | 依赖 | 所需接口 |
+/**
+ * Parse dependency matrix columns: | 模块 | 依赖 | 所需接口 |.
+ *
+ * @param {string} content - File content
+ * @returns {Array<{name: string, depends: string, interface: string}>} Parsed dependency entries
+ */
 function parseDependencyMatrix(content) {
   const lines = content.split('\n');
   const modules = [];
@@ -92,7 +101,15 @@ function parseDependencyMatrix(content) {
   return modules;
 }
 
-module.exports = async function check(root) {
+/**
+ * Check that module directories referenced in ARCHITECTURE.md exist.
+ *
+ * @param {string} root - Absolute path to the project root
+ * @param {import('../config').SddConfig} config - SDD configuration
+ * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ */
+module.exports = async function check(root, config) {
+  const MODULE_DIR_RE = new RegExp(config.moduleDirPattern);
   const archPath = path.join(root, 'docs/ARCHITECTURE.md');
 
   if (!fs.existsSync(archPath)) {

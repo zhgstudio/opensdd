@@ -1,23 +1,25 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 
-const REQUIRED_FILES = [
-  { rel: 'docs/SPEC.md', label: 'docs/SPEC.md' },
-  { rel: 'docs/ARCHITECTURE.md', label: 'docs/ARCHITECTURE.md' },
-  { rel: 'docs/PLAN.md', label: 'docs/PLAN.md' },
-  { rel: 'AGENTS.md', label: 'AGENTS.md' },
-];
-
-module.exports = async function check(root) {
+/**
+ * Check that all required files exist in the project.
+ *
+ * @param {string} root - Absolute path to the project root
+ * @param {import('../config').SddConfig} config - SDD configuration
+ * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ */
+module.exports = async function check(root, config) {
   const missing = [];
 
-  for (const f of REQUIRED_FILES) {
-    const fp = path.join(root, f.rel);
-    if (!fs.existsSync(fp)) missing.push(f.label);
+  for (const rel of config.requiredFiles) {
+    const fp = path.join(root, rel);
+    if (!fs.existsSync(fp)) missing.push(rel);
   }
 
   if (missing.length === 0) {
-    return { name: 'FILE_EXISTS', status: 'pass', messages: ['All 4 required files present'] };
+    return { name: 'FILE_EXISTS', status: 'pass', messages: [`All ${config.requiredFiles.length} required files present`] };
   }
 
   return {
