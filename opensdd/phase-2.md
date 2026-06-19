@@ -53,7 +53,7 @@
    ### 公共设计
    跨模块共用的设计决策：认证方案、数据流拓扑、部署架构概览（如适用）。
 
-3. **重要职责边界**：`ARCHITECTURE.md` 只写整体架构和公共设计，具体的模块内部设计放在对应模块的 `DESIGN.md` 中。`ARCHITECTURE.md` 中通过模块引用表引用到各模块目录，这样编码阶段的开发者只需要阅读 `AGENTS.md` + `ARCHITECTURE.md`（公共部分）+ 当前模块目录下的 `API.md` 和 `DESIGN.md`
+3. **重要职责边界**：`ARCHITECTURE.md` 只写整体架构和公共设计，具体的模块内部设计放在对应模块的 `DESIGN.md` 中。`ARCHITECTURE.md` 中通过模块引用表引用到各模块目录，这样编码阶段的开发者只需要阅读 `AGENTS.md` + `ARCHITECTURE.md`（公共部分）+ 当前模块目录下的 `API.md` 和 `DESIGN.md`。`AGENTS.md` 的内容面向编码阶段的开发者，写明编码时的规则和约束，不用于 OpenSDD 阶段自身。
 
 4. **写入 `AGENTS.md` 主体**，以 `## ` 为章节标题追加以下章节（AGENTS.md 的顶层章节须使用 `## ` 二级标题，子层级允许使用 `### ` 三级标题，以确保 `opensdd-check` 的 AGENTS_SECTIONS 检查项能正确识别顶层章节）：
    - 文件操作范围（AI 可读/可写的目录白名单）

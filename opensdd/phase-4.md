@@ -43,7 +43,7 @@
    - 公共设计合规：检查各模块的命名风格和设计规范是否遵循 `ARCHITECTURE.md` 中定义的全局编码规范和公共设计（可使用 `node tools/opensdd-check/index.js` 中的 `PUBLIC_DESIGN_COMPLIANCE` 检查自动验证）
    - 如果发现不一致，**暂停并升级给人类**，说明矛盾的具体位置和内容，等待人类决策后再继续
 6. 任务按依赖关系拓扑排序
-7. **追加 `AGENTS.md`**：在 `AGENTS.md` 末尾追加"PLAN.md 任务规范"章节，说明 `PLAN.md` 的格式、任务标记规则、引用约定
+7. **追加 `AGENTS.md`**：在 `AGENTS.md` 末尾追加"PLAN.md 任务规范"章节，说明 `PLAN.md` 的格式、任务标记规则、引用约定。注意：`AGENTS.md` 的内容面向编码阶段的开发者，`AGENTS.md` 中追加的所有规范都服务于编码阶段，不用于 OpenSDD 阶段自身。
 
 ## 审查清单
 

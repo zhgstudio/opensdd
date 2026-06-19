@@ -2,6 +2,8 @@
 
 > **Stop coding blind. Start with specs.** A lightweight workflow for the pre-development specification phase. Formalizes 5 types of documents through 4 dedicated AI agent roles, producing contract-grade specs that guide subsequent AI autonomous coding.
 
+> **适用场景：** 适用于所有采用文档先行、规格驱动开发范式的软件项目——包括但不限于 IPD（集成产品开发）流程中的技术方案阶段。核心前提是项目在编码前需要完成需求、架构、模块设计、任务计划的规范化文档产出。
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/zhgstudio/opensdd/actions/workflows/ci.yml/badge.svg)](https://github.com/zhgstudio/opensdd/actions/workflows/ci.yml)
 [![skills.sh](https://skills.sh/b/zhgstudio/opensdd)](https://skills.sh/zhgstudio/ai-agent-4-n-sdd-skill/opensdd)

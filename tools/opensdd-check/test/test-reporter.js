@@ -6,18 +6,18 @@ const { report } = require('../lib/reporter');
 
 describe('reporter', () => {
   const passResults = [
-    { name: 'FILE_EXISTS', status: 'pass', messages: ['All files ok'], _root: '/test' },
-    { name: 'PLAN_FORMAT', status: 'pass', messages: ['5 tasks ok'], _root: '/test' },
+    { name: 'FILE_EXISTS', status: 'pass', messages: ['All files ok'] },
+    { name: 'PLAN_FORMAT', status: 'pass', messages: ['5 tasks ok'] },
   ];
 
   const failResults = [
-    { name: 'FILE_EXISTS', status: 'fail', messages: ['Missing SPEC.md'], _root: '/test' },
-    { name: 'PLAN_FORMAT', status: 'pass', messages: ['5 tasks ok'], _root: '/test' },
+    { name: 'FILE_EXISTS', status: 'fail', messages: ['Missing SPEC.md'] },
+    { name: 'PLAN_FORMAT', status: 'pass', messages: ['5 tasks ok'] },
   ];
 
   const warnResults = [
-    { name: 'DEP_MATRIX', status: 'warn', messages: ['Some warnings'], _root: '/test' },
-    { name: 'PLAN_FORMAT', status: 'pass', messages: ['5 tasks ok'], _root: '/test' },
+    { name: 'DEP_MATRIX', status: 'warn', messages: ['Some warnings'] },
+    { name: 'PLAN_FORMAT', status: 'pass', messages: ['5 tasks ok'] },
   ];
 
   it('should return 0 when all pass', () => {
@@ -62,12 +62,12 @@ describe('reporter', () => {
     assert.strictEqual(jsonOutput.summary.passed, 2);
   });
 
-  it('JSON projectRoot should reflect user-specified path', () => {
+  it('JSON projectRoot should reflect user-specified path via root option', () => {
     const logs = [];
     mock.method(console, 'log', (msg) => logs.push(msg));
 
-    const customResults = [{ name: 'FILE_EXISTS', status: 'pass', messages: ['All files ok'], _root: '/custom/path' }];
-    report(customResults, { json: true, strict: false });
+    const customResults = [{ name: 'FILE_EXISTS', status: 'pass', messages: ['All files ok'] }];
+    report(customResults, { json: true, strict: false, root: '/custom/path' });
     mock.restoreAll();
 
     const jsonOutput = JSON.parse(logs[0]);

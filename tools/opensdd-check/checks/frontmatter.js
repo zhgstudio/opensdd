@@ -7,7 +7,7 @@ const path = require('path');
  * Check that skill files have valid YAML frontmatter.
  *
  * @param {string} root - Absolute path to the project root
- * @param {import('../config').SddConfig} config - SDD configuration
+ * @param {import('../config').SddConfig} _config - SDD configuration
  * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
  */
 module.exports = async function check(root, _config) {

@@ -5,14 +5,14 @@ const grpcStrategy = require('./grpc');
 const functionStrategy = require('./function');
 
 /**
- * @typedef {Object} InterfaceDefinition
+ * @typedef {object} InterfaceDefinition
  * @property {string} signature - Full signature string for display
  * @property {string} type - Interface type tag (e.g. "http", "grpc", "function")
- * @property {Object} [details] - Strategy-specific structured info
+ * @property {object} [details] - Strategy-specific structured info
  */
 
 /**
- * @typedef {Object} InterfaceStrategy
+ * @typedef {object} InterfaceStrategy
  * @property {string} name - Strategy identifier
  * @property {function(string): InterfaceDefinition[]} extract
  *   Extract interface definitions from document content.

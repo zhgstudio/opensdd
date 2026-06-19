@@ -4,19 +4,19 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * @typedef {Object} AgentSection
+ * @typedef {object} AgentSection
  * @property {string[]} keywords - List of keywords to match against headings
  */
 
 /**
- * @typedef {Object} SddConfig
+ * @typedef {object} SddConfig
  * @property {string[]} requiredFiles - List of required file paths relative to root
  * @property {AgentSection[]} requiredAgentSections - Required sections for AGENTS.md
  * @property {string[]} garbagePatterns - Regex patterns for garbage file detection
  * @property {string} taskRegex - Regex pattern for task line format in PLAN.md
  * @property {string} moduleDirPattern - Regex pattern for module directory names
  * @property {string} interfaceStrategy - Interface check strategy ('http'|'grpc'|'function'|'auto')
- * @property {Object} [publicDesignRules] - Public design compliance rules
+ * @property {object} [publicDesignRules] - Public design compliance rules
  * @property {string} [publicDesignRules.namingConvention] - Expected naming convention ('camelCase', 'snake_case', etc.)
  * @property {string[]} [publicDesignRules.allowedPatterns] - Allowed identifier regex patterns for exceptions
  */
@@ -91,7 +91,8 @@ const DEFAULT_CONFIG = {
  * Load SDD configuration from `.sddrc.json` in the given root directory.
  * Merges with defaults — user config overrides matching keys.
  *
- * @param {string} root - Absolute path to the project root directory
+ * @param {SddConfig} defaults - Default configuration
+ * @param {SddConfig} user - User configuration to merge
  * @returns {SddConfig} Merged configuration object
  */
 function mergeConfig(defaults, user) {

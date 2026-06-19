@@ -1,0 +1,6 @@
+node_modules/
+test/
+.sddrc.json.example
+.eslintrc.json
+.prettierrc
+package-lock.json

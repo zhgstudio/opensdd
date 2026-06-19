@@ -11,12 +11,10 @@ const frontmatterCheck = require('./checks/frontmatter');
 const moduleContentCheck = require('./checks/module-content');
 const interfaceConsistencyCheck = require('./checks/interface-consistency');
 const publicDesignComplianceCheck = require('./checks/public-design-compliance');
+const languageCheck = require('./checks/language');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
-/**
- * Print CLI help text.
- */
 function printHelp() {
   console.log(`
 opensdd-check — Validate OpenSDD project structure
@@ -39,15 +37,10 @@ CHECKS
   MODULE_CONTENT        API.md/DESIGN.md required sections and feature list
   API_CONSISTENCY       Cross-module interface signature matching
   PUBLIC_DESIGN_COMPLIANCE  Module files follow ARCHITECTURE.md public design rules
+  LANGUAGE_CONSISTENCY     All documents use a consistent language
 `);
 }
 
-/**
- * Parse CLI arguments into options object.
- *
- * @param {string[]} args - Raw process.argv slice
- * @returns {{root: string, json: boolean, strict: boolean}} Parsed options
- */
 function parseArgs(args) {
   const opts = { root: '.', json: false, strict: false };
 
@@ -72,11 +65,6 @@ function parseArgs(args) {
   return opts;
 }
 
-/**
- * Main entry point.
- *
- * @returns {Promise<void>}
- */
 async function main() {
   const args = process.argv.slice(2);
   const opts = parseArgs(args);
@@ -94,14 +82,10 @@ async function main() {
     moduleContentCheck(resolvedRoot, config),
     interfaceConsistencyCheck(resolvedRoot, config),
     publicDesignComplianceCheck(resolvedRoot, config),
+    languageCheck(resolvedRoot, config),
   ]);
 
-  // Attach root for reporting
-  for (const r of results) {
-    r._root = resolvedRoot;
-  }
-
-  const exitCode = report(results, { json: opts.json, strict: opts.strict });
+  const exitCode = report(results, { json: opts.json, strict: opts.strict, root: resolvedRoot });
   process.exit(exitCode);
 }
 

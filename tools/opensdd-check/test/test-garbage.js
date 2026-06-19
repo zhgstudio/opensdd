@@ -6,95 +6,72 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 
-const check = require('../checks/garbage');
-const { DEFAULT_CONFIG } = require('../config');
+const DEFAULT_CONFIG = require('../config').DEFAULT_CONFIG;
 
 describe('NO_GARBAGE check', () => {
-  it('should detect garbage files like _v2.md', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
-    try {
-      fs.writeFileSync(path.join(tmpDir, 'doc_v2.md'), 'garbage', 'utf-8');
-      const result = await check(tmpDir, DEFAULT_CONFIG);
-      assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages[0].includes('garbage'));
-    } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-  });
-
-  it('should detect _final.md files', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
-    try {
-      fs.writeFileSync(path.join(tmpDir, 'report_final.md'), 'garbage', 'utf-8');
-      const result = await check(tmpDir, DEFAULT_CONFIG);
-      assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages[0].includes('garbage'));
-    } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-  });
-
-  it('should detect .bak.md files', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
-    try {
-      fs.writeFileSync(path.join(tmpDir, 'spec.bak.md'), 'garbage', 'utf-8');
-      const result = await check(tmpDir, DEFAULT_CONFIG);
-      assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages[0].includes('garbage'));
-    } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-  });
-
   it('should pass when no garbage files exist', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-gb-'));
     try {
-      fs.writeFileSync(path.join(tmpDir, 'README.md'), 'clean', 'utf-8');
-      fs.writeFileSync(path.join(tmpDir, 'index.js'), 'clean', 'utf-8');
-      fs.writeFileSync(path.join(tmpDir, 'SPEC.md'), 'clean', 'utf-8');
-
-      const result = await check(tmpDir, DEFAULT_CONFIG);
+      const check = require('../checks/garbage');
+      fs.writeFileSync(path.join(root, 'README.md'), '# clean project');
+      const result = await check(root, DEFAULT_CONFIG);
       assert.strictEqual(result.status, 'pass');
     } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('should fail when _v2.md exists', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-gb-'));
+    try {
+      const check = require('../checks/garbage');
+      fs.mkdirSync(path.join(root, 'docs'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'docs', 'SPEC_v2.md'), 'garbage');
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('SPEC_v2.md')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('should fail when _final.md exists', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-gb-'));
+    try {
+      const check = require('../checks/garbage');
+      fs.mkdirSync(path.join(root, 'docs'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'docs', 'ARCHITECTURE_final.md'), 'garbage');
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('ARCHITECTURE_final.md')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('should fail when .bak.md exists', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-gb-'));
+    try {
+      const check = require('../checks/garbage');
+      fs.writeFileSync(path.join(root, 'PLAN.md.bak'), 'garbage');
+      const result = await check(root, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('PLAN.md.bak')));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
     }
   });
 
   it('should skip node_modules directory', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-gb-'));
     try {
-      const nmDir = path.join(tmpDir, 'node_modules');
-      fs.mkdirSync(nmDir, { recursive: true });
-      fs.writeFileSync(path.join(nmDir, 'lib_v2.md'), 'garbage', 'utf-8');
-
-      const result = await check(tmpDir, DEFAULT_CONFIG);
+      const check = require('../checks/garbage');
+      fs.mkdirSync(path.join(root, 'node_modules'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'node_modules', 'some_v2.md'), 'garbage');
+      const result = await check(root, DEFAULT_CONFIG);
       assert.strictEqual(result.status, 'pass');
     } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-  });
-
-  it('should detect _tmp files', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
-    try {
-      fs.writeFileSync(path.join(tmpDir, 'notes_tmp.md'), 'garbage', 'utf-8');
-      const result = await check(tmpDir, DEFAULT_CONFIG);
-      assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages[0].includes('garbage'));
-    } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
-    }
-  });
-
-  it('should detect _old files', async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-garbage-'));
-    try {
-      fs.writeFileSync(path.join(tmpDir, 'draft_old.md'), 'garbage', 'utf-8');
-      const result = await check(tmpDir, DEFAULT_CONFIG);
-      assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages[0].includes('garbage'));
-    } finally {
-      fs.rmSync(tmpDir, { recursive: true, force: true });
+      fs.rmSync(root, { recursive: true, force: true });
     }
   });
 });

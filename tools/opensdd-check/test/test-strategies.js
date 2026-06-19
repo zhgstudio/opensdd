@@ -235,23 +235,3 @@ describe('strategy registry', () => {
     assert.strictEqual(result.name, 'http');
   });
 });
-
-// ─── Backward Compatibility ─────────────────────────────────────────────────
-
-describe('interface-consistency backward compatibility', () => {
-  const { extractInterfaces, extractEndpoints } = require('../checks/interface-consistency');
-
-  it('extractEndpoints should still return old format', () => {
-    const endpoints = extractEndpoints('POST /auth/register');
-    assert.strictEqual(endpoints.length, 1);
-    assert.strictEqual(endpoints[0].method, 'POST');
-    assert.strictEqual(endpoints[0].path, '/auth/register');
-    assert.strictEqual(typeof endpoints[0].raw, 'string');
-  });
-
-  it('extractInterfaces should still work', () => {
-    const result = extractInterfaces(['## 接口定义', '- POST /auth/login'].join('\n'));
-    assert.ok(result['接口定义']);
-    assert.strictEqual(result['接口定义'].length, 1);
-  });
-});

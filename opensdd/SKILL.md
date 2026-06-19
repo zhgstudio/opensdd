@@ -58,7 +58,7 @@ docs/
 | `ARCHITECTURE.md` | 总体架构设计 + 公共设计（技术栈、命名风格、错误处理），模块引用表指向各模块目录 | Architect、Designer |
 | `modules/{NN}-{name}/API.md` + `DESIGN.md` | 该模块的接口定义与内部实现，代码开发必须严格遵循 | Designer、编码阶段的开发者 |
 | `PLAN.md` | 基于 DESIGN.md 拆分的开发任务跟踪表，仅含任务条目和完成状态，不含方案细节 | 编码阶段的开发者 |
-| `AGENTS.md` | 编码阶段的入口指引。包含项目规则、操作范围、任务规范，AI 编码前必读 | 编码阶段的开发者 |
+| `AGENTS.md` | 编码阶段的入口指引。包含项目规则、操作范围、任务规范，AI 编码前必读。注意：AGENTS.md 的内容面向编码阶段，不用于 OpenSDD 阶段自身 | 编码阶段的开发者 |
 
 ---
 
@@ -192,7 +192,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 ```
 请读取 SKILL.md 和 phase-3.md。
 请以模块设计师（Designer Agent）角色启动阶段三。
-读取 docs/ARCHITECTURE.md。
+读取 docs/ARCHITECTURE.md 和 docs/SPEC.md。
 当前要设计的模块是：[模块名，如 01-auth]。
 按照 ARCHITECTURE.md 模块引用表顺序依次设计，在 docs/modules/{NN}-{name}/ 下生成本模块的 API.md 和 DESIGN.md。
 特征列表以 {NN}-F{NNN} 编号。

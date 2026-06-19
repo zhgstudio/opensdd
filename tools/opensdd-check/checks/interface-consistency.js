@@ -5,75 +5,6 @@ const path = require('path');
 const { parseDependencyMatrix } = require('./matrix');
 const { getStrategy, detect } = require('./strategies');
 
-/**
- * Extract interface groupings by heading (kept for backward compatibility).
- *
- * @param {string} content - Document content
- * @returns {Object} Map of heading → list items
- */
-function extractInterfaces(content) {
-  const interfaces = {};
-  const lines = content.split('\n');
-  let currentInterface = null;
-  let inCodeBlock = false;
-
-  for (const raw of lines) {
-    const trimmed = raw.trim();
-
-    if (trimmed.startsWith('```')) {
-      inCodeBlock = !inCodeBlock;
-      continue;
-    }
-
-    if (inCodeBlock) continue;
-
-    const headingMatch = trimmed.match(/^#{1,6}\s*(.+)$/);
-    if (headingMatch) {
-      const heading = headingMatch[1].trim();
-      if (
-        heading.includes('接口') ||
-        heading.includes('Interface') ||
-        heading.includes('API') ||
-        heading.includes('Endpoint')
-      ) {
-        currentInterface = heading;
-        interfaces[currentInterface] = [];
-      }
-      continue;
-    }
-
-    if (currentInterface && trimmed.startsWith('- ')) {
-      interfaces[currentInterface].push(trimmed.substring(2).trim());
-    }
-  }
-
-  return interfaces;
-}
-
-/**
- * Extract HTTP endpoints from document content (kept for backward compatibility).
- * Delegates to the HTTP strategy internally.
- *
- * @param {string} content - Document content
- * @returns {Array<{method: string, path: string, raw: string}>} Extracted endpoints
- */
-function extractEndpoints(content) {
-  const httpStrategy = getStrategy('http');
-  const defs = httpStrategy.extract(content);
-  return defs.map((d) => ({
-    method: d.details.method,
-    path: d.details.path,
-    raw: d.signature,
-  }));
-}
-
-/**
- * Resolve the interface strategy based on config.
- *
- * @param {string} strategyName - Config value (http|grpc|function|auto)
- * @param {string[]} docContents - Document contents for auto-detection
- * @returns {{strategy: import('./strategies').InterfaceStrategy, detected: boolean}}
- */
 function resolveStrategy(strategyName, docContents) {
   if (strategyName === 'auto' || !strategyName) {
     return { strategy: detect(docContents), detected: true };
@@ -81,13 +12,6 @@ function resolveStrategy(strategyName, docContents) {
   return { strategy: getStrategy(strategyName), detected: false };
 }
 
-/**
- * Check cross-module interface consistency using the configured strategy.
- *
- * @param {string} root - Absolute path to the project root
- * @param {import('../config').SddConfig} config - SDD configuration
- * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
- */
 async function checkInterfaceConsistency(root, config) {
   const archPath = path.join(root, 'docs/ARCHITECTURE.md');
 
@@ -120,15 +44,8 @@ async function checkInterfaceConsistency(root, config) {
     };
   }
 
-  // Cache file contents to avoid repeated I/O
   const contentCache = new Map();
 
-  /**
-   * Read a file with caching.
-   *
-   * @param {string} filePath - Absolute path to the file
-   * @returns {string|null} File content or null if unreadable
-   */
   function readCached(filePath) {
     if (contentCache.has(filePath)) return contentCache.get(filePath);
     try {
@@ -144,7 +61,6 @@ async function checkInterfaceConsistency(root, config) {
     return null;
   }
 
-  // Collect all module document contents for auto-detection
   const docContents = [];
   for (const entry of depMatrix) {
     const modulePath = path.join(root, 'docs/modules', entry.name, 'API.md');
@@ -218,7 +134,3 @@ async function checkInterfaceConsistency(root, config) {
 module.exports = async function check(root, config) {
   return checkInterfaceConsistency(root, config);
 };
-
-// Retained for backward compatibility
-module.exports.extractInterfaces = extractInterfaces;
-module.exports.extractEndpoints = extractEndpoints;
