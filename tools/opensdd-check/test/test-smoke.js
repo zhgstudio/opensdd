@@ -107,7 +107,7 @@ describe('opensdd-check smoke test', () => {
         '负责用户认证。',
         '',
         '## 核心数据结构',
-        '- User: { id, email, password }',
+        '- user: { id, email, password }',
         '',
         '## 接口定义',
         '- POST /auth/register',
@@ -166,6 +166,7 @@ describe('opensdd-check smoke test', () => {
     const moduleContentCheck = require('../checks/module-content');
     const interfaceConsistencyCheck = require('../checks/interface-consistency');
     const languageCheck = require('../checks/language');
+    const publicDesignComplianceCheck = require('../checks/public-design-compliance');
     const config = require('../config').DEFAULT_CONFIG;
 
     const results = await Promise.all([
@@ -178,6 +179,7 @@ describe('opensdd-check smoke test', () => {
       moduleContentCheck(tmpDir, config),
       interfaceConsistencyCheck(tmpDir, config),
       languageCheck(tmpDir, config),
+      publicDesignComplianceCheck(tmpDir, config),
     ]);
 
     for (const r of results) {

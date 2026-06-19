@@ -3,7 +3,7 @@ name: opensdd
 description: "Open Spec-Driven Documentation — 编码前规范阶段工作流。为 AI 智能体提供需求规格、架构设计、模块详细设计、任务计划、入口指引共 5 类文档的规范化生成流程，产物作为后续 AI 自主编码阶段的契约依据。"
 metadata:
   author: zhgstudio
-  version: 3.2.0
+  version: 3.3.0
 ---
 
 # OpenSDD — 编码前规范阶段工作流
@@ -53,7 +53,7 @@ docs/
 | 文档 | 作用 | 使用者 |
 |------|------|--------|
 | `SPEC.md` | 原始需求的全面细化，覆盖业务边界、用户旅程、优先级、非功能性约束 | 所有角色 |
-| `ARCHITECTURE.md` | 总体架构设计 + 公共设计（技术栈、命名风格、错误处理），按模块引用到对应 INTERFACE.md | Architect、Designer |
+| `ARCHITECTURE.md` | 总体架构设计 + 公共设计（技术栈、命名风格、错误处理），模块引用表指向各模块目录 | Architect、Designer |
 | `modules/{NN}-{name}/INTERFACE.md` + `INTERNALS.md` | 该模块的接口定义与内部实现，代码开发必须严格遵循 | Designer、编码阶段的开发者 |
 | `PLAN.md` | 基于 INTERNALS.md 拆分的开发任务跟踪表，仅含任务条目和完成状态，不含方案细节 | 编码阶段的开发者 |
 | `AGENTS.md` | 编码阶段的入口指引。包含项目规则、操作范围、任务规范，AI 编码前必读 | 编码阶段的开发者 |
@@ -144,7 +144,7 @@ SPEC.md     ARCHITECTURE.md  模块 INTERFACE+   PLAN.md      锁定全部文档
 
 - **AI 可应人类要求主动执行验证**——人类在任意阶段说"检查项目结构"或"run validation"时，AI 应当执行 `node tools/opensdd-check/index.js`
 - 人类也可手动执行：`node tools/opensdd-check/index.js`（默认检查当前目录）
-- 建议在最终定稿前运行一次全量检查
+- 建议在最终定稿前运行 `node tools/opensdd-check/index.js --strict` 执行全量严格检查（将所有警告视为错误），其中包含 `PUBLIC_DESIGN_COMPLIANCE` 公共设计合规性检查
 
 ## 核心禁令
 

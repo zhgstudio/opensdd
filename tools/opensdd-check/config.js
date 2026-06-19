@@ -16,6 +16,9 @@ const path = require('path');
  * @property {string} taskRegex - Regex pattern for task line format in PLAN.md
  * @property {string} moduleDirPattern - Regex pattern for module directory names
  * @property {string} interfaceStrategy - Interface check strategy ('http'|'grpc'|'function'|'auto')
+ * @property {Object} [publicDesignRules] - Public design compliance rules
+ * @property {string} [publicDesignRules.namingConvention] - Expected naming convention ('camelCase', 'snake_case', etc.)
+ * @property {string[]} [publicDesignRules.allowedPatterns] - Allowed identifier regex patterns for exceptions
  */
 
 /**
@@ -39,6 +42,10 @@ const DEFAULT_CONFIG = {
   requiredInternalsSections: ['核心逻辑流程', '内部实现细节', '功能特性列表'],
   interfaceStrategy: 'auto',
   skipDirs: ['node_modules', '.git', '.github'],
+  publicDesignRules: {
+    namingConvention: 'camelCase',
+    allowedPatterns: [],
+  },
 };
 
 /**

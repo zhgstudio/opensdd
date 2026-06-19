@@ -11,6 +11,7 @@ const frontmatterCheck = require('./checks/frontmatter');
 const moduleContentCheck = require('./checks/module-content');
 const interfaceConsistencyCheck = require('./checks/interface-consistency');
 const languageCheck = require('./checks/language');
+const publicDesignComplianceCheck = require('./checks/public-design-compliance');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -39,6 +40,7 @@ CHECKS
   MODULE_CONTENT        INTERFACE.md/INTERNALS.md required sections and feature list
   INTERFACE_CONSISTENCY Cross-module interface signature matching
   LANGUAGE_CONSISTENCY  All documents use consistent language (zh/en)
+  PUBLIC_DESIGN_COMPLIANCE  Module files follow ARCHITECTURE.md public design rules
 `);
 }
 
@@ -94,6 +96,7 @@ async function main() {
     moduleContentCheck(resolvedRoot, config),
     interfaceConsistencyCheck(resolvedRoot, config),
     languageCheck(resolvedRoot, config),
+    publicDesignComplianceCheck(resolvedRoot, config),
   ]);
 
   // Attach root for reporting

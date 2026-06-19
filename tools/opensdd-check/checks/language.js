@@ -89,7 +89,7 @@ async function checkLanguageConsistency(root, config) {
   }
 
   const langCounts = new Map();
-  for (const [file, lang] of languages) {
+  for (const [, lang] of languages) {
     langCounts.set(lang, (langCounts.get(lang) || 0) + 1);
   }
 

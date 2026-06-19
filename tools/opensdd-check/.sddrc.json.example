@@ -13,5 +13,9 @@
   "taskRegex": "^\\-\\s+\\[([ x])\\]\\s+(T-\\d+)\\s*:\\s*(.+)$",
   "moduleDirPattern": "^\\d{2}-[a-zA-Z0-9_-]+$",
   "interfaceStrategy": "auto",
-  "skipDirs": ["node_modules", ".git", ".github"]
+  "skipDirs": ["node_modules", ".git", ".github"],
+  "publicDesignRules": {
+    "namingConvention": "camelCase",
+    "allowedPatterns": []
+  }
 }
