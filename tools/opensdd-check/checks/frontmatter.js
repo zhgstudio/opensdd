@@ -18,11 +18,24 @@ module.exports = async function check(root, _config) {
     return { name: 'FRONTMATTER', status: 'skip', messages: ['opensdd/ directory not found, skipping'] };
   }
 
-  const files = fs.readdirSync(skillsDir).filter((f) => f.endsWith('.md'));
+  let fileList;
+  try {
+    fileList = fs.readdirSync(skillsDir);
+  } catch (err) {
+    return { name: 'FRONTMATTER', status: 'fail', messages: [`Failed to read opensdd/ directory: ${err.message}`] };
+  }
+
+  const files = fileList.filter((f) => f.endsWith('.md'));
 
   for (const file of files) {
     const filePath = path.join(skillsDir, file);
-    const content = fs.readFileSync(filePath, 'utf-8');
+    let content;
+    try {
+      content = fs.readFileSync(filePath, 'utf-8');
+    } catch (err) {
+      issues.push(`${file}: failed to read — ${err.message}`);
+      continue;
+    }
 
     // Check for YAML frontmatter (starts with ---)
     if (!content.startsWith('---\n') && !content.startsWith('---\r\n')) {

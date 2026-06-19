@@ -170,7 +170,13 @@ module.exports = async function check(root, config) {
     return { name: 'DEP_MATRIX', status: 'skip', messages: ['docs/ARCHITECTURE.md not found, skipping'] };
   }
 
-  const content = fs.readFileSync(archPath, 'utf-8');
+  let content;
+  try {
+    content = fs.readFileSync(archPath, 'utf-8');
+  } catch (err) {
+    return { name: 'DEP_MATRIX', status: 'fail', messages: [`Failed to read ARCHITECTURE.md: ${err.message}`] };
+  }
+
   const moduleTable = parseModuleTable(content);
   const depMatrix = parseDependencyMatrix(content);
 
@@ -237,13 +243,21 @@ module.exports = async function check(root, config) {
   // Check for orphan module directories (exist in docs/modules/ but not declared in ARCHITECTURE.md)
   const modulesDir = path.join(root, 'docs/modules');
   if (fs.existsSync(modulesDir)) {
-    const entries = fs.readdirSync(modulesDir, { withFileTypes: true });
-    for (const entry of entries) {
-      if (entry.isDirectory() && MODULE_DIR_RE.test(entry.name)) {
-        if (!moduleNames.has(entry.name)) {
-          issues.push(
-            `Orphan module directory 'docs/modules/${entry.name}' exists but is not declared in ARCHITECTURE.md module reference table`,
-          );
+    let entries;
+    try {
+      entries = fs.readdirSync(modulesDir, { withFileTypes: true });
+    } catch (err) {
+      issues.push(`Failed to list modules directory: ${err.message}`);
+    }
+
+    if (entries) {
+      for (const entry of entries) {
+        if (entry.isDirectory() && MODULE_DIR_RE.test(entry.name)) {
+          if (!moduleNames.has(entry.name)) {
+            issues.push(
+              `Orphan module directory 'docs/modules/${entry.name}' exists but is not declared in ARCHITECTURE.md module reference table`,
+            );
+          }
         }
       }
     }

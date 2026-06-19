@@ -3,8 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 
-// Optional reference at end: [NN-name/INTERNALS.md#NN-FNNN]
-const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/INTERNALS\.md#\d{2}-F\d+)\]/;
+// Optional reference at end: [NN-name/INTERNALS.md#NN-FNNN] where NNN is 3 digits per SKILL.md
+const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/INTERNALS\.md#\d{2}-F\d{3})\]/;
 
 /**
  * Extract module name from the ref path (e.g., "01-auth" from "01-auth/INTERNALS.md#01-F001").
@@ -34,7 +34,14 @@ module.exports = async function check(root, config) {
     return { name: 'PLAN_FORMAT', status: 'skip', messages: ['docs/PLAN.md not found, skipping'] };
   }
 
-  const lines = fs.readFileSync(planPath, 'utf-8').split('\n');
+  let content;
+  try {
+    content = fs.readFileSync(planPath, 'utf-8');
+  } catch (err) {
+    return { name: 'PLAN_FORMAT', status: 'fail', messages: [`Failed to read ${planPath}: ${err.message}`] };
+  }
+
+  const lines = content.split('\n');
   const issues = [];
   let taskCount = 0;
   let refCount = 0;

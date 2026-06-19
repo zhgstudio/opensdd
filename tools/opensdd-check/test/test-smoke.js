@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert');
@@ -6,102 +6,157 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 
-const filesCheck = require('../checks/files');
-const planCheck = require('../checks/plan');
-const matrixCheck = require('../checks/matrix');
-const garbageCheck = require('../checks/garbage');
-const agentsCheck = require('../checks/agents');
-const { DEFAULT_CONFIG } = require('../config');
-
-/**
- * Create a minimal valid OpenSDD project structure for smoke testing.
- *
- * @param {string} dir - Root directory for the test project
- */
-function createMinimalProject(dir) {
-  // Required files
-  fs.mkdirSync(path.join(dir, 'docs/modules/01-auth'), { recursive: true });
-
-  fs.writeFileSync(path.join(dir, 'docs/SPEC.md'), '# SPEC', 'utf-8');
-  fs.writeFileSync(
-    path.join(dir, 'docs/ARCHITECTURE.md'),
-    '# ARCHITECTURE\n\n## 模块引用表\n| 编号 | 模块名 | 功能简述 | 详细设计 |\n|------|--------|----------|----------|\n| 01 | auth | Auth | docs/modules/01-auth/INTERFACE.md |\n\n## 模块依赖矩阵\n| 模块 | 依赖 | 所需接口 |\n|------|------|----------|\n| 01-auth | - | none |\n',
-    'utf-8',
-  );
-  fs.writeFileSync(
-    path.join(dir, 'docs/PLAN.md'),
-    '# Plan\n\n- [ ] T-001: Setup [01-auth/INTERNALS.md#01-F001]\n',
-    'utf-8',
-  );
-  fs.writeFileSync(
-    path.join(dir, 'AGENTS.md'),
-    '# AGENTS.md\n\n## 质量验收标准\nContent\n\n## 文件操作范围\nContent\n\n## 提交规范\nContent\n\n## 测试要求\nContent\n\n## 升级条件\nContent\n\n## 跨模块规则\nContent\n\n## 任务规范\nContent\n',
-    'utf-8',
-  );
-  fs.writeFileSync(
-    path.join(dir, 'docs/modules/01-auth/INTERFACE.md'),
-    '## INTERFACE\n\n### Data Structures\nAuth module interface\n',
-    'utf-8',
-  );
-  fs.writeFileSync(
-    path.join(dir, 'docs/modules/01-auth/INTERNALS.md'),
-    '## INTERNALS\n\n### 01-F001: Auth feature\n',
-    'utf-8',
-  );
-}
-
-describe('opensdd-check — smoke test (full E2E)', () => {
+describe('opensdd-check smoke test', () => {
   /** @type {string} */
   let tmpDir;
 
   before(() => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-smoke-'));
-    createMinimalProject(tmpDir);
+
+    const docsDir = path.join(tmpDir, 'docs');
+    const modulesDir = path.join(docsDir, 'modules', '01-auth');
+    const opensddDir = path.join(tmpDir, 'opensdd');
+
+    fs.mkdirSync(docsDir, { recursive: true });
+    fs.mkdirSync(modulesDir, { recursive: true });
+    fs.mkdirSync(opensddDir, { recursive: true });
+
+    fs.writeFileSync(path.join(docsDir, 'SPEC.md'), [
+      '# 需求规格',
+      '',
+      '## 业务背景',
+      '这是一个测试项目。',
+      '',
+      '## 功能需求',
+      '- 用户注册',
+      '- 用户登录',
+      '',
+      '## 非功能性约束',
+      '- 响应时间 < 200ms',
+    ].join('\n'), 'utf-8');
+
+    fs.writeFileSync(path.join(docsDir, 'ARCHITECTURE.md'), [
+      '# 总体架构设计',
+      '',
+      '## 技术栈标准',
+      'Node.js, Express',
+      '',
+      '## 模块引用表',
+      '| 编号 | 模块名 | 功能简述 | 详细设计 |',
+      '|------|--------|----------|----------|',
+      '| 01 | auth | 用户认证 | docs/modules/01-auth/INTERFACE.md |',
+      '',
+      '## 模块依赖矩阵',
+      '| 模块 | 依赖 | 所需接口 |',
+      '|------|------|----------|',
+      '| 01-auth | - | - |',
+    ].join('\n'), 'utf-8');
+
+    fs.writeFileSync(path.join(docsDir, 'PLAN.md'), [
+      '# 任务计划',
+      '',
+      '## 模块：01-auth',
+      '- [ ] T-001: 实现用户注册接口 [01-auth/INTERNALS.md#01-F001]',
+      '- [ ] T-002: 实现用户登录接口 [01-auth/INTERNALS.md#01-F002]',
+    ].join('\n'), 'utf-8');
+
+    fs.writeFileSync(path.join(tmpDir, 'AGENTS.md'), [
+      '# AGENTS',
+      '',
+      '## 质量验收标准',
+      '所有接口须通过测试。',
+      '',
+      '## 文件操作范围',
+      '仅允许操作 src/ 目录。',
+      '',
+      '## 提交规范',
+      'feat: / fix: / chore:',
+      '',
+      '## 测试要求',
+      '覆盖率不低于 80%。',
+      '',
+      '## 升级条件',
+      '跨模块接口变更须升级。',
+      '',
+      '## 跨模块规则',
+      '只读依赖模块的 INTERFACE.md。',
+      '',
+      '## 任务规范',
+      '参考 PLAN.md 完成开发。',
+    ].join('\n'), 'utf-8');
+
+    fs.writeFileSync(path.join(modulesDir, 'INTERFACE.md'), [
+      '# 01-auth 模块接口',
+      '',
+      '## 模块概述与职责边界',
+      '负责用户认证。',
+      '',
+      '## 核心数据结构',
+      '- User: { id, email, password }',
+      '',
+      '## 接口定义',
+      '- POST /auth/register',
+      '- POST /auth/login',
+    ].join('\n'), 'utf-8');
+
+    fs.writeFileSync(path.join(modulesDir, 'INTERNALS.md'), [
+      '# 01-auth 模块内部实现',
+      '',
+      '## 核心逻辑流程',
+      '注册流程：验证邮箱 -> 加密密码 -> 存入数据库',
+      '',
+      '## 内部实现细节',
+      '使用 bcrypt 加密密码。',
+      '',
+      '## 功能特性列表',
+      '### 01-F001: 用户注册接口',
+      '实现 POST /auth/register 端点。',
+      '',
+      '### 01-F002: 用户登录接口',
+      '实现 POST /auth/login 端点。',
+    ].join('\n'), 'utf-8');
+
+    fs.writeFileSync(path.join(opensddDir, 'SKILL.md'), [
+      '---',
+      'name: opensdd',
+      'description: "test"',
+      'metadata.author: test',
+      'metadata.version: 1.0.0',
+      '---',
+      '',
+    ].join('\n'), 'utf-8');
   });
 
   after(() => {
-    fs.rmSync(tmpDir, { recursive: true, force: true });
+    if (tmpDir) fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it('FILE_EXISTS should pass on valid project', async () => {
-    const result = await filesCheck(tmpDir, DEFAULT_CONFIG);
-    assert.strictEqual(result.status, 'pass');
-  });
+  it('should pass all checks on a valid OpenSDD project', async () => {
+    const filesCheck = require('../checks/files');
+    const planCheck = require('../checks/plan');
+    const matrixCheck = require('../checks/matrix');
+    const garbageCheck = require('../checks/garbage');
+    const agentsCheck = require('../checks/agents');
+    const frontmatterCheck = require('../checks/frontmatter');
+    const moduleContentCheck = require('../checks/module-content');
+    const interfaceConsistencyCheck = require('../checks/interface-consistency');
+    const languageCheck = require('../checks/language');
+    const config = require('../config').DEFAULT_CONFIG;
 
-  it('PLAN_FORMAT should pass on valid project', async () => {
-    const result = await planCheck(tmpDir, DEFAULT_CONFIG);
-    assert.strictEqual(result.status, 'pass');
-  });
-
-  it('DEP_MATRIX should pass on valid project', async () => {
-    const result = await matrixCheck(tmpDir, DEFAULT_CONFIG);
-    assert.strictEqual(result.status, 'pass');
-  });
-
-  it('NO_GARBAGE should pass on clean project', async () => {
-    const result = await garbageCheck(tmpDir, DEFAULT_CONFIG);
-    assert.strictEqual(result.status, 'pass');
-  });
-
-  it('AGENTS_SECTIONS should pass on valid AGENTS.md', async () => {
-    const result = await agentsCheck(tmpDir, DEFAULT_CONFIG);
-    assert.strictEqual(result.status, 'pass');
-  });
-
-  it('all 5 checks should pass simultaneously', async () => {
     const results = await Promise.all([
-      filesCheck(tmpDir, DEFAULT_CONFIG),
-      planCheck(tmpDir, DEFAULT_CONFIG),
-      matrixCheck(tmpDir, DEFAULT_CONFIG),
-      garbageCheck(tmpDir, DEFAULT_CONFIG),
-      agentsCheck(tmpDir, DEFAULT_CONFIG),
+      filesCheck(tmpDir, config),
+      planCheck(tmpDir, config),
+      matrixCheck(tmpDir, config),
+      garbageCheck(tmpDir, config),
+      agentsCheck(tmpDir, config),
+      frontmatterCheck(tmpDir, config),
+      moduleContentCheck(tmpDir, config),
+      interfaceConsistencyCheck(tmpDir, config),
+      languageCheck(tmpDir, config),
     ]);
 
-    const failed = results.filter((r) => r.status !== 'pass');
-    assert.strictEqual(
-      failed.length,
-      0,
-      `Expected all pass, got: ${failed.map((r) => `${r.name}=${r.status}`).join(', ')}`,
-    );
+    for (const r of results) {
+      assert.strictEqual(r.status, 'pass', 'Check ' + r.name + ' failed: ' + r.messages.join('; '));
+    }
   });
 });

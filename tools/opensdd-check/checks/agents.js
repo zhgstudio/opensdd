@@ -18,7 +18,13 @@ module.exports = async function check(root, config) {
     return { name: 'AGENTS_SECTIONS', status: 'skip', messages: ['AGENTS.md not found, skipping'] };
   }
 
-  const content = fs.readFileSync(agentsPath, 'utf-8');
+  let content;
+  try {
+    content = fs.readFileSync(agentsPath, 'utf-8');
+  } catch (err) {
+    return { name: 'AGENTS_SECTIONS', status: 'fail', messages: [`Failed to read AGENTS.md: ${err.message}`] };
+  }
+
   const headings = content
     .split('\n')
     .filter((line) => line.trimStart().startsWith('## '))

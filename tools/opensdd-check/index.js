@@ -8,6 +8,9 @@ const matrixCheck = require('./checks/matrix');
 const garbageCheck = require('./checks/garbage');
 const agentsCheck = require('./checks/agents');
 const frontmatterCheck = require('./checks/frontmatter');
+const moduleContentCheck = require('./checks/module-content');
+const interfaceConsistencyCheck = require('./checks/interface-consistency');
+const languageCheck = require('./checks/language');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -28,11 +31,14 @@ OPTIONS
   --help, -h      Show this help
 
 CHECKS
-  FILE_EXISTS     SPEC.md, ARCHITECTURE.md, PLAN.md, AGENTS.md presence
-  PLAN_FORMAT     Task format validity in PLAN.md (with DESIGN.md references)
-  DEP_MATRIX      Module directories (NN-name) exist with DESIGN.md for dependency matrix entries
-  NO_GARBAGE      No _v2.md, _final.md, _tmp etc. versioned garbage files
-  AGENTS_SECTIONS Required sections present in AGENTS.md
+  FILE_EXISTS           SPEC.md, ARCHITECTURE.md, PLAN.md, AGENTS.md presence
+  PLAN_FORMAT           Task format validity in PLAN.md (with DESIGN.md references)
+  DEP_MATRIX            Module directories (NN-name) exist with DESIGN.md for dependency matrix entries
+  NO_GARBAGE            No _v2.md, _final.md, _tmp etc. versioned garbage files
+  AGENTS_SECTIONS       Required sections present in AGENTS.md
+  MODULE_CONTENT        INTERFACE.md/INTERNALS.md required sections and feature list
+  INTERFACE_CONSISTENCY Cross-module interface signature matching
+  LANGUAGE_CONSISTENCY  All documents use consistent language (zh/en)
 `);
 }
 
@@ -85,6 +91,9 @@ async function main() {
     garbageCheck(resolvedRoot, config),
     agentsCheck(resolvedRoot, config),
     frontmatterCheck(resolvedRoot, config),
+    moduleContentCheck(resolvedRoot, config),
+    interfaceConsistencyCheck(resolvedRoot, config),
+    languageCheck(resolvedRoot, config),
   ]);
 
   // Attach root for reporting
