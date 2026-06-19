@@ -158,7 +158,7 @@ function parseDependencyMatrix(content) {
 function parseDependencies(depStr) {
   return depStr
     .split(',')
-    .map(s => s.trim())
+    .map((s) => s.trim())
     .filter(Boolean);
 }
 
@@ -184,7 +184,11 @@ module.exports = async function check(root, config) {
   }
 
   if (moduleNames.size === 0) {
-    return { name: 'DEP_MATRIX', status: 'warn', messages: ['No module reference table or dependency matrix found in ARCHITECTURE.md'] };
+    return {
+      name: 'DEP_MATRIX',
+      status: 'warn',
+      messages: ['No module reference table or dependency matrix found in ARCHITECTURE.md'],
+    };
   }
 
   const issues = [];
@@ -215,7 +219,9 @@ module.exports = async function check(root, config) {
       if (!MODULE_DIR_RE.test(dep)) {
         issues.push(`Dependency '${dep}' in matrix entry '${entry.name}' does not follow NN-name format`);
       } else if (!moduleNames.has(dep)) {
-        issues.push(`Dependency '${dep}' declared in matrix entry '${entry.name}' is not defined in module reference table`);
+        issues.push(
+          `Dependency '${dep}' declared in matrix entry '${entry.name}' is not defined in module reference table`,
+        );
       }
     }
   }
@@ -228,9 +234,24 @@ module.exports = async function check(root, config) {
     };
   }
 
+  // Check for orphan module directories (exist in docs/modules/ but not declared in ARCHITECTURE.md)
+  const modulesDir = path.join(root, 'docs/modules');
+  if (fs.existsSync(modulesDir)) {
+    const entries = fs.readdirSync(modulesDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory() && MODULE_DIR_RE.test(entry.name)) {
+        if (!moduleNames.has(entry.name)) {
+          issues.push(
+            `Orphan module directory 'docs/modules/${entry.name}' exists but is not declared in ARCHITECTURE.md module reference table`,
+          );
+        }
+      }
+    }
+  }
+
   return {
     name: 'DEP_MATRIX',
-    status: 'warn',
+    status: 'fail',
     messages: issues,
   };
 };

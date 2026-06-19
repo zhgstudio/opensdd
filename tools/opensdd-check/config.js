@@ -35,6 +35,7 @@ const DEFAULT_CONFIG = {
   garbagePatterns: ['_v\\d+', '_final', '_tmp\\w*', '_old', '_backup', '\\.bak', '-v\\d+'],
   taskRegex: '^\\-\\s+\\[([ x])\\]\\s+(T-\\d+)\\s*:\\s*(.+)$',
   moduleDirPattern: '^\\d{2}-[a-zA-Z0-9_-]+$',
+  skipDirs: ['node_modules', '.git', '.github'],
 };
 
 /**
@@ -44,6 +45,21 @@ const DEFAULT_CONFIG = {
  * @param {string} root - Absolute path to the project root directory
  * @returns {SddConfig} Merged configuration object
  */
+function mergeConfig(defaults, user) {
+  const result = { ...defaults };
+  for (const key of Object.keys(user)) {
+    if (Array.isArray(defaults[key]) && Array.isArray(user[key])) {
+      // Arrays extend (don't replace)
+      result[key] = [...defaults[key], ...user[key]];
+    } else if (defaults[key] !== undefined) {
+      // Known keys: user overrides
+      result[key] = user[key];
+    }
+    // Unknown keys are silently ignored
+  }
+  return result;
+}
+
 function loadConfig(root) {
   const configPath = path.join(root, '.sddrc.json');
 
@@ -55,11 +71,11 @@ function loadConfig(root) {
     const raw = fs.readFileSync(configPath, 'utf-8');
     /** @type {Partial<SddConfig>} */
     const userConfig = JSON.parse(raw);
-    return { ...DEFAULT_CONFIG, ...userConfig };
+    return mergeConfig(DEFAULT_CONFIG, userConfig);
   } catch (err) {
     console.error(`Warning: Failed to parse ${configPath}: ${err.message}`);
     return { ...DEFAULT_CONFIG };
   }
 }
 
-module.exports = { loadConfig, DEFAULT_CONFIG };
+module.exports = { loadConfig, mergeConfig, DEFAULT_CONFIG };

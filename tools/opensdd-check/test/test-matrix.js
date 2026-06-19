@@ -2,10 +2,6 @@
 
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const fs = require('node:fs');
-const path = require('node:path');
-const os = require('node:os');
-
 const { parseModuleTable, parseDependencyMatrix, parseDependencies, splitRow } = require('../checks/matrix');
 
 describe('parseModuleTable', () => {
@@ -151,7 +147,11 @@ describe('parseDependencies', () => {
   });
 
   it('should handle spaces around commas', () => {
-    assert.deepStrictEqual(parseDependencies('01-auth,02-task-core,  03-gateway'), ['01-auth', '02-task-core', '03-gateway']);
+    assert.deepStrictEqual(parseDependencies('01-auth,02-task-core,  03-gateway'), [
+      '01-auth',
+      '02-task-core',
+      '03-gateway',
+    ]);
   });
 
   it('should filter empty entries', () => {

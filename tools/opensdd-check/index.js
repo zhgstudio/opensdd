@@ -7,6 +7,7 @@ const planCheck = require('./checks/plan');
 const matrixCheck = require('./checks/matrix');
 const garbageCheck = require('./checks/garbage');
 const agentsCheck = require('./checks/agents');
+const frontmatterCheck = require('./checks/frontmatter');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -83,13 +84,19 @@ async function main() {
     matrixCheck(resolvedRoot, config),
     garbageCheck(resolvedRoot, config),
     agentsCheck(resolvedRoot, config),
+    frontmatterCheck(resolvedRoot, config),
   ]);
+
+  // Attach root for reporting
+  for (const r of results) {
+    r._root = resolvedRoot;
+  }
 
   const exitCode = report(results, { json: opts.json, strict: opts.strict });
   process.exit(exitCode);
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('opensdd-check error:', err.message);
   process.exit(1);
 });

@@ -54,7 +54,7 @@ describe('PLAN_FORMAT check', () => {
     try {
       const result = await check(dir, DEFAULT_CONFIG);
       assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages.some(m => m.includes('malformed')));
+      assert.ok(result.messages.some((m) => m.includes('malformed')));
     } finally {
       cleanup();
     }
@@ -70,7 +70,7 @@ describe('PLAN_FORMAT check', () => {
     try {
       const result = await check(dir, DEFAULT_CONFIG);
       assert.strictEqual(result.status, 'fail');
-      assert.ok(result.messages.some(m => m.includes('malformed')));
+      assert.ok(result.messages.some((m) => m.includes('malformed')));
     } finally {
       cleanup();
     }

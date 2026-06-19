@@ -19,7 +19,11 @@ module.exports = async function check(root, config) {
   }
 
   if (missing.length === 0) {
-    return { name: 'FILE_EXISTS', status: 'pass', messages: [`All ${config.requiredFiles.length} required files present`] };
+    return {
+      name: 'FILE_EXISTS',
+      status: 'pass',
+      messages: [`All ${config.requiredFiles.length} required files present`],
+    };
   }
 
   return {

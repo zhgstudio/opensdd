@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Optional reference at end: [NN-name/DESIGN.md#F-NNN]
-const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#F-\d+)\]/;
+const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#\d{2}-F\d+)\]/;
 
 /**
  * Extract module name from the ref path (e.g., "01-auth" from "01-auth/DESIGN.md#F-001").
@@ -27,7 +27,7 @@ function extractModuleFromRef(ref) {
  */
 module.exports = async function check(root, config) {
   const TASK_RE = new RegExp(config.taskRegex);
-  const MODULE_DIR_RE = /^\d{2}-[a-zA-Z0-9_-]+$/;
+  const MODULE_DIR_RE = new RegExp(config.moduleDirPattern);
   const planPath = path.join(root, 'docs/PLAN.md');
 
   if (!fs.existsSync(planPath)) {
@@ -38,7 +38,6 @@ module.exports = async function check(root, config) {
   const issues = [];
   let taskCount = 0;
   let refCount = 0;
-  const moduleDirsFound = new Set();
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
@@ -74,7 +73,6 @@ module.exports = async function check(root, config) {
 
       // Verify module directory exists
       if (moduleName && MODULE_DIR_RE.test(moduleName)) {
-        moduleDirsFound.add(moduleName);
         const moduleDirPath = path.join(root, 'docs/modules', moduleName);
         const designPath = path.join(moduleDirPath, 'DESIGN.md');
         if (!fs.existsSync(designPath)) {

@@ -21,20 +21,24 @@ module.exports = async function check(root, config) {
   const content = fs.readFileSync(agentsPath, 'utf-8');
   const headings = content
     .split('\n')
-    .filter(line => line.trimStart().startsWith('## '))
-    .map(line => line.trim().toLowerCase());
+    .filter((line) => line.trimStart().startsWith('## '))
+    .map((line) => line.trim().toLowerCase());
 
   const missing = [];
 
   for (const section of config.requiredAgentSections) {
-    const found = section.keywords.some(kw => headings.some(h => h.includes(kw.toLowerCase())));
+    const found = section.keywords.some((kw) => headings.some((h) => h.includes(kw.toLowerCase())));
     if (!found) {
       missing.push(section.keywords[0]);
     }
   }
 
   if (missing.length === 0) {
-    return { name: 'AGENTS_SECTIONS', status: 'pass', messages: [`All ${config.requiredAgentSections.length} required sections present`] };
+    return {
+      name: 'AGENTS_SECTIONS',
+      status: 'pass',
+      messages: [`All ${config.requiredAgentSections.length} required sections present`],
+    };
   }
 
   return {

@@ -6,15 +6,15 @@
 
 const C = {
   /** @param {string} s */
-  green: s => `\x1b[32m${s}\x1b[0m`,
+  green: (s) => `\x1b[32m${s}\x1b[0m`,
   /** @param {string} s */
-  red: s => `\x1b[31m${s}\x1b[0m`,
+  red: (s) => `\x1b[31m${s}\x1b[0m`,
   /** @param {string} s */
-  yellow: s => `\x1b[33m${s}\x1b[0m`,
+  yellow: (s) => `\x1b[33m${s}\x1b[0m`,
   /** @param {string} s */
-  dim: s => `\x1b[2m${s}\x1b[0m`,
+  dim: (s) => `\x1b[2m${s}\x1b[0m`,
   /** @param {string} s */
-  bold: s => `\x1b[1m${s}\x1b[0m`,
+  bold: (s) => `\x1b[1m${s}\x1b[0m`,
 };
 
 /**
@@ -25,11 +25,16 @@ const C = {
  */
 function statusIcon(status) {
   switch (status) {
-    case 'pass': return C.green('[PASS]');
-    case 'fail': return C.red('[FAIL]');
-    case 'warn': return C.yellow('[WARN]');
-    case 'skip': return C.dim('[SKIP]');
-    default: return `[${status.toUpperCase()}]`;
+    case 'pass':
+      return C.green('[PASS]');
+    case 'fail':
+      return C.red('[FAIL]');
+    case 'warn':
+      return C.yellow('[WARN]');
+    case 'skip':
+      return C.dim('[SKIP]');
+    default:
+      return `[${status.toUpperCase()}]`;
   }
 }
 
@@ -94,7 +99,7 @@ function jsonReport(results, strict) {
     timestamp: new Date().toISOString(),
     summary: { passed, failed: errors, warnings },
     strict,
-    results: results.map(r => ({
+    results: results.map((r) => ({
       name: r.name,
       status: r.status,
       messages: r.messages,
@@ -118,13 +123,14 @@ function jsonReport(results, strict) {
  * @returns {number} Exit code (0 = pass, 1 = fail)
  */
 module.exports.report = function report(results, opts = {}) {
-  // attach root for reporting
-  for (const r of results) {
-    delete r._root;
-  }
-
   if (opts.json) {
-    return jsonReport(results, opts.strict);
+    // strip internal _root before serializing
+    const clean = results.map((r) => {
+      const copy = { ...r };
+      delete copy._root;
+      return copy;
+    });
+    return jsonReport(clean, opts.strict);
   }
   return terminalReport(results, opts.strict);
 };
