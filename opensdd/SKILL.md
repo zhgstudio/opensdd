@@ -174,7 +174,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 ### 阶段一：启动 PM Agent
 
 ```
-请读取 SKILL.md 和 phase-1.md。
+请读取 phase-1.md。
 我的新项目是：[一句话描述]。
 请以产品经理（PM Agent）角色启动阶段一。
 文档语言使用：[中文/English/...]。
@@ -185,7 +185,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 ### 阶段二：启动 Architect Agent
 
 ```
-请读取 SKILL.md 和 phase-2.md。
+请读取 phase-2.md。
 请以架构师（Architect Agent）角色启动阶段二。
 读取 AGENTS.md（如已存在）和 docs/SPEC.md（只读）。
 使用指定语言生成 docs/ARCHITECTURE.md。
@@ -196,7 +196,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 ### 阶段三：启动 Designer Agent
 
 ```
-请读取 SKILL.md 和 phase-3.md。
+请读取 phase-3.md。
 请以模块设计师（Designer Agent）角色启动阶段三。
 读取 docs/ARCHITECTURE.md、docs/SPEC.md 和 AGENTS.md（如已存在）。
 当前要设计的模块是：[模块名，如 01-auth]。
@@ -208,7 +208,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 ### 阶段四：启动 Project Manager Agent
 
 ```
-请读取 SKILL.md 和 phase-4.md。
+请读取 phase-4.md。
 请以项目经理（Project Manager Agent）角色启动阶段四。
 读取所有已定稿的 docs/SPEC.md、docs/ARCHITECTURE.md、docs/modules/*/API.md。
 在 docs/PLAN.md 中生成任务跟踪表。
