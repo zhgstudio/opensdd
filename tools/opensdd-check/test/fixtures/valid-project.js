@@ -15,9 +15,6 @@ const os = require('node:os');
 function createValidProject(overrides = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-valid-'));
 
-  // Best-effort cleanup on process exit (fallback for abnormal termination)
-  process.on('exit', () => { try { fs.rmSync(root, { recursive: true, force: true }); } catch {} });
-
   const docsDir = path.join(root, 'docs');
   const moduleDirs = overrides.modules || ['01-auth'];
 
@@ -124,6 +121,8 @@ function createValidProject(overrides = {}) {
         '## 功能特性列表',
         `### ${m.split('-')[0]}-F001: 接口`,
         '实现端点。',
+        '',
+        '- 对应需求: REQ-001',
       ].join('\n'),
       'utf-8',
     );

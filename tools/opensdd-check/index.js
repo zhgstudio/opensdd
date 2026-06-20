@@ -71,12 +71,10 @@ function parseArgs(args) {
   return opts;
 }
 
-let _opts = { root: '.', json: false, strict: false };
-
 function main() {
-  _opts = parseArgs(process.argv.slice(2));
+  const opts = parseArgs(process.argv.slice(2));
 
-  const resolvedRoot = path.resolve(_opts.root);
+  const resolvedRoot = path.resolve(opts.root);
   const config = loadConfig(resolvedRoot);
 
   const results = [
@@ -94,14 +92,15 @@ function main() {
     traceabilityCheck(resolvedRoot),
   ];
 
-  const exitCode = report(results, { json: _opts.json, strict: _opts.strict, root: resolvedRoot });
+  const exitCode = report(results, { json: opts.json, strict: opts.strict, root: resolvedRoot });
   process.exit(exitCode);
 }
 
 try {
   main();
 } catch (err) {
-  if (_opts.json) {
+  const jsonMode = process.argv.includes('--json');
+  if (jsonMode) {
     console.log(JSON.stringify({ error: err.message }));
   } else {
     console.error('opensdd-check error:', err.message);

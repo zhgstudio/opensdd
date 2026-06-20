@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { escapeRegex } = require('../lib/escape');
 
 /**
  * Check that DECISIONS.md has valid YAML frontmatter and required sections.
@@ -69,13 +70,3 @@ module.exports = function checkDecisions(root) {
     messages: issues,
   };
 };
-
-/**
- * Escape special regex characters in a string.
- *
- * @param {string} str - Raw string to escape
- * @returns {string} Escaped string safe for RegExp
- */
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}

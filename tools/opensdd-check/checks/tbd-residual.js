@@ -1,6 +1,5 @@
 'use strict';
 
-const path = require('path');
 const { readFile } = require('../lib/read-file');
 const { splitLines } = require('../lib/line-split');
 

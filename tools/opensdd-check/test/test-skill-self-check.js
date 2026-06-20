@@ -129,7 +129,15 @@ describe('SKILL.md self-check', () => {
       assert.ok(fs.existsSync(modPath), `Module file not found: checks/${mod}.js`);
 
       const checkFn = require(modPath);
-      const result = checkFn(REPO_ROOT, { requiredFiles: [], requiredAgentSections: [], taskRegex: '', moduleDirPattern: '', requiredApiSections: [], requiredDesignSections: [], interfaceStrategy: 'auto' });
+      const result = checkFn(REPO_ROOT, {
+        requiredFiles: [],
+        requiredAgentSections: [],
+        taskRegex: '',
+        moduleDirPattern: '',
+        requiredApiSections: [],
+        requiredDesignSections: [],
+        interfaceStrategy: 'auto',
+      });
       returnNames.push(result.name);
     }
 
@@ -137,10 +145,7 @@ describe('SKILL.md self-check', () => {
     assert.ok(helpSection, 'Help text section not found in index.js');
 
     for (const name of returnNames) {
-      assert.ok(
-        helpSection[0].includes(name),
-        `Help text does not mention check "${name}"`,
-      );
+      assert.ok(helpSection[0].includes(name), `Help text does not mention check "${name}"`);
     }
   });
 

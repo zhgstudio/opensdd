@@ -22,6 +22,7 @@ describe('opensdd-check smoke test', () => {
       const tbdResidualCheck = require('../checks/tbd-residual');
       const versionConsistencyCheck = require('../checks/version-consistency');
       const noTmpCheck = require('../checks/no-tmp');
+      const traceabilityCheck = require('../checks/traceability');
       const config = require('../config').DEFAULT_CONFIG;
 
       const results = [
@@ -36,6 +37,7 @@ describe('opensdd-check smoke test', () => {
         versionConsistencyCheck(root),
         noTmpCheck(root),
         require('../checks/decisions')(root),
+        traceabilityCheck(root),
       ];
 
       for (const r of results) {
