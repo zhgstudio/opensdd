@@ -17,7 +17,7 @@ tools/opensdd-check/node_modules/
 skills-lock.json
 
 # Superpowers docs (not part of the skill itself)
-docs/
+/docs/superpowers
 
 # Experiment code during design phase (see phase-3.md)
 docs/modules/*/tmp/
