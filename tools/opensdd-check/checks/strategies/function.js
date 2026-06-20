@@ -1,5 +1,7 @@
 'use strict';
 
+const { splitLines } = require('../../lib/line-split');
+
 /**
  * Function/method signature interface strategy.
  * Matches patterns like:
@@ -20,7 +22,7 @@
  */
 function extract(content) {
   const functions = [];
-  const lines = content.split('\n');
+  const lines = splitLines(content);
   let inCodeBlock = false;
 
   for (const raw of lines) {

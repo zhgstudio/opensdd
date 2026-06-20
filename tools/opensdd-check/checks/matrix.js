@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { splitLines } = require('../lib/line-split');
 
 /**
  * Replace inline code spans with placeholders to protect their content
@@ -80,7 +81,7 @@ function splitRow(trimmed) {
  * @returns {Array<{name: string, description: string, ref: string}>} Parsed module entries
  */
 function parseModuleTable(content) {
-  const lines = content.split('\n');
+  const lines = splitLines(content);
   const modules = [];
   let inTable = false;
 
@@ -144,7 +145,7 @@ function parseModuleTable(content) {
  * @returns {Array<{name: string, depends: string, interface: string}>} Parsed dependency entries
  */
 function parseDependencyMatrix(content) {
-  const lines = content.split('\n');
+  const lines = splitLines(content);
   const modules = [];
   let inMatrix = false;
 

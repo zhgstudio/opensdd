@@ -10,6 +10,8 @@ const frontmatterCheck = require('./checks/frontmatter');
 const moduleContentCheck = require('./checks/module-content');
 const interfaceConsistencyCheck = require('./checks/interface-consistency');
 const tbdResidualCheck = require('./checks/tbd-residual');
+const versionConsistencyCheck = require('./checks/version-consistency');
+const noTmpCheck = require('./checks/no-tmp');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -34,6 +36,8 @@ CHECKS
   MODULE_CONTENT        API.md/DESIGN.md required sections and feature list
   API_CONSISTENCY       Cross-module interface signature matching
   TBD_RESIDUAL          No [TBD] markers remain in ARCHITECTURE.md
+  VERSION_CONSISTENCY   SKILL.md version matches package.json versions
+  NO_TMP                No tmp/ directories exist in the project
 
 `);
 }
@@ -78,6 +82,8 @@ async function main() {
     moduleContentCheck(resolvedRoot, config),
     interfaceConsistencyCheck(resolvedRoot, config),
     tbdResidualCheck(resolvedRoot, config),
+    versionConsistencyCheck(resolvedRoot, config),
+    noTmpCheck(resolvedRoot, config),
   ]);
 
   const exitCode = report(results, { json: opts.json, strict: opts.strict, root: resolvedRoot });

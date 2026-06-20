@@ -2,6 +2,11 @@
 
 All notable changes to the OpenSDD Skill will be documented here.
 
+## [Unreleased]
+
+### Added
+- **VERSION_CONSISTENCY check**: New opensdd-check check that validates SKILL.md `metadata.version` matches root `package.json` and `tools/opensdd-check/package.json`. Fails on mismatch, warns on missing package.json files. Supports both dot-notation and nested YAML frontmatter formats.
+
 ## [3.3.0] - 2026-06-19
 
 ### Changed

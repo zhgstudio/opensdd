@@ -1,5 +1,7 @@
 'use strict';
 
+const { splitLines } = require('../../lib/line-split');
+
 /**
  * HTTP REST interface strategy.
  * Matches patterns like: GET /path, POST /auth/login, PUT /resource/:id
@@ -13,7 +15,7 @@
  */
 function extract(content) {
   const endpoints = [];
-  const lines = content.split('\n');
+  const lines = splitLines(content);
 
   for (const raw of lines) {
     const trimmed = raw.trim();

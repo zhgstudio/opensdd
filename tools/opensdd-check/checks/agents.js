@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { splitLines } = require('../lib/line-split');
 
 /**
  * Check that AGENTS.md contains all required sections (by heading-level matching).
@@ -25,8 +26,7 @@ module.exports = function check(root, config) {
     return { name: 'AGENTS_SECTIONS', status: 'fail', messages: [`Failed to read AGENTS.md: ${err.message}`] };
   }
 
-  const headings = content
-    .split('\n')
+  const headings = splitLines(content)
     .filter((line) => line.trimStart().startsWith('## '))
     .map((line) => line.trim().toLowerCase());
 

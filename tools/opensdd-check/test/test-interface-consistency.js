@@ -107,6 +107,81 @@ describe('interface-consistency', () => {
     fs.rmSync(emptyDir, { recursive: true, force: true });
   });
 
+  it('should pass when dependency references non-existent module directory (entry skipped gracefully)', async () => {
+    const ndDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-iface-nomoddir-'));
+    try {
+      const ndDocs = path.join(ndDir, 'docs');
+      fs.mkdirSync(ndDocs, { recursive: true });
+      // 01-auth exists as directory, but 02-task-core does not
+      const ndMod01 = path.join(ndDocs, 'modules', '01-auth');
+      fs.mkdirSync(ndMod01, { recursive: true });
+      fs.writeFileSync(path.join(ndMod01, 'API.md'), '# 01-auth API\n\n## 接口定义\n- POST /auth/verify\n', 'utf-8');
+      fs.writeFileSync(
+        path.join(ndDocs, 'ARCHITECTURE.md'),
+        [
+          '# Architecture',
+          '## 模块引用表',
+          '| 编号 | 模块名 | 功能简述 | 详细设计 |',
+          '|------|--------|----------|----------|',
+          '| 01 | auth | Auth | docs/modules/01-auth/ |',
+          '| 02 | task-core | Task | docs/modules/02-task-core/ |',
+          '',
+          '## 模块依赖矩阵',
+          '| 模块 | 依赖 | 所需接口 |',
+          '|------|------|----------|',
+          '| 02-task-core | 01-auth | POST /auth/verify |',
+        ].join('\n'),
+        'utf-8',
+      );
+      const result = await check(ndDir, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'pass');
+    } finally {
+      fs.rmSync(ndDir, { recursive: true, force: true });
+    }
+  });
+
+  it('should filter out [TBD] markers from dependency interfaces', async () => {
+    const tbdDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-iface-tbd-'));
+    try {
+      const tbdDocs = path.join(tbdDir, 'docs');
+      const tbdMod01 = path.join(tbdDocs, 'modules', '01-auth');
+      const tbdMod02 = path.join(tbdDocs, 'modules', '02-task-core');
+      fs.mkdirSync(tbdMod01, { recursive: true });
+      fs.mkdirSync(tbdMod02, { recursive: true });
+      fs.writeFileSync(
+        path.join(tbdMod01, 'API.md'),
+        '# 01-auth API\n\n## 接口定义\n- POST /auth/verify\n',
+        'utf-8',
+      );
+      fs.writeFileSync(
+        path.join(tbdMod02, 'API.md'),
+        '# 02-task-core API\n\n## 接口定义\n- GET /task/list\n',
+        'utf-8',
+      );
+      fs.writeFileSync(
+        path.join(tbdDocs, 'ARCHITECTURE.md'),
+        [
+          '# Architecture',
+          '## 模块引用表',
+          '| 编号 | 模块名 | 功能简述 | 详细设计 |',
+          '|------|--------|----------|----------|',
+          '| 01 | auth | Auth | docs/modules/01-auth/ |',
+          '| 02 | task-core | Task | docs/modules/02-task-core/ |',
+          '',
+          '## 模块依赖矩阵',
+          '| 模块 | 依赖 | 所需接口 |',
+          '|------|------|----------|',
+          '| 02-task-core | 01-auth | POST /auth/verify, [TBD: 角色鉴权接口] |',
+        ].join('\n'),
+        'utf-8',
+      );
+      const result = await check(tbdDir, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'pass');
+    } finally {
+      fs.rmSync(tbdDir, { recursive: true, force: true });
+    }
+  });
+
   it('should skip when no dependency matrix found', async () => {
     const noDepDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-iface-nodep-'));
     const docsDir = path.join(noDepDir, 'docs');

@@ -63,12 +63,13 @@
 | FILE_EXISTS | SPEC.md / ARCHITECTURE.md / PLAN.md / AGENTS.md 存在（如项目有 DECISIONS.md 也检查） |
 | DEP_MATRIX | 模块目录与引用表一致，无孤儿目录 |
 | PLAN_FORMAT | 任务格式正确，引用有效 |
-| NO_GARBAGE | 无版本残留文件 |
+| NO_TMP | 无 tmp/ 目录（临时过程文档不留存） |
 | AGENTS_SECTIONS | AGENTS.md 含必要章节 |
 | MODULE_CONTENT | 各模块文件含必要章节和特征列表 |
 | API_CONSISTENCY | 跨模块接口签名匹配 |
 | TBD_RESIDUAL | ARCHITECTURE.md 无残留 [TBD] 标记 |
 | FRONTMATTER | 技能文件含有效 frontmatter |
+| VERSION_CONSISTENCY | SKILL.md 版本号与 package.json 版本号一致 |
 
 ## 定稿锁定
 

@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { splitLines } = require('../lib/line-split');
 
 /**
  * Check that no [TBD] markers remain in ARCHITECTURE.md.
@@ -27,7 +28,7 @@ module.exports = function check(root, _config) {
 
   const tbdPattern = /\[TBD[^\]]*\]/i;
   const matches = [];
-  const lines = content.split('\n');
+  const lines = splitLines(content);
 
   for (let i = 0; i < lines.length; i++) {
     const trimmed = lines[i].trim();

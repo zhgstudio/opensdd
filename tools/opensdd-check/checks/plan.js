@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { splitLines } = require('../lib/line-split');
 
 // Optional reference at end: [NN-name/DESIGN.md#NN-FNNN] where NNN is 3 digits per SKILL.md
 const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#\d{2}-F\d{3})\]/;
@@ -44,7 +45,7 @@ module.exports = function check(root, config) {
     return { name: 'PLAN_FORMAT', status: 'fail', messages: [`Failed to read ${planPath}: ${err.message}`] };
   }
 
-  const lines = content.split('\n');
+  const lines = splitLines(content);
   const issues = [];
   let taskCount = 0;
   let refCount = 0;

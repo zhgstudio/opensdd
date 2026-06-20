@@ -1,5 +1,7 @@
 'use strict';
 
+const { splitLines } = require('../../lib/line-split');
+
 /**
  * gRPC / protobuf interface strategy.
  * Matches patterns like:
@@ -16,7 +18,7 @@
  */
 function extract(content) {
   const methods = [];
-  const lines = content.split('\n');
+  const lines = splitLines(content);
   let inCodeBlock = false;
   // Stack for tracking service block nesting
   let currentService = null;

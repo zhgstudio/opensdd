@@ -13,6 +13,8 @@ describe('index.js module interfaces', () => {
     const moduleContentCheck = require('../checks/module-content');
     const interfaceConsistencyCheck = require('../checks/interface-consistency');
     const tbdResidualCheck = require('../checks/tbd-residual');
+    const versionConsistencyCheck = require('../checks/version-consistency');
+    const noTmpCheck = require('../checks/no-tmp');
 
     assert.strictEqual(typeof filesCheck, 'function');
     assert.strictEqual(typeof planCheck, 'function');
@@ -22,5 +24,7 @@ describe('index.js module interfaces', () => {
     assert.strictEqual(typeof moduleContentCheck, 'function');
     assert.strictEqual(typeof interfaceConsistencyCheck, 'function');
     assert.strictEqual(typeof tbdResidualCheck, 'function');
+    assert.strictEqual(typeof versionConsistencyCheck, 'function');
+    assert.strictEqual(typeof noTmpCheck, 'function');
   });
 });
