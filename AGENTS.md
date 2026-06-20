@@ -114,6 +114,22 @@ opensdd-check 是面向下游项目的结构合规性校验工具。本仓库 CI
 
 过时的实施计划、设计草案等临时过程文档在定稿后即删除，不留存在仓库中（包括 `docs/` 下）。相关决策已在最终产物（SKILL.md、phase 文件、工具代码）中体现，不需要保留历史草案作为参考。
 
+### 版本一致性自动检查
+
+`VERSION_CONSISTENCY` 已作为 opensdd-check 的内置检查项。验证三项版本号完全一致：SKILL.md `metadata.version`、根 `package.json` version、`tools/opensdd-check/package.json` version。不一致时 fail；package.json 缺失时 warn；SKILL.md 不存在时 skip。支持点记法（`metadata.version: X.Y.Z`）和嵌套 YAML（`metadata:\n  version: X.Y.Z`）两种 frontmatter 格式。
+
+### CRLF 兼容性统一处理
+
+所有硬编码的 `content.split('\n')` 已全部替换为 `lib/line-split.js` 中导出的共享 `splitLines(content)` 函数（内部使用 `content.split(/\r?\n/)`），覆盖 8 个检查文件（matrix.js、agents.js、plan.js、tbd-residual.js、strategies/{http,grpc,function}.js、version-consistency.js）。后续新增文件也应使用该工具函数而非直接调用 `split('\n')`。
+
+### tmp/ 目录清理检查
+
+`NO_TMP` 已作为 opensdd-check 的内置检查项。检测项目根目录下是否存在 `tmp/` 目录（临时过程文档未清理的迹象）。存在时 fail。已在 `finalization.md` 的自动化验证表中取代已移除的 `NO_GARBAGE`。
+
+### 公共设计栅栏规则
+
+在 `phase-2.md` 中新增"公共设计栅栏规则"章节，列出 6 类必须进入 `ARCHITECTURE.md` 公共设计、不得下沉到模块 `DESIGN.md` 的决策类型：全局错误格式、分页规范、时区与时间格式、审计字段、跨模块通信协议、日志与监控。架构师以此清单为下限而非上限。清单外的模块特有细节留在对应 `DESIGN.md` 中。
+
 ---
 
 ## 遗留暂不考虑
