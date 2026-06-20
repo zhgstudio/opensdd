@@ -27,7 +27,7 @@ function extractModuleFromRef(ref) {
  *
  * @param {string} root - Absolute path to the project root
  * @param {import('../config').SddConfig} config - SDD configuration
- * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ * @returns {{name: string, status: string, messages: string[]}} Check result
  */
 module.exports = function check(root, config) {
   const TASK_RE = new RegExp(config.taskRegex);

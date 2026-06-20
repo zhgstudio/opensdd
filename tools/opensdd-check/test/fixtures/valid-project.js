@@ -125,6 +125,26 @@ function createValidProject(overrides = {}) {
     );
   }
 
+  // Include DECISIONS.md with valid frontmatter and required sections
+  fs.writeFileSync(
+    path.join(docsDir, 'DECISIONS.md'),
+    [
+      '---',
+      'name: test-project',
+      'description: "Test decisions"',
+      'metadata.author: test',
+      'metadata.version: 1.0.0',
+      '---',
+      '',
+      '## 理由',
+      '该决策被拒绝。',
+      '',
+      '## 取消条件',
+      '当需求变更时重新评估。',
+    ].join('\n'),
+    'utf-8',
+  );
+
   if (overrides.withSkill) {
     const skillDir = path.join(root, 'opensdd');
     fs.mkdirSync(skillDir, { recursive: true });

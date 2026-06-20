@@ -9,7 +9,7 @@ const { createValidProject } = require('./fixtures/valid-project');
 const INDEX_PATH = path.resolve(__dirname, '..', 'index.js');
 
 describe('opensdd-check smoke test', () => {
-  it('should pass all checks on a valid OpenSDD project', async () => {
+  it('should pass all checks on a valid OpenSDD project', () => {
     const { root, cleanup } = createValidProject({ withSkill: true });
     try {
       const filesCheck = require('../checks/files');
@@ -24,18 +24,19 @@ describe('opensdd-check smoke test', () => {
       const noTmpCheck = require('../checks/no-tmp');
       const config = require('../config').DEFAULT_CONFIG;
 
-      const results = await Promise.all([
+      const results = [
         filesCheck(root, config),
         planCheck(root, config),
         matrixCheck(root, config),
         agentsCheck(root, config),
-        frontmatterCheck(root, config),
+        frontmatterCheck(root),
         moduleContentCheck(root, config),
         interfaceConsistencyCheck(root, config),
         tbdResidualCheck(root, config),
-        versionConsistencyCheck(root, config),
-        noTmpCheck(root, config),
-      ]);
+        versionConsistencyCheck(root),
+        noTmpCheck(root),
+        require('../checks/decisions')(root),
+      ];
 
       for (const r of results) {
         assert.strictEqual(r.status, 'pass', 'Check ' + r.name + ' failed: ' + r.messages.join('; '));

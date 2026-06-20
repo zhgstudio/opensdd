@@ -15,6 +15,7 @@ describe('index.js module interfaces', () => {
     const tbdResidualCheck = require('../checks/tbd-residual');
     const versionConsistencyCheck = require('../checks/version-consistency');
     const noTmpCheck = require('../checks/no-tmp');
+    const decisionsCheck = require('../checks/decisions');
 
     assert.strictEqual(typeof filesCheck, 'function');
     assert.strictEqual(typeof planCheck, 'function');
@@ -26,5 +27,6 @@ describe('index.js module interfaces', () => {
     assert.strictEqual(typeof tbdResidualCheck, 'function');
     assert.strictEqual(typeof versionConsistencyCheck, 'function');
     assert.strictEqual(typeof noTmpCheck, 'function');
+    assert.strictEqual(typeof decisionsCheck, 'function');
   });
 });

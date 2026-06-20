@@ -70,6 +70,7 @@
 | TBD_RESIDUAL | ARCHITECTURE.md 无残留 [TBD] 标记 |
 | FRONTMATTER | 技能文件含有效 frontmatter |
 | VERSION_CONSISTENCY | SKILL.md 版本号与 package.json 版本号一致 |
+| DECISIONS_FORMAT | DECISIONS.md frontmatter 有效、含必需章节（理由、取消条件） |
 
 ## 定稿锁定
 

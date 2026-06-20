@@ -1,6 +1,6 @@
 'use strict';
 
-const { describe, it, before, after } = require('node:test');
+const { describe, it } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -159,24 +159,12 @@ describe('VERSION_CONSISTENCY check', () => {
       fs.mkdirSync(skillDir, { recursive: true });
       fs.writeFileSync(
         path.join(skillDir, 'SKILL.md'),
-        [
-          '---',
-          'name: opensdd',
-          'metadata:',
-          '  author: zhg',
-          '  version: 4.5.6',
-          '---',
-          '',
-        ].join('\n'),
+        ['---', 'name: opensdd', 'metadata:', '  author: zhg', '  version: 4.5.6', '---', ''].join('\n'),
         'utf-8',
       );
       const checkDir = path.join(root, 'tools', 'opensdd-check');
       fs.mkdirSync(checkDir, { recursive: true });
-      fs.writeFileSync(
-        path.join(root, 'package.json'),
-        JSON.stringify({ name: 'test', version: '4.5.6' }),
-        'utf-8',
-      );
+      fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ name: 'test', version: '4.5.6' }), 'utf-8');
       fs.writeFileSync(
         path.join(checkDir, 'package.json'),
         JSON.stringify({ name: 'opensdd-check', version: '4.5.6' }),

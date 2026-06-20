@@ -2,15 +2,61 @@
 
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
+
+/**
+ * Parse YAML frontmatter from a markdown file.
+ *
+ * @param {string} content - File content
+ * @returns {{ data: object|null, error: string|null }} Parsed data or error description
+ */
+function parseFrontmatter(content) {
+  const openMatch = content.match(/^---\r?\n/);
+  if (!openMatch) return { data: null, error: 'missing YAML frontmatter (must start with ---)' };
+
+  const openLen = openMatch[0].length;
+  const afterOpen = content.slice(openLen);
+  const closeMatch = afterOpen.match(/\r?\n---\r?\n/);
+  if (!closeMatch) return { data: null, error: 'YAML frontmatter has no closing ---' };
+
+  const yamlStr = content.substring(openLen, openLen + closeMatch.index);
+
+  try {
+    const data = yaml.load(yamlStr);
+    return { data: typeof data === 'object' && data !== null ? data : {}, error: null };
+  } catch (err) {
+    return { data: null, error: `YAML parse error: ${err.message}` };
+  }
+}
+
+/**
+ * Extract a field from parsed frontmatter data, supporting both
+ * dot-notation (metadata.version) and nested (metadata: { version }) forms.
+ *
+ * @param {object} data - Parsed YAML data
+ * @param {string} dottedPath - Dot-notation path (e.g. "metadata.version")
+ * @returns {*} Field value or undefined
+ */
+function getField(data, dottedPath) {
+  const direct = data[dottedPath];
+  if (direct !== undefined) return direct;
+
+  const parts = dottedPath.split('.');
+  let current = data;
+  for (const part of parts) {
+    if (current === null || typeof current !== 'object') return undefined;
+    current = current[part];
+  }
+  return current;
+}
 
 /**
  * Check that skill files have valid YAML frontmatter.
  *
  * @param {string} root - Absolute path to the project root
- * @param {import('../config').SddConfig} _config - SDD configuration
- * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ * @returns {{name: string, status: string, messages: string[]}} Check result
  */
-module.exports = function check(root, _config) {
+module.exports = function check(root) {
   const skillsDir = path.join(root, 'opensdd');
   const issues = [];
 
@@ -37,35 +83,16 @@ module.exports = function check(root, _config) {
       continue;
     }
 
-    // Check for YAML frontmatter (starts with ---)
-    const openMatch = content.match(/^---\r?\n/);
-    if (!openMatch) {
-      issues.push(`${file}: missing YAML frontmatter (must start with ---)`);
+    const { data, error } = parseFrontmatter(content);
+    if (error) {
+      issues.push(`${file}: ${error}`);
       continue;
     }
 
-    // Find closing --- (handles LF, CRLF, mixed line endings)
-    const openLen = openMatch[0].length;
-    const afterOpen = content.slice(openLen);
-    const closeMatch = afterOpen.match(/\r?\n---\r?\n/);
-    if (!closeMatch) {
-      issues.push(`${file}: YAML frontmatter has no closing ---`);
-      continue;
-    }
-    const endPos = openLen + closeMatch.index;
-
-    const frontmatter = content.substring(openLen, endPos);
-
-    // Check required fields
-    const hasName = /^name\s*:/m.test(frontmatter);
-    const hasDescription = /^description\s*:/m.test(frontmatter);
-    const hasAuthor = /^metadata\.author\s*:/m.test(frontmatter) || /^metadata:\s*\n.*author\s*:/m.test(frontmatter);
-    const hasVersion = /^metadata\.version\s*:/m.test(frontmatter) || /^metadata:\s*\n.*version\s*:/m.test(frontmatter);
-
-    if (!hasName) issues.push(`${file}: frontmatter missing 'name' field`);
-    if (!hasDescription) issues.push(`${file}: frontmatter missing 'description' field`);
-    if (!hasAuthor) issues.push(`${file}: frontmatter missing 'metadata.author' field`);
-    if (!hasVersion) issues.push(`${file}: frontmatter missing 'metadata.version' field`);
+    if (!getField(data, 'name')) issues.push(`${file}: frontmatter missing 'name' field`);
+    if (!getField(data, 'description')) issues.push(`${file}: frontmatter missing 'description' field`);
+    if (!getField(data, 'metadata.author')) issues.push(`${file}: frontmatter missing 'metadata.author' field`);
+    if (!getField(data, 'metadata.version')) issues.push(`${file}: frontmatter missing 'metadata.version' field`);
   }
 
   if (issues.length === 0) {

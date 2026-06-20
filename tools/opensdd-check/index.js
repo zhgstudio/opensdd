@@ -12,6 +12,7 @@ const interfaceConsistencyCheck = require('./checks/interface-consistency');
 const tbdResidualCheck = require('./checks/tbd-residual');
 const versionConsistencyCheck = require('./checks/version-consistency');
 const noTmpCheck = require('./checks/no-tmp');
+const decisionsCheck = require('./checks/decisions');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -38,6 +39,7 @@ CHECKS
   TBD_RESIDUAL          No [TBD] markers remain in ARCHITECTURE.md
   VERSION_CONSISTENCY   SKILL.md version matches package.json versions
   NO_TMP                No tmp/ directories exist in the project
+  DECISIONS_FORMAT      DECISIONS.md frontmatter validity and required sections
 
 `);
 }
@@ -66,31 +68,34 @@ function parseArgs(args) {
   return opts;
 }
 
-async function main() {
+function main() {
   const args = process.argv.slice(2);
   const opts = parseArgs(args);
 
   const resolvedRoot = path.resolve(opts.root);
   const config = loadConfig(resolvedRoot);
 
-  const results = await Promise.all([
+  const results = [
     filesCheck(resolvedRoot, config),
     planCheck(resolvedRoot, config),
     matrixCheck(resolvedRoot, config),
     agentsCheck(resolvedRoot, config),
-    frontmatterCheck(resolvedRoot, config),
+    frontmatterCheck(resolvedRoot),
     moduleContentCheck(resolvedRoot, config),
     interfaceConsistencyCheck(resolvedRoot, config),
     tbdResidualCheck(resolvedRoot, config),
-    versionConsistencyCheck(resolvedRoot, config),
-    noTmpCheck(resolvedRoot, config),
-  ]);
+    versionConsistencyCheck(resolvedRoot),
+    noTmpCheck(resolvedRoot),
+    decisionsCheck(resolvedRoot),
+  ];
 
   const exitCode = report(results, { json: opts.json, strict: opts.strict, root: resolvedRoot });
   process.exit(exitCode);
 }
 
-main().catch((err) => {
+try {
+  main();
+} catch (err) {
   console.error('opensdd-check error:', err.message);
   process.exit(1);
-});
+}

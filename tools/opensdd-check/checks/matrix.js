@@ -192,7 +192,7 @@ function parseDependencyMatrix(content) {
  *
  * @param {string} root - Absolute path to the project root
  * @param {import('../config').SddConfig} config - SDD configuration
- * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
+ * @returns {{name: string, status: string, messages: string[]}} Check result
  */
 /**
  * Parse a dependency string (e.g. "01-auth, 03-api-gateway") into individual module names.

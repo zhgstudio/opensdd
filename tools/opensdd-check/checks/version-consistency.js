@@ -2,7 +2,44 @@
 
 const fs = require('fs');
 const path = require('path');
-const { splitLines } = require('../lib/line-split');
+const yaml = require('js-yaml');
+
+/**
+ * Parse SKILL.md frontmatter and extract version.
+ * Supports both dot-notation (metadata.version: X.Y.Z) and
+ * nested YAML (metadata:\n  version: X.Y.Z) formats.
+ *
+ * @param {string} skillPath - Absolute path to SKILL.md
+ * @returns {string|null} Version string or null
+ */
+function readSkillVersion(skillPath) {
+  try {
+    if (!fs.existsSync(skillPath)) return null;
+    const content = fs.readFileSync(skillPath, 'utf-8');
+
+    const openMatch = content.match(/^---\r?\n/);
+    if (!openMatch) return null;
+
+    const openLen = openMatch[0].length;
+    const afterOpen = content.slice(openLen);
+    const closeMatch = afterOpen.match(/\r?\n---\r?\n/);
+    if (!closeMatch) return null;
+
+    const yamlStr = content.substring(openLen, openLen + closeMatch.index);
+    const data = yaml.load(yamlStr);
+    if (typeof data !== 'object' || data === null) return null;
+
+    // Try dot-notation: data['metadata.version']
+    if (typeof data['metadata.version'] === 'string') return data['metadata.version'];
+
+    // Try nested: data.metadata.version
+    if (data.metadata && typeof data.metadata.version === 'string') return data.metadata.version;
+
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Extract version value from YAML frontmatter content.
@@ -13,46 +50,17 @@ const { splitLines } = require('../lib/line-split');
  * @returns {string|null} Version string or null if not found
  */
 function extractFrontmatterVersion(frontmatter) {
-  // Try dot notation: metadata.version: X.Y.Z
-  const dotMatch = frontmatter.match(/^metadata\.version\s*:\s*['"]?([\w.+-]+)['"]?\s*$/m);
-  if (dotMatch) return dotMatch[1];
+  try {
+    const data = require('js-yaml').load(frontmatter);
+    if (typeof data !== 'object' || data === null) return null;
 
-  // Try nested YAML:
-  //   metadata:
-  //     version: X.Y.Z
-  const lines = splitLines(frontmatter);
-  let inMetadata = false;
-  let metadataIndent = 0;
+    if (typeof data['metadata.version'] === 'string') return data['metadata.version'];
+    if (data.metadata && typeof data.metadata.version === 'string') return data.metadata.version;
 
-  for (let i = 0; i < lines.length; i++) {
-    const trimmed = lines[i].trimEnd();
-
-    if (!inMetadata) {
-      const metaMatch = trimmed.match(/^metadata\s*:\s*$/);
-      if (metaMatch) {
-        inMetadata = true;
-        metadataIndent = lines[i].search(/\S/);
-      }
-      continue;
-    }
-
-    // Detect end of metadata block: a line with same or less indentation
-    const lineIndent = lines[i].search(/\S/);
-    if (trimmed === '' || lineIndent <= metadataIndent) {
-      // Empty line or dedented — could be end of metadata
-      // But check if this is a new top-level key
-      if (trimmed !== '' && !trimmed.startsWith('#')) {
-        inMetadata = false;
-        continue;
-      }
-    }
-
-    // Inside metadata block, look for version: X.Y.Z (with optional leading whitespace)
-    const verMatch = trimmed.match(/^\s*version\s*:\s*['"]?([\w.+-]+)['"]?\s*$/);
-    if (verMatch) return verMatch[1];
+    return null;
+  } catch {
+    return null;
   }
-
-  return null;
 }
 
 /**
@@ -73,41 +81,12 @@ function readPackageVersion(filePath) {
 }
 
 /**
- * Read SKILL.md and extract the version from its YAML frontmatter.
- *
- * @param {string} skillPath - Absolute path to SKILL.md
- * @returns {string|null} Version string or null
- */
-function readSkillVersion(skillPath) {
-  try {
-    if (!fs.existsSync(skillPath)) return null;
-    const content = fs.readFileSync(skillPath, 'utf-8');
-
-    const openMatch = content.match(/^---\r?\n/);
-    if (!openMatch) return null;
-
-    const openLen = openMatch[0].length;
-    const afterOpen = content.slice(openLen);
-    const closeMatch = afterOpen.match(/\r?\n---\r?\n/);
-    if (!closeMatch) return null;
-
-    const endPos = openLen + closeMatch.index;
-    const frontmatter = content.substring(openLen, endPos);
-
-    return extractFrontmatterVersion(frontmatter);
-  } catch {
-    return null;
-  }
-}
-
-/**
  * Check that SKILL.md version matches all package.json version fields.
  *
  * @param {string} root - Absolute path to the project root
- * @param {import('../config').SddConfig} _config - SDD configuration
  * @returns {{name: string, status: string, messages: string[]}} Check result
  */
-module.exports = function check(root, _config) {
+module.exports = function check(root) {
   const skillPath = path.join(root, 'opensdd', 'SKILL.md');
   const rootPkgPath = path.join(root, 'package.json');
   const checkPkgPath = path.join(root, 'tools', 'opensdd-check', 'package.json');

@@ -148,16 +148,8 @@ describe('interface-consistency', () => {
       const tbdMod02 = path.join(tbdDocs, 'modules', '02-task-core');
       fs.mkdirSync(tbdMod01, { recursive: true });
       fs.mkdirSync(tbdMod02, { recursive: true });
-      fs.writeFileSync(
-        path.join(tbdMod01, 'API.md'),
-        '# 01-auth API\n\n## 接口定义\n- POST /auth/verify\n',
-        'utf-8',
-      );
-      fs.writeFileSync(
-        path.join(tbdMod02, 'API.md'),
-        '# 02-task-core API\n\n## 接口定义\n- GET /task/list\n',
-        'utf-8',
-      );
+      fs.writeFileSync(path.join(tbdMod01, 'API.md'), '# 01-auth API\n\n## 接口定义\n- POST /auth/verify\n', 'utf-8');
+      fs.writeFileSync(path.join(tbdMod02, 'API.md'), '# 02-task-core API\n\n## 接口定义\n- GET /task/list\n', 'utf-8');
       fs.writeFileSync(
         path.join(tbdDocs, 'ARCHITECTURE.md'),
         [
