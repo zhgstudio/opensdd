@@ -10,7 +10,7 @@ const path = require('path');
  * @param {import('../config').SddConfig} config - SDD configuration
  * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
  */
-module.exports = async function check(root, config) {
+module.exports = function check(root, config) {
   const missing = [];
 
   for (const rel of config.requiredFiles) {

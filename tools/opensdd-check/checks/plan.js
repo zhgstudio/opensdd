@@ -28,7 +28,7 @@ function extractModuleFromRef(ref) {
  * @param {import('../config').SddConfig} config - SDD configuration
  * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
  */
-module.exports = async function check(root, config) {
+module.exports = function check(root, config) {
   const TASK_RE = new RegExp(config.taskRegex);
   const MODULE_DIR_RE = new RegExp(config.moduleDirPattern);
   const planPath = path.join(root, 'docs/PLAN.md');

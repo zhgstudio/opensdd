@@ -36,7 +36,7 @@ function* walkFiles(dir, garbageRe, skipDirs) {
  * @param {import('../config').SddConfig} config - SDD configuration
  * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
  */
-module.exports = async function check(root, config) {
+module.exports = function check(root, config) {
   let garbageRe;
   try {
     garbageRe = new RegExp(`(${config.garbagePatterns.join('|')})`, 'i');

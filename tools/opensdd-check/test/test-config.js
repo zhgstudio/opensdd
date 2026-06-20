@@ -47,6 +47,28 @@ describe('config', () => {
     assert.strictEqual(config.taskRegex, '^custom$');
   });
 
+  it('should warn on invalid enum value for interfaceStrategy', () => {
+    const configPath = path.join(tmpDir, '.sddrc.json');
+    fs.writeFileSync(configPath, JSON.stringify({ interfaceStrategy: 'grp' }));
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    loadConfig(tmpDir);
+    console.warn = origWarn;
+    assert.ok(warnings.some((w) => w.includes('grp')), 'should warn about invalid strategy');
+  });
+
+  it('should warn on type mismatch for array field', () => {
+    const configPath = path.join(tmpDir, '.sddrc.json');
+    fs.writeFileSync(configPath, JSON.stringify({ requiredFiles: 'not-an-array' }));
+    const warnings = [];
+    const origWarn = console.warn;
+    console.warn = (...args) => warnings.push(args.join(' '));
+    loadConfig(tmpDir);
+    console.warn = origWarn;
+    assert.ok(warnings.some((w) => w.includes('requiredFiles')), 'should warn about type mismatch');
+  });
+
   it('should warn on unknown config keys', () => {
     const configPath = path.join(tmpDir, '.sddrc.json');
     fs.writeFileSync(configPath, JSON.stringify({ unknownKey: 'value' }));
@@ -58,11 +80,5 @@ describe('config', () => {
     assert.ok(warnings.some((w) => w.includes('unknownKey')));
   });
 
-  it('should merge nested objects (not replace)', () => {
-    const configPath = path.join(tmpDir, '.sddrc.json');
-    fs.writeFileSync(configPath, JSON.stringify({ publicDesignRules: { namingConvention: 'snake_case' } }));
-    const config = loadConfig(tmpDir);
-    assert.strictEqual(config.publicDesignRules.namingConvention, 'snake_case');
-    assert.deepStrictEqual(config.publicDesignRules.allowedPatterns, []);
-  });
+
 });

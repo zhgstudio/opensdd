@@ -10,7 +10,7 @@ const path = require('path');
  * @param {import('../config').SddConfig} _config - SDD configuration
  * @returns {Promise<{name: string, status: string, messages: string[]}>} Check result
  */
-module.exports = async function check(root, _config) {
+module.exports = function check(root, _config) {
   const skillsDir = path.join(root, 'opensdd');
   const issues = [];
 

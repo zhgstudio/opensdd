@@ -12,7 +12,7 @@ function resolveStrategy(strategyName, docContents) {
   return { strategy: getStrategy(strategyName), detected: false };
 }
 
-async function checkInterfaceConsistency(root, config) {
+function checkInterfaceConsistency(root, config) {
   const archPath = path.join(root, 'docs/ARCHITECTURE.md');
 
   if (!fs.existsSync(archPath)) {
@@ -131,6 +131,6 @@ async function checkInterfaceConsistency(root, config) {
   };
 }
 
-module.exports = async function check(root, config) {
+module.exports = function check(root, config) {
   return checkInterfaceConsistency(root, config);
 };

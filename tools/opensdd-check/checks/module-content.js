@@ -109,6 +109,6 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-module.exports = async function check(root, config) {
+module.exports = function check(root, config) {
   return checkModuleContent(root, config);
 };

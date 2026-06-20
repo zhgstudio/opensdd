@@ -205,7 +205,7 @@ function parseDependencies(depStr) {
     .filter(Boolean);
 }
 
-module.exports = async function check(root, config) {
+module.exports = function check(root, config) {
   const MODULE_DIR_RE = new RegExp(config.moduleDirPattern);
   const archPath = path.join(root, 'docs/ARCHITECTURE.md');
 

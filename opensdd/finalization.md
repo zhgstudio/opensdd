@@ -66,7 +66,6 @@
 | AGENTS_SECTIONS | AGENTS.md 含必要章节 |
 | MODULE_CONTENT | 各模块文件含必要章节和特征列表 |
 | API_CONSISTENCY | 跨模块接口签名匹配 |
-| PUBLIC_DESIGN_COMPLIANCE | 命名规范遵循公共设计 |
 | FRONTMATTER | 技能文件含有效 frontmatter |
 
 ## 定稿锁定

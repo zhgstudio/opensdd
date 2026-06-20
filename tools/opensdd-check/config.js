@@ -16,9 +16,6 @@ const path = require('path');
  * @property {string} taskRegex - Regex pattern for task line format in PLAN.md
  * @property {string} moduleDirPattern - Regex pattern for module directory names
  * @property {string} interfaceStrategy - Interface check strategy ('http'|'grpc'|'function'|'auto')
- * @property {object} [publicDesignRules] - Public design compliance rules
- * @property {string} [publicDesignRules.namingConvention] - Expected naming convention ('camelCase', 'snake_case', etc.)
- * @property {string[]} [publicDesignRules.allowedPatterns] - Allowed identifier regex patterns for exceptions
  */
 
 /**
@@ -76,16 +73,46 @@ const DEFAULT_CONFIG = {
   requiredDesignSections: ['核心逻辑流程', '内部实现细节', '功能特性列表'],
   interfaceStrategy: 'auto',
   skipDirs: ['node_modules', '.git', '.github'],
-  publicDesignRules: {
-    namingConvention: 'camelCase',
-    allowedPatterns: [],
-    pascalCaseAllowedPatterns: [
-      '^(Date|String|Number|Boolean|Array|Object|Promise|Error|Map|Set|Symbol|BigInt|RegExp|Buffer|Event|Json|Void|Never|Any|Unknown|Null|Undefined|Id|Url|Uri|Dto|Vo|Po|Do|Api)$',
-      '^I[A-Z][a-z]+[A-Za-z]*$',
-      '^[A-Z][a-z]+(Request|Response|Dto|Vo|Po|Do|Event|Command|Query|Handler|Service|Controller|Repository|Factory|Builder|Provider|Module|Config|Exception|Manager|Helper|Util|Utils|Model|Entity|View|Model|Input|Output|Result|Payload|Header|Body|Params|Option|Options|Context|Interceptor|Guard|Pipe|Filter|Adapter|Strategy|Converter|Mapper|Transformer|Validator|Resolver|Loader|Writer|Reader|Client|Server|Gateway|Proxy|Facade|Singleton|Prototype|State|Strategy|Observer|Listener|Publisher|Subscriber|Producer|Consumer|Task|Job)$',
-    ],
-  },
 };
+
+const CONFIG_SCHEMA = {
+  requiredFiles: 'string[]',
+  requiredAgentSections: 'object[]',
+  garbagePatterns: 'string[]',
+  taskRegex: 'string',
+  moduleDirPattern: 'string',
+  interfaceStrategy: ['auto', 'http', 'grpc', 'function'],
+  requiredApiSections: 'string[]',
+  requiredDesignSections: 'string[]',
+  skipDirs: 'string[]',
+};
+
+/**
+ * Validate user config values against expected types/values.
+ * Prints warnings for type mismatches and invalid enum values.
+ *
+ * @param {Partial<SddConfig>} user - User configuration
+ */
+function validateConfig(user) {
+  for (const [key, value] of Object.entries(user)) {
+    const expected = CONFIG_SCHEMA[key];
+    if (!expected) continue; // unknown keys handled elsewhere
+
+    if (Array.isArray(expected)) {
+      if (!expected.includes(value)) {
+        console.warn(
+          `Warning: "${key}" is "${String(value)}", expected one of: ${expected.join(', ')}`,
+        );
+      }
+    } else if (expected.endsWith('[]')) {
+      if (!Array.isArray(value)) {
+        console.warn(`Warning: "${key}" should be an array, got ${typeof value}`);
+      }
+    } else if (typeof value !== expected) {
+      console.warn(`Warning: "${key}" should be ${expected}, got ${typeof value}`);
+    }
+  }
+}
 
 /**
  * Load SDD configuration from `.sddrc.json` in the given root directory.
@@ -109,7 +136,7 @@ function mergeConfig(defaults, user) {
       user[key] !== null &&
       !Array.isArray(user[key])
     ) {
-      // Nested objects merge recursively (e.g. publicDesignRules)
+      // Nested objects merge recursively
       result[key] = { ...defaults[key], ...user[key] };
     } else if (defaults[key] !== undefined) {
       // Known keys: user overrides
@@ -139,6 +166,8 @@ function loadConfig(root) {
         console.warn(`Warning: Unknown config key "${key}" in .sddrc.json (typo?)`);
       }
     }
+
+    validateConfig(userConfig);
 
     return mergeConfig(DEFAULT_CONFIG, userConfig);
   } catch (err) {

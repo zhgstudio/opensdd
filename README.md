@@ -179,17 +179,7 @@ node tools/opensdd-check/index.js --path /path/to/project
 
 > AI agent can also run validation on request — just say "run validation" or "检查项目结构" during any phase.
 
-5 checks:
-
-| Check | What it validates |
-|-------|-------------------|
-| **FILE_EXISTS** | `SPEC.md`, `ARCHITECTURE.md`, `PLAN.md`, `AGENTS.md` all present |
-| **PLAN_FORMAT** | Task lines match format with DESIGN.md references |
-| **DEP_MATRIX** | Module directories (`NN-name`) with API.md exist for dependency matrix entries |
-| **NO_GARBAGE** | No `_v2.md`, `_final.md`, `.bak.md` versioned garbage |
-| **AGENTS_SECTIONS** | All required sections present in AGENTS.md |
-
-Use `--json` for CI and `--strict` to treat warnings as errors.
+Use `--json` for CI and `--strict` to treat warnings as errors. Run with `--help` to list all checks.
 
 ---
 
