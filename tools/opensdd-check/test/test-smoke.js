@@ -8,6 +8,30 @@ const { createValidProject } = require('./fixtures/valid-project');
 
 const INDEX_PATH = path.resolve(__dirname, '..', 'index.js');
 
+describe('opensdd-check module loading', () => {
+  it('all check modules should load as functions', () => {
+    const checkModules = [
+      '../checks/files',
+      '../checks/plan',
+      '../checks/matrix',
+      '../checks/agents',
+      '../checks/frontmatter',
+      '../checks/module-content',
+      '../checks/interface-consistency',
+      '../checks/tbd-residual',
+      '../checks/version-consistency',
+      '../checks/no-tmp',
+      '../checks/decisions',
+    ];
+    for (const mod of checkModules) {
+      const fn = require(mod);
+      if (typeof fn !== 'function') {
+        throw new Error(`${mod} did not export a function`);
+      }
+    }
+  });
+});
+
 describe('opensdd-check smoke test', () => {
   it('should pass all checks on a valid OpenSDD project', () => {
     const { root, cleanup } = createValidProject({ withSkill: true });

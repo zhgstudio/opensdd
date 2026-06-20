@@ -49,6 +49,9 @@ module.exports = function check(root, config) {
   const issues = [];
   let taskCount = 0;
   let refCount = 0;
+  const taskIds = new Set();
+  /** @type {Array<{line: number, dep: string}>} */
+  const depRefs = [];
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
@@ -66,6 +69,7 @@ module.exports = function check(root, config) {
     const status = match[1];
     const taskId = match[2];
     const descriptionPart = match[3];
+    taskIds.add(taskId);
 
     if (status !== ' ' && status !== 'x') {
       issues.push(`line ${i + 1}: invalid status "[${status}]", expected " " or "x"`);
@@ -99,8 +103,17 @@ module.exports = function check(root, config) {
       for (const dep of deps) {
         if (!/^T-\d+$/.test(dep)) {
           issues.push(`line ${i + 1}: invalid dependency "${dep}", expected T-{NNN}`);
+        } else {
+          depRefs.push({ line: i + 1, dep });
         }
       }
+    }
+  }
+
+  // Validate that all dependency references point to existing task IDs
+  for (const { line, dep } of depRefs) {
+    if (!taskIds.has(dep)) {
+      issues.push(`line ${line}: dependency "${dep}" references non-existent task ID`);
     }
   }
 

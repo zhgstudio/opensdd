@@ -21,6 +21,8 @@ function findTmpDirs(dirPath) {
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
+    // Skip common directories that may contain third-party tmp/ (false positives)
+    if (entry.name === 'node_modules' || entry.name === '.git') continue;
     const fullPath = path.join(dirPath, entry.name);
     if (entry.name === 'tmp') {
       found.push(fullPath);
