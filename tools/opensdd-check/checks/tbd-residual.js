@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
+const { readFile } = require('../lib/read-file');
 const { splitLines } = require('../lib/line-split');
 
 /**
@@ -13,17 +13,10 @@ const { splitLines } = require('../lib/line-split');
  * @returns {{name: string, status: string, messages: string[]}} Check result
  */
 module.exports = function check(root, _config) {
-  const archPath = path.join(root, 'docs/ARCHITECTURE.md');
+  const content = readFile(root, 'docs', 'ARCHITECTURE.md');
 
-  if (!fs.existsSync(archPath)) {
+  if (content === null) {
     return { name: 'TBD_RESIDUAL', status: 'skip', messages: ['docs/ARCHITECTURE.md not found, skipping'] };
-  }
-
-  let content;
-  try {
-    content = fs.readFileSync(archPath, 'utf-8');
-  } catch (err) {
-    return { name: 'TBD_RESIDUAL', status: 'fail', messages: [`Failed to read ARCHITECTURE.md: ${err.message}`] };
   }
 
   const tbdPattern = /\[TBD[^\]]*\]/i;

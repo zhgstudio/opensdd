@@ -177,6 +177,8 @@ node tools/opensdd-check/index.js --path /path/to/project
 
 `--json` 输出 JSON 供 CI 集成，`--strict` 将 Warning 视为 Error。
 
+工具支持通过项目根目录下的 `.sddrc.json` 进行自定义配置。参见 [`tools/opensdd-check/.sddrc.json.example`](tools/opensdd-check/.sddrc.json.example) 了解可用选项。
+
 ---
 
 ## 支持平台

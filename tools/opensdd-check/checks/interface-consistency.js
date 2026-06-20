@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { readFile } = require('../lib/read-file');
 const { parseDependencyMatrix } = require('./matrix');
 const { getStrategy, detect } = require('./strategies');
 
@@ -13,24 +14,13 @@ function resolveStrategy(strategyName, docContents) {
 }
 
 function checkInterfaceConsistency(root, config) {
-  const archPath = path.join(root, 'docs/ARCHITECTURE.md');
+  const content = readFile(root, 'docs', 'ARCHITECTURE.md');
 
-  if (!fs.existsSync(archPath)) {
+  if (content === null) {
     return {
       name: 'API_CONSISTENCY',
       status: 'skip',
       messages: ['docs/ARCHITECTURE.md not found, skipping'],
-    };
-  }
-
-  let content;
-  try {
-    content = fs.readFileSync(archPath, 'utf-8');
-  } catch (err) {
-    return {
-      name: 'API_CONSISTENCY',
-      status: 'fail',
-      messages: [`Failed to read ARCHITECTURE.md: ${err.message}`],
     };
   }
 

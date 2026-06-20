@@ -86,4 +86,83 @@ describe('SKILL.md self-check', () => {
     assert.ok(pkg.engines, 'Missing engines field in root package.json');
     assert.ok(pkg.engines.node, 'Missing engines.node in root package.json');
   });
+
+  it('all registered checks should have valid require path in index.js', () => {
+    const indexPath = path.join(REPO_ROOT, 'tools', 'opensdd-check', 'index.js');
+    const indexContent = fs.readFileSync(indexPath, 'utf-8');
+
+    // Extract all require('./checks/...') statements
+    const checkReqs = [];
+    const checkRegex = /require\(['"]\.\/checks\/([^'"]+)['"]\)/g;
+    let match;
+    while ((match = checkRegex.exec(indexContent)) !== null) {
+      checkReqs.push(match[1]);
+    }
+
+    assert.ok(checkReqs.length >= 11, `Expected at least 11 checks, found ${checkReqs.length}`);
+
+    for (const mod of checkReqs) {
+      const modPath = path.join(REPO_ROOT, 'tools', 'opensdd-check', 'checks', `${mod}.js`);
+      assert.ok(fs.existsSync(modPath), `Check module file not found: checks/${mod}.js`);
+    }
+  });
+
+  it('help text should list all registered check names from loaded modules', () => {
+    const indexPath = path.join(REPO_ROOT, 'tools', 'opensdd-check', 'index.js');
+    const indexContent = fs.readFileSync(indexPath, 'utf-8');
+
+    // Extract module paths from require('./checks/...') calls
+    const checkModules = [];
+    const requireRegex = /require\(['"]\.\/checks\/([^'"]+)['"]\)/g;
+    let m;
+    while ((m = requireRegex.exec(indexContent)) !== null) {
+      checkModules.push(m[1]);
+    }
+
+    assert.ok(checkModules.length >= 11, `Expected at least 11 check modules, found ${checkModules.length}`);
+
+    // Load each module and get its returned .name to verify it appears in help text
+    const checksDir = path.join(REPO_ROOT, 'tools', 'opensdd-check', 'checks');
+    const returnNames = [];
+    for (const mod of checkModules) {
+      const modPath = path.join(checksDir, `${mod}.js`);
+      assert.ok(fs.existsSync(modPath), `Module file not found: checks/${mod}.js`);
+
+      const checkFn = require(modPath);
+      const result = checkFn(REPO_ROOT, { requiredFiles: [], requiredAgentSections: [], taskRegex: '', moduleDirPattern: '', requiredApiSections: [], requiredDesignSections: [], interfaceStrategy: 'auto' });
+      returnNames.push(result.name);
+    }
+
+    const helpSection = indexContent.match(/CHECKS[\s\S]*?`\);/);
+    assert.ok(helpSection, 'Help text section not found in index.js');
+
+    for (const name of returnNames) {
+      assert.ok(
+        helpSection[0].includes(name),
+        `Help text does not mention check "${name}"`,
+      );
+    }
+  });
+
+  it('all registered checks should be called in main() results array', () => {
+    const indexPath = path.join(REPO_ROOT, 'tools', 'opensdd-check', 'index.js');
+    const indexContent = fs.readFileSync(indexPath, 'utf-8');
+
+    const varMap = [];
+    const requireRegex = /const\s+(\w+)\s*=\s*require\(['"]\.\/checks\/([^'"]+)['"]\)/g;
+    let m;
+    while ((m = requireRegex.exec(indexContent)) !== null) {
+      varMap.push({ varName: m[1], modName: m[2] });
+    }
+
+    const resultsSection = indexContent.match(/const results = \[[\s\S]*?\];/);
+    assert.ok(resultsSection, 'Results array not found in index.js');
+
+    for (const { varName, modName } of varMap) {
+      assert.ok(
+        resultsSection[0].includes(varName),
+        `Check variable "${varName}" (from checks/${modName}.js) not found in results array`,
+      );
+    }
+  });
 });

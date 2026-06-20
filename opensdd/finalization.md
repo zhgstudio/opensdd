@@ -71,6 +71,7 @@
 | FRONTMATTER | 技能文件含有效 frontmatter |
 | VERSION_CONSISTENCY | SKILL.md 版本号与 package.json 版本号一致 |
 | DECISIONS_FORMAT | DECISIONS.md frontmatter 有效、含必需章节（理由、取消条件） |
+| TRACEABILITY | SPEC.md 中 REQ-NNN 与 DESIGN.md 中 NN-FNNN 的追溯一致性（无对应关系时仅 warn，不阻止） |
 
 ## 定稿锁定
 

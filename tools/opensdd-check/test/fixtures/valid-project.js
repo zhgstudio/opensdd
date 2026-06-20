@@ -14,6 +14,10 @@ const os = require('node:os');
  */
 function createValidProject(overrides = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-valid-'));
+
+  // Best-effort cleanup on process exit (fallback for abnormal termination)
+  process.on('exit', () => { try { fs.rmSync(root, { recursive: true, force: true }); } catch {} });
+
   const docsDir = path.join(root, 'docs');
   const moduleDirs = overrides.modules || ['01-auth'];
 
@@ -26,7 +30,7 @@ function createValidProject(overrides = {}) {
       '## 业务背景',
       '测试项目。',
       '## 功能需求',
-      '- 用户注册',
+      '- REQ-001: 用户注册',
       '## 非功能性约束',
       '- 响应时间 < 200ms',
     ].join('\n'),

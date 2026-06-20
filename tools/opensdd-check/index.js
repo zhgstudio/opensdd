@@ -13,6 +13,7 @@ const tbdResidualCheck = require('./checks/tbd-residual');
 const versionConsistencyCheck = require('./checks/version-consistency');
 const noTmpCheck = require('./checks/no-tmp');
 const decisionsCheck = require('./checks/decisions');
+const traceabilityCheck = require('./checks/traceability');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -30,6 +31,7 @@ OPTIONS
   --help, -h      Show this help
 
 CHECKS
+  FRONTMATTER           YAML frontmatter validity in skill .md files
   FILE_EXISTS           SPEC.md, ARCHITECTURE.md, PLAN.md, AGENTS.md presence
   PLAN_FORMAT           Task format validity in PLAN.md (with DESIGN.md references)
   DEP_MATRIX            Module directories (NN-name) exist with DESIGN.md for dependency matrix entries
@@ -40,6 +42,7 @@ CHECKS
   VERSION_CONSISTENCY   SKILL.md version matches package.json versions
   NO_TMP                No tmp/ directories exist in the project
   DECISIONS_FORMAT      DECISIONS.md frontmatter validity and required sections
+  TRACEABILITY          Requirement-to-feature traceability (REQ-NNN ↔ NN-FNNN, warn only)
 
 `);
 }
@@ -68,11 +71,12 @@ function parseArgs(args) {
   return opts;
 }
 
-function main() {
-  const args = process.argv.slice(2);
-  const opts = parseArgs(args);
+let _opts = { root: '.', json: false, strict: false };
 
-  const resolvedRoot = path.resolve(opts.root);
+function main() {
+  _opts = parseArgs(process.argv.slice(2));
+
+  const resolvedRoot = path.resolve(_opts.root);
   const config = loadConfig(resolvedRoot);
 
   const results = [
@@ -87,15 +91,20 @@ function main() {
     versionConsistencyCheck(resolvedRoot),
     noTmpCheck(resolvedRoot),
     decisionsCheck(resolvedRoot),
+    traceabilityCheck(resolvedRoot),
   ];
 
-  const exitCode = report(results, { json: opts.json, strict: opts.strict, root: resolvedRoot });
+  const exitCode = report(results, { json: _opts.json, strict: _opts.strict, root: resolvedRoot });
   process.exit(exitCode);
 }
 
 try {
   main();
 } catch (err) {
-  console.error('opensdd-check error:', err.message);
+  if (_opts.json) {
+    console.log(JSON.stringify({ error: err.message }));
+  } else {
+    console.error('opensdd-check error:', err.message);
+  }
   process.exit(1);
 }

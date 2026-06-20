@@ -82,7 +82,7 @@ This repository contains two types of `AGENTS.md`:
 
 Root-level files:
 - `opensdd/` — Skill source: `SKILL.md` (workflow overview) + `phase-1.md` through `phase-4.md` + `finalization.md`
-- `tools/opensdd-check/` — Project structure validation tool (10 checks)
+- `tools/opensdd-check/` — Project structure validation tool (12 checks)
 - `.github/` — CI workflows, issue/PR templates
 - Root configs: `package.json`, `.npmrc`, `.gitignore`, `.lycheeignore`
 
@@ -181,6 +181,8 @@ node tools/opensdd-check/index.js --path /path/to/project
 > AI agent can also run validation on request — just say "run validation" or "检查项目结构" during any phase.
 
 Use `--json` for CI and `--strict` to treat warnings as errors. Run with `--help` to list all checks.
+
+The tool supports user configuration via `.sddrc.json` in the project root. See [`tools/opensdd-check/.sddrc.json.example`](tools/opensdd-check/.sddrc.json.example) for available options.
 
 ---
 
