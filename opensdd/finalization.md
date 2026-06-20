@@ -6,7 +6,7 @@
 
 ## 输入
 
-全部 5 类已定稿文档：`SPEC.md`、`ARCHITECTURE.md`、各 `API.md` / `DESIGN.md`、`PLAN.md`、`AGENTS.md`
+全部已定稿文档：`SPEC.md`、`ARCHITECTURE.md`、各 `API.md` / `DESIGN.md`、`PLAN.md`、`AGENTS.md`；如存在 `DECISIONS.md` 也一并纳入
 
 ## 输出
 
@@ -15,6 +15,8 @@
 ## 审查清单
 
 ### 人工审查
+
+开始审查前，如存在 `docs/DECISIONS.md`，请先阅读该文件以了解已知遗留决策和已拒绝事项，避免重复提出。
 
 逐项核验以下全部维度：
 
@@ -45,6 +47,11 @@
 - [ ] 所有章节有实质内容，无空章节或占位符
 - [ ] 引用的模块目录路径与实际一致
 - [ ] 覆盖编码阶段所需全部指引
+- [ ] 如存在 `DECISIONS.md`，已引用该文件并说明其加载规则
+
+**DECISIONS.md**（如存在）
+- [ ] 仅记录被拒绝或遗留暂不处理的事项，不记录已接受并执行的事项
+- [ ] 每条记录含清晰理由和（如适用）取消条件
 
 ### 自动化验证
 
@@ -52,7 +59,7 @@
 
 | 检查项 | 验证内容 |
 |--------|----------|
-| FILE_EXISTS | SPEC.md / ARCHITECTURE.md / PLAN.md / AGENTS.md 存在 |
+| FILE_EXISTS | SPEC.md / ARCHITECTURE.md / PLAN.md / AGENTS.md 存在（如项目有 DECISIONS.md 也检查） |
 | DEP_MATRIX | 模块目录与引用表一致，无孤儿目录 |
 | PLAN_FORMAT | 任务格式正确，引用有效 |
 | NO_GARBAGE | 无版本残留文件 |
