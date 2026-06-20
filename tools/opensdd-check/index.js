@@ -11,7 +11,6 @@ const frontmatterCheck = require('./checks/frontmatter');
 const moduleContentCheck = require('./checks/module-content');
 const interfaceConsistencyCheck = require('./checks/interface-consistency');
 const publicDesignComplianceCheck = require('./checks/public-design-compliance');
-const languageCheck = require('./checks/language');
 const { report } = require('./lib/reporter');
 const { loadConfig } = require('./config');
 
@@ -37,7 +36,6 @@ CHECKS
   MODULE_CONTENT        API.md/DESIGN.md required sections and feature list
   API_CONSISTENCY       Cross-module interface signature matching
   PUBLIC_DESIGN_COMPLIANCE  Module files follow ARCHITECTURE.md public design rules
-  LANGUAGE_CONSISTENCY     All documents use a consistent language
 `);
 }
 
@@ -82,7 +80,6 @@ async function main() {
     moduleContentCheck(resolvedRoot, config),
     interfaceConsistencyCheck(resolvedRoot, config),
     publicDesignComplianceCheck(resolvedRoot, config),
-    languageCheck(resolvedRoot, config),
   ]);
 
   const exitCode = report(results, { json: opts.json, strict: opts.strict, root: resolvedRoot });

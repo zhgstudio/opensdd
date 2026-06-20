@@ -10,5 +10,8 @@
     "format": "cd tools/opensdd-check && npm run format",
     "format-check": "cd tools/opensdd-check && npm run format-check"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
 }
