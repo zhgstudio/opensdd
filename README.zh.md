@@ -172,7 +172,7 @@ node tools/opensdd-check/index.js
 node tools/opensdd-check/index.js --path /path/to/project
 ```
 
-> AI 智能体可在任意阶段主动执行验证——只需说"检查项目结构"或"run validation"。
+> AI 智能体可在任意阶段主动执行验证——只需说"检查项目结构"、"检查是否满足opensdd规范"、"run validation"、"check compliance"等即可。
 
 `--json` 输出 JSON 供 CI 集成，`--strict` 将 Warning 视为 Error。
 

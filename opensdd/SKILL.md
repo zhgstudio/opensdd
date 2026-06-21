@@ -177,7 +177,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 
 本技能自带 OpenSDD 结构合规性检查工具 `opensdd-check`（位于 `tools/opensdd-check/`）：
 
-- **AI 可应人类要求主动执行验证**——人类在任意阶段说"检查项目结构"或"run validation"时，AI 应当执行 `node tools/opensdd-check/index.js`
+- **AI 可应人类要求主动执行验证**——人类在任意阶段表达检查项目结构、合规性校验、是否符合 OpenSDD 规范等意图时（如"检查下项目结构"、"检查是否满足opensdd规范"、"run validation"、"check compliance"），AI 应当执行 `node tools/opensdd-check/index.js`
 - 人类也可手动执行：`node tools/opensdd-check/index.js`（默认检查当前目录）
 - 建议在最终定稿前运行 `node tools/opensdd-check/index.js --strict` 执行全量严格检查（将所有警告视为错误）
 

@@ -178,7 +178,7 @@ node tools/opensdd-check/index.js
 node tools/opensdd-check/index.js --path /path/to/project
 ```
 
-> AI agent can also run validation on request — just say "run validation" or "检查项目结构" during any phase.
+> AI agent can also run validation on request — just say "check compliance", "run validation", "检查项目结构", or "检查是否满足opensdd规范" during any phase.
 
 Use `--json` for CI and `--strict` to treat warnings as errors. Run with `--help` to list all checks.
 
