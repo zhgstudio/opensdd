@@ -77,10 +77,8 @@ function checkInterfaceConsistency(root, config) {
 
       const depDefs = strategy.extract(depContent);
 
-      // Skip [TBD] markers — placeholder signatures determined during Stage 3,
-      // do not require API.md matching
-      if (/\[TBD/i.test(entry.interface)) continue;
-
+      // [TBD] items are filtered per-item below (line 88); the filter after comma split
+      // handles mixed lines like "POST /auth/verify, [TBD: role check]" correctly
       const requiredInterfaces = entry.interface
         .split(',')
         .map((i) => i.trim())
