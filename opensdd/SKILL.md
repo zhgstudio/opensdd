@@ -87,7 +87,7 @@ OpenSDD 使用三层编号体系实现从需求到任务的完整追溯链：
 |------|------|----|----|
 | **PM Agent**（产品经理） | 阶段一 | `AGENTS.md`（如已存在） | `docs/SPEC.md` |
 | **Architect Agent**（架构师） | 阶段二 | `SPEC.md`（只读）、`AGENTS.md`（如已存在） | `docs/ARCHITECTURE.md`、写入 `AGENTS.md` 主体 |
-| **Designer Agent**（模块设计师） × N | 阶段三 | `ARCHITECTURE.md` + 所依赖模块的 `API.md` + `AGENTS.md`（如已存在） | `docs/modules/{NN}-{name}/API.md` + `DESIGN.md` |
+| **Designer Agent**（模块设计师） × N | 阶段三 | `ARCHITECTURE.md` + `SPEC.md` + 所依赖模块的 `API.md`（只读） + `AGENTS.md`（如已存在） | `docs/modules/{NN}-{name}/API.md` + `DESIGN.md` |
 | **Project Manager Agent**（项目经理） | 阶段四 | 全部已定稿设计文档 + `AGENTS.md`（如已存在） | `docs/PLAN.md`、追加 `AGENTS.md` 任务规范 |
 
 每个角色启动新的 AI 会话，只加载职责范围内的文件。每阶段产物经人类评审定稿后，才能进入下一阶段。
@@ -214,7 +214,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 请以模块设计师（Designer Agent）角色启动阶段三。
 读取 docs/ARCHITECTURE.md、docs/SPEC.md 和 AGENTS.md（如已存在）。
 当前要设计的模块是：[模块名，如 01-auth]。
-按照 ARCHITECTURE.md 模块引用表顺序依次设计，在 docs/modules/{NN}-{name}/ 下生成本模块的 API.md 和 DESIGN.md。
+按依赖顺序串行推进——所依赖模块设计定稿后才能开始设计当前模块，无依赖关系的模块按模块引用表顺序依次设计。在 docs/modules/{NN}-{name}/ 下生成本模块的 API.md 和 DESIGN.md。
 特征列表以 {NN}-F{NNN} 编号。
 请严格按照技能规范执行，一次只做一个模块。
 ```
