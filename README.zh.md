@@ -142,7 +142,7 @@ cp -r /tmp/opensdd-skill/opensdd .opencode/skills/
 rm -rf /tmp/opensdd-skill
 ```
 
-> **语言说明**：所有生成的文档（SPEC.md、ARCHITECTURE.md、AGENTS.md、PLAN.md 以及模块 API.md / DESIGN.md）均使用**中文**编写。
+> **语言说明**：默认情况下，所有生成的文档（SPEC.md、ARCHITECTURE.md、AGENTS.md、PLAN.md 以及模块 API.md / DESIGN.md）均使用**中文**编写。语言可在阶段一启动时配置。
 
 ### 2. 唤醒你的 AI
 
