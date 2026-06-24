@@ -31,7 +31,7 @@ function extract(content) {
     for (const text of candidates) {
       if (!text) continue;
       // Match METHOD /path at line start
-      const methodPathMatch = text.match(/^(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)/i);
+      const methodPathMatch = text.match(/^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS|CONNECT)\s+(\/\S+)/i);
       if (methodPathMatch) {
         endpoints.push({
           signature: `${methodPathMatch[1].toUpperCase()} ${methodPathMatch[2]}`,
@@ -45,7 +45,7 @@ function extract(content) {
       }
 
       // Match `METHOD /path` inside backticks
-      const codeMatch = text.match(/`(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)`/i);
+      const codeMatch = text.match(/`(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS|CONNECT)\s+(\/\S+)`/i);
       if (codeMatch) {
         endpoints.push({
           signature: `${codeMatch[1].toUpperCase()} ${codeMatch[2]}`,
@@ -72,7 +72,7 @@ function extract(content) {
  * @returns {boolean} Whether a matching definition was found
  */
 function matchRequired(required, definitions) {
-  const methodPathMatch = required.match(/^(GET|POST|PUT|PATCH|DELETE)\s+(\/\S+)/i);
+  const methodPathMatch = required.match(/^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS|CONNECT)\s+(\/\S+)/i);
   if (!methodPathMatch) return false;
 
   const requiredMethod = methodPathMatch[1].toUpperCase();

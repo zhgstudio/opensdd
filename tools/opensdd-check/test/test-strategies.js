@@ -55,6 +55,30 @@ describe('http strategy', () => {
     assert.strictEqual(http.matchRequired('DELETE /users', defs), false);
   });
 
+  it('should extract HEAD, OPTIONS, CONNECT methods', () => {
+    const content = [
+      '- HEAD /resource/1',
+      '- OPTIONS /api',
+      '- CONNECT /proxy',
+      '- PATCH /resource/1',
+      '- GET /resource/1',
+    ].join('\n');
+    const defs = http.extract(content);
+    assert.strictEqual(defs.length, 5);
+    assert.strictEqual(defs[0].details.method, 'HEAD');
+    assert.strictEqual(defs[1].details.method, 'OPTIONS');
+    assert.strictEqual(defs[2].details.method, 'CONNECT');
+    assert.strictEqual(defs[3].details.method, 'PATCH');
+    assert.strictEqual(defs[4].details.method, 'GET');
+  });
+
+  it('should match HEAD, OPTIONS, CONNECT required interfaces', () => {
+    const defs = http.extract('HEAD /health\nOPTIONS /api\nCONNECT /proxy');
+    assert.strictEqual(http.matchRequired('HEAD /health', defs), true);
+    assert.strictEqual(http.matchRequired('OPTIONS /api', defs), true);
+    assert.strictEqual(http.matchRequired('CONNECT /proxy', defs), true);
+  });
+
   it('should return false for non-HTTP required string', () => {
     assert.strictEqual(http.matchRequired('someFunction', []), false);
   });
@@ -117,6 +141,12 @@ describe('grpc strategy', () => {
     const defs = grpc.extract('rpc Login(LoginRequest) returns (LoginResponse)');
     assert.strictEqual(grpc.matchRequired('rpc Login(LoginRequest) returns (LoginResponse)', defs), true);
     assert.strictEqual(grpc.matchRequired('rpc Login(LoginRequest) returns (Empty)', defs), false);
+  });
+
+  it('should match full rpc signature with stream', () => {
+    const defs = grpc.extract('rpc Subscribe(SubscribeRequest) returns (stream Event)');
+    assert.strictEqual(grpc.matchRequired('rpc Subscribe(SubscribeRequest) returns (stream Event)', defs), true);
+    assert.strictEqual(grpc.matchRequired('rpc Subscribe(SubscribeRequest) returns (Event)', defs), false);
   });
 });
 
@@ -186,6 +216,21 @@ describe('function strategy', () => {
     const defs = fnStrategy.extract('- validateToken');
     assert.strictEqual(fnStrategy.matchRequired('validateToken', defs), true);
     assert.strictEqual(fnStrategy.matchRequired('generateJwt', defs), false);
+  });
+
+  it('should handle function with generic type parameters', () => {
+    const content = 'mapToList<T>(items: T[]): List<T>';
+    const defs = fnStrategy.extract(content);
+    assert.strictEqual(defs.length, 1);
+    assert.strictEqual(defs[0].details.name, 'mapToList');
+    assert.strictEqual(defs[0].details.params.length, 1);
+    assert.strictEqual(defs[0].details.returnType, 'List<T>');
+    assert.strictEqual(defs[0].signature, 'mapToList(items: T[]): List<T>');
+  });
+
+  it('should match signature with generic type parameters', () => {
+    const defs = fnStrategy.extract('mapToList<T>(items: T[]): List<T>');
+    assert.strictEqual(fnStrategy.matchRequired('mapToList(items: T[]): List<T>', defs), true);
   });
 });
 

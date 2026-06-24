@@ -1,5 +1,6 @@
 {
   "name": "opensdd-check",
+  "private": true,
   "version": "3.3.0",
   "description": "OpenSDD project structure validator — checks SPEC.md, ARCHITECTURE.md, PLAN.md, AGENTS.md and module integrity for OpenSDD topology compliance",
   "type": "commonjs",

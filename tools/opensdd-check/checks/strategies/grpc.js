@@ -103,7 +103,7 @@ function matchRequired(required, definitions) {
 
   // Try full rpc signature
   const rpcMatch = trimmed.match(
-    /^rpc\s+([A-Za-z_]\w*)\s*\(\s*([A-Za-z_]\w*)\s*\)\s*returns\s*\(\s*([A-Za-z_]\w*)\s*\)$/,
+    /^rpc\s+([A-Za-z_]\w*)\s*\(\s*((?:stream\s+)?[A-Za-z_]\w*)\s*\)\s*returns\s*\(\s*((?:stream\s+)?[A-Za-z_]\w*)\s*\)$/,
   );
   if (rpcMatch) {
     const method = rpcMatch[1];

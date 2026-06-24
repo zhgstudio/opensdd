@@ -41,7 +41,8 @@ function extract(content) {
 
     // Pattern 1: funcName(params) -> return or funcName(params): return
     // e.g. validateToken(token: string): Claims
-    let fnMatch = trimmed.match(/([a-zA-Z_]\w*)\s*\(\s*([^)]*)\s*\)\s*(?::|->|=>)\s*(.+)$/);
+    // Handles optional generic type params: funcName<T>(...)
+    let fnMatch = trimmed.match(/([a-zA-Z_]\w*)(?:<[^>]*>)?\s*\(\s*([^)]*)\s*\)\s*(?::|->|=>)\s*(.+)$/);
     if (fnMatch) {
       const name = fnMatch[1];
       const params = fnMatch[2].trim();
@@ -62,7 +63,7 @@ function extract(content) {
 
     // Pattern 2: funcName(params) — no return type
     // e.g. validateToken(token)
-    fnMatch = trimmed.match(/([a-zA-Z_]\w*)\s*\(\s*([^)]*)\s*\)\s*$/);
+    fnMatch = trimmed.match(/([a-zA-Z_]\w*)(?:<[^>]*>)?\s*\(\s*([^)]*)\s*\)\s*$/);
     if (fnMatch) {
       const name = fnMatch[1];
       const params = fnMatch[2].trim();
@@ -111,7 +112,7 @@ function matchRequired(required, definitions) {
   const trimmed = required.trim();
 
   // Try full signature: funcName(params): returnType
-  let fnMatch = trimmed.match(/^([a-zA-Z_]\w*)\s*\(\s*([^)]*)\s*\)\s*(?::|->|=>)\s*(.+)$/);
+  let fnMatch = trimmed.match(/^([a-zA-Z_]\w*)(?:<[^>]*>)?\s*\(\s*([^)]*)\s*\)\s*(?::|->|=>)\s*(.+)$/);
   if (fnMatch) {
     const name = fnMatch[1];
     const requiredParams = fnMatch[2]
@@ -128,7 +129,7 @@ function matchRequired(required, definitions) {
   }
 
   // Try name + params: funcName(params)
-  fnMatch = trimmed.match(/^([a-zA-Z_]\w*)\s*\(\s*([^)]*)\s*\)$/);
+  fnMatch = trimmed.match(/^([a-zA-Z_]\w*)(?:<[^>]*>)?\s*\(\s*([^)]*)\s*\)$/);
   if (fnMatch) {
     const name = fnMatch[1];
     const requiredParams = fnMatch[2]
