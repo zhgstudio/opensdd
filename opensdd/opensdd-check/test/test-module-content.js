@@ -57,7 +57,7 @@ describe('MODULE_CONTENT check', () => {
         '使用 bcrypt。',
         '',
         '## 功能特性列表',
-        '### 01-F001: 用户注册',
+        '### AUTH-F001: 用户注册',
         '实现注册接口。',
       ].join('\n'),
     );
@@ -71,7 +71,7 @@ describe('MODULE_CONTENT check', () => {
     const { root, cleanup } = createModuleProject(
       '01-auth',
       ['# 01-auth 接口', '', '## 接口定义', '- POST /auth/register'].join('\n'),
-      ['## 核心逻辑流程', 'ok', '', '## 内部实现细节', 'ok', '', '## 功能特性列表', '### 01-F001: test'].join('\n'),
+      ['## 核心逻辑流程', 'ok', '', '## 内部实现细节', 'ok', '', '## 功能特性列表', '### AUTH-F001: test'].join('\n'),
     );
     const result = await check(root, DEFAULT_CONFIG);
     assert.strictEqual(result.status, 'fail');

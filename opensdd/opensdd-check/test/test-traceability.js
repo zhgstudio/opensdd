@@ -56,16 +56,16 @@ describe('TRACEABILITY', () => {
 
   it('should pass when REQs and features both exist with REQ references in DESIGN.md', async () => {
     createProjectStructure(
-      ['REQ-001', 'REQ-002'],
-      { '01-auth': ['01-F001', '01-F002'] },
-      { '01-auth': ['REQ-001', 'REQ-002'] },
+      ['REQ-AUTH-001', 'REQ-AUTH-002'],
+      { '01-auth': ['AUTH-F001', 'AUTH-F002'] },
+      { '01-auth': ['REQ-AUTH-001', 'REQ-AUTH-002'] },
     );
     const result = await check(tmpDir);
     assert.strictEqual(result.status, 'pass');
   });
 
   it('should warn when REQs exist but no features', async () => {
-    createProjectStructure(['REQ-001', 'REQ-002'], {});
+    createProjectStructure(['REQ-AUTH-001', 'REQ-AUTH-002'], {});
     const result = await check(tmpDir);
     assert.strictEqual(result.status, 'warn');
 
@@ -75,14 +75,14 @@ describe('TRACEABILITY', () => {
   });
 
   it('should warn when REQs exist but are not referenced in any DESIGN.md', async () => {
-    createProjectStructure(['REQ-001'], { '01-auth': ['01-F001'] });
+    createProjectStructure(['REQ-AUTH-001'], { '01-auth': ['AUTH-F001'] });
     const result = await check(tmpDir);
     assert.strictEqual(result.status, 'warn');
     assert.ok(result.messages[0].includes('not referenced in any DESIGN.md'));
   });
 
   it('should warn when features exist but no REQs', async () => {
-    createProjectStructure([], { '01-auth': ['01-F001'] });
+    createProjectStructure([], { '01-auth': ['AUTH-F001'] });
     const result = await check(tmpDir);
     assert.strictEqual(result.status, 'warn');
     assert.ok(result.messages[0].includes('1 feature(s)'));

@@ -8,7 +8,7 @@
     { "keywords": ["跨模块规则", "cross-module rule", "cross module rule", "模块间"] },
     { "keywords": ["plan.md", "任务规范", "task convention", "任务标记"] }
   ],
-  "taskRegex": "^\\-\\s+\\[([ x])\\]\\s+(T-\\d+)\\s*:\\s*(.+)$",
+  "taskRegex": "^\\-\\s+\\[([ x])\\]\\s+(T-[A-Z]+-\\d+)\\s*:\\s*(.+)$",
   "moduleDirPattern": "^\\d{2}-[a-zA-Z0-9_-]+$",
   "interfaceStrategy": "auto",
   "requiredApiSections": ["模块概述与职责边界", "核心数据结构", "接口定义"],

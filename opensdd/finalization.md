@@ -23,7 +23,7 @@
 **SPEC.md**
 - [ ] 业务背景与目标清晰、成功标准可衡量
 - [ ] 功能需求以用户旅程或用例形式列出，可独立验证
-- [ ] 每条需求以 `REQ-{NNN}` 编号，编号连续不重复
+- [ ] 每条需求以 `REQ-{DOMAIN}-{NNN}` 编号，同领域内编号不重复
 - [ ] 非功能性约束已量化（如响应时间、并发数）
 - [ ] 边界与排除项明确
 
@@ -35,13 +35,13 @@
 
 **模块设计（每个模块）**
 - [ ] API.md 包含模块概述、核心数据结构、接口定义
-- [ ] DESIGN.md 包含核心逻辑、实现细节、`{NN}-F{NNN}` 特性列表
+- [ ] DESIGN.md 包含核心逻辑、实现细节、`{MODULE}-F{NNN}` 特性列表
 - [ ] 命名与 ARCHITECTURE.md 规范一致
 - [ ] 接口签名与所依赖方声明匹配
 
 **PLAN.md**
-- [ ] `T-{NNN}` 任务覆盖所有 `{NN}-F{NNN}` 特性
-- [ ] 每条任务引用 `[NN-name/DESIGN.md#{NN}-F{NNN}]`
+- [ ] `T-{MODULE}-{NNN}` 任务覆盖所有 `{MODULE}-F{NNN}` 特性
+- [ ] 每条任务引用 `[module-name/DESIGN.md#{MODULE}-F{NNN}]`
 - [ ] 任务按依赖拓扑排序，不包含方案细节
 
 **AGENTS.md**（面向编码阶段的入口指引）
@@ -75,7 +75,7 @@
 | FRONTMATTER | 技能文件含有效 frontmatter |
 | VERSION_CONSISTENCY | SKILL.md 版本号与 package.json 版本号一致 |
 | DECISIONS_FORMAT | DECISIONS.md YAML frontmatter 格式有效（--- 边界正确） |
-| TRACEABILITY | SPEC.md 中 REQ-NNN 与 DESIGN.md 中 NN-FNNN 的追溯一致性（无对应关系时仅 warn，不阻止） |
+| TRACEABILITY | SPEC.md 中 REQ-DOMAIN-NNN 与 DESIGN.md 中 MODULE-FNNN 的追溯一致性（无对应关系时仅 warn，不阻止） |
 
 ## 定稿锁定
 

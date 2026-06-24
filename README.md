@@ -125,7 +125,7 @@ SPEC.md     ARCHITECTURE.md  module       PLAN.md      locks all docs
 
 - Reads all finalized API.md / DESIGN.md files, extracts {NN}-F{NNN} features
 - Writes `docs/PLAN.md` — task tracking with references to DESIGN.md sections
-- Each task: `- [ ] T-{NNN}: description [NN-name/DESIGN.md#{NN}-F{NNN}]`
+- Each task: `- [ ] T-{MODULE}-{NNN}: description [module-name/DESIGN.md#{MODULE}-F{NNN}]`
 - Appends PLAN.md task conventions to `AGENTS.md`
 
 ### Finalization (Human)

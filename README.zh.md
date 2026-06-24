@@ -111,7 +111,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+  PLAN.md      AGENTS.md 就绪
 
 ### 阶段四：任务计划（Project Manager Agent）
 
-产出 `docs/PLAN.md`，每个任务引用对应 DESIGN.md 的 {NN}-F{NNN} 章节（如 `[01-auth/DESIGN.md#01-F001]`）。严格不涉及方案细节，只做任务跟踪。同时追加 `AGENTS.md` 的 PLAN.md 任务规范章节。
+产出 `docs/PLAN.md`，每个任务引用对应 DESIGN.md 的 {MODULE}-F{NNN} 章节（如 `[auth/DESIGN.md#AUTH-F001]`）。严格不涉及方案细节，只做任务跟踪。同时追加 `AGENTS.md` 的 PLAN.md 任务规范章节。
 
 ### 最终定稿（人类）
 

@@ -37,14 +37,14 @@
    `DESIGN.md` 须包含：
    - 核心逻辑流程 / 状态机
    - 内部实现细节
-   - 该模块需要实现的功能特性列表（feature list），每条以 `### {NN}-F{NNN}` 编号
+    - 该模块需要实现的功能特性列表（feature list），每条以 `### {MODULE}-F{NNN}` 编号（MODULE 为模块目录名去除数字前缀后的大写形式，如 `01-auth` → `AUTH`）
 
-   示例（DESIGN.md）：
-   ```markdown
-   ### 01-F001: 用户注册接口
-   实现 `POST /auth/register` 端点，接收邮箱+密码，返回 token。
+    示例（DESIGN.md）：
+    ```markdown
+    ### AUTH-F001: 用户注册接口
+    实现 `POST /auth/register` 端点，接收邮箱+密码，返回 token。
 
-    ### 01-F002: 用户登录接口
+    ### AUTH-F005: 用户登录接口
     实现 `POST /auth/login` 端点，验证凭证，返回 token。
     ```
 
@@ -90,7 +90,7 @@
 - [ ] **API.md — 接口定义**：每个接口的入参、出参、错误码是否完整
 - [ ] **DESIGN.md — 核心逻辑流程**：主流程/状态机是否描述清楚
 - [ ] **DESIGN.md — 内部实现细节**：关键算法、数据持久化策略等是否有说明
-- [ ] **DESIGN.md — 功能特性列表**：每条以 `### {NN}-F{NNN}` 编号，覆盖所有接口
+- [ ] **DESIGN.md — 功能特性列表**：每条以 `### {MODULE}-F{NNN}` 编号，覆盖所有接口
 - [ ] **命名一致性**：所有字段名、接口名是否继承 ARCHITECTURE.md 的规范
 - [ ] **接口契约**：本模块提供的接口签名与 `ARCHITECTURE.md` 依赖矩阵中声明的需求逐条核对，确保路径、方法、参数结构一致
 - [ ] **目录与编号**：模块目录名、编号是否与 ARCHITECTURE.md 模块引用表严格一致

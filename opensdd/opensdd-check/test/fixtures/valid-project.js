@@ -27,7 +27,7 @@ function createValidProject(overrides = {}) {
       '## 业务背景',
       '测试项目。',
       '## 功能需求',
-      '- REQ-001: 用户注册',
+      '- REQ-AUTH-001: 用户注册',
       '## 非功能性约束',
       '- 响应时间 < 200ms',
     ].join('\n'),
@@ -67,9 +67,10 @@ function createValidProject(overrides = {}) {
     path.join(docsDir, 'PLAN.md'),
     [
       '# 任务计划',
-      ...moduleDirs.map(
-        (m, i) => `- [ ] T-${String(i + 1).padStart(3, '0')}: 实现接口 [${m}/DESIGN.md#${m.split('-')[0]}-F001]`,
-      ),
+      ...moduleDirs.map((m, i) => {
+        const moduleName = m.split('-').slice(1).join('-').toUpperCase();
+        return `- [ ] T-${moduleName}-${String(i + 1).padStart(3, '0')}: 实现接口 [${m}/DESIGN.md#${moduleName}-F001]`;
+      }),
     ].join('\n'),
     'utf-8',
   );
@@ -119,10 +120,10 @@ function createValidProject(overrides = {}) {
         '## 内部实现细节',
         '细节。',
         '## 功能特性列表',
-        `### ${m.split('-')[0]}-F001: 接口`,
+        `### ${m.split('-').slice(1).join('-').toUpperCase()}-F001: 接口`,
         '实现端点。',
         '',
-        '- 对应需求: REQ-001',
+        '- 对应需求: REQ-AUTH-001',
       ].join('\n'),
       'utf-8',
     );

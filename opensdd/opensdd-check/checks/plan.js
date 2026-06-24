@@ -5,14 +5,14 @@ const path = require('path');
 const { readFile } = require('../lib/read-file');
 const { splitLines } = require('../lib/line-split');
 
-// Optional reference at end: [NN-name/DESIGN.md#NN-FNNN] where NNN is 3 digits per SKILL.md
-const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#\d{2}-F\d{3})\]/;
+// Optional reference at end: [module-name/DESIGN.md#MODULE-FNNN] where NNN is 3 digits per SKILL.md
+const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#[A-Z]+-F\d{3})\]/;
 
-// Dependency syntax: depends: T-NNN or depends: T-NNN, T-NNN (comma-separated)
-const DEPENDS_RE = /\bdepends:\s*(T-\d+(?:\s*,\s*T-\d+)*)$/i;
+// Dependency syntax: depends: T-MODULE-NNN or depends: T-MODULE-NNN, T-MODULE-NNN (comma-separated)
+const DEPENDS_RE = /\bdepends:\s*(T-[A-Z]+-\d+(?:\s*,\s*T-[A-Z]+-\d+)*)$/i;
 
 /**
- * Extract module name from the ref path (e.g., "01-auth" from "01-auth/DESIGN.md#01-F001").
+ * Extract module name from the ref path (e.g., "auth" from "auth/DESIGN.md#AUTH-F001").
  *
  * @param {string} ref - Reference string from task line
  * @returns {string|null} Module name or null
@@ -56,7 +56,7 @@ module.exports = function check(root, config) {
 
     const match = trimmed.match(TASK_RE);
     if (!match) {
-      issues.push(`line ${i + 1}: malformed — does not match "- [ ] T-{NNN}: description" pattern`);
+      issues.push(`line ${i + 1}: malformed — does not match "- [ ] T-{MODULE}-{NNN}: description" pattern`);
       continue;
     }
 
@@ -70,8 +70,8 @@ module.exports = function check(root, config) {
       issues.push(`line ${i + 1}: invalid status "[${status}]", expected " " or "x"`);
     }
 
-    if (!/^T-\d+$/.test(taskId)) {
-      issues.push(`line ${i + 1}: invalid task ID "${taskId}", expected T-{NNN}`);
+    if (!/^T-[A-Z]+-\d+$/.test(taskId)) {
+      issues.push(`line ${i + 1}: invalid task ID "${taskId}", expected T-{MODULE}-{NNN}`);
     }
 
     // Check for DESIGN.md reference
@@ -91,13 +91,13 @@ module.exports = function check(root, config) {
       }
     }
 
-    // Validate dependency syntax (depends: T-NNN or depends: T-NNN, T-NNN)
+    // Validate dependency syntax (depends: T-MODULE-NNN or depends: T-MODULE-NNN, T-MODULE-NNN)
     const dependsMatch = descriptionPart.match(DEPENDS_RE);
     if (dependsMatch) {
       const deps = dependsMatch[1].split(',').map((d) => d.trim());
       for (const dep of deps) {
-        if (!/^T-\d+$/.test(dep)) {
-          issues.push(`line ${i + 1}: invalid dependency "${dep}", expected T-{NNN}`);
+        if (!/^T-[A-Z]+-\d+$/.test(dep)) {
+          issues.push(`line ${i + 1}: invalid dependency "${dep}", expected T-{MODULE}-{NNN}`);
         } else {
           depRefs.push({ line: i + 1, dep });
         }

@@ -29,9 +29,9 @@ describe('PLAN_FORMAT check', () => {
   it('should pass with valid task lines', async () => {
     const content = `# Plan
 
-- [ ] T-001: Setup project structure
-- [ ] T-002: Implement authentication
-- [x] T-003: Write tests
+- [ ] T-AUTH-001: Setup project structure
+- [ ] T-AUTH-002: Implement authentication
+- [x] T-AUTH-003: Write tests
 `;
     const { dir, cleanup } = createPlan(content);
     try {
@@ -46,8 +46,8 @@ describe('PLAN_FORMAT check', () => {
   it('should fail with malformed task lines', async () => {
     const content = `# Plan
 
-- [ ] T-001: Valid task
-- [x] bad-task: Missing T-NNN format
+- [ ] T-AUTH-001: Valid task
+- [x] bad-task: Missing T-MODULE-NNN format
 - Not a task line
 `;
     const { dir, cleanup } = createPlan(content);
@@ -64,7 +64,7 @@ describe('PLAN_FORMAT check', () => {
     // [y] does not match the regex [ x], so it's reported as malformed
     const content = `# Plan
 
-- [y] T-001: Invalid status marker
+- [y] T-AUTH-001: Invalid status marker
 `;
     const { dir, cleanup } = createPlan(content);
     try {
@@ -89,7 +89,7 @@ describe('PLAN_FORMAT check', () => {
   it('should handle tasks with design references', async () => {
     const content = `# Plan
 
-- [ ] T-001: Setup [01-auth/DESIGN.md#01-F001]
+- [ ] T-AUTH-001: Setup [auth/DESIGN.md#AUTH-F001]
 `;
     const { dir, cleanup } = createPlan(content);
     try {
@@ -104,9 +104,9 @@ describe('PLAN_FORMAT check', () => {
   it('should pass with depends: syntax referencing valid task IDs', async () => {
     const content = `# Plan
 
-- [ ] T-001: Setup project structure
-- [ ] T-002: Implement auth [01-auth/DESIGN.md#01-F001] depends: T-001
-- [x] T-003: Implement login [01-auth/DESIGN.md#01-F002] depends: T-001, T-002
+- [ ] T-AUTH-001: Setup project structure
+- [ ] T-AUTH-002: Implement auth [auth/DESIGN.md#AUTH-F001] depends: T-AUTH-001
+- [x] T-AUTH-003: Implement login [auth/DESIGN.md#AUTH-F002] depends: T-AUTH-001, T-AUTH-002
 `;
     const { dir, cleanup } = createPlan(content);
     try {
@@ -125,8 +125,8 @@ describe('PLAN_FORMAT check', () => {
   it('should fail when depend references non-existent task ID', async () => {
     const content = `# Plan
 
-- [ ] T-001: Setup project
-- [ ] T-002: Implement auth depends: T-999
+- [ ] T-AUTH-001: Setup project
+- [ ] T-AUTH-002: Implement auth depends: T-AUTH-999
 `;
     const { dir, cleanup } = createPlan(content);
     try {
@@ -141,9 +141,9 @@ describe('PLAN_FORMAT check', () => {
   it('should count tasks correctly', async () => {
     const content = `# Plan
 
-- [ ] T-001: First task
-- [ ] T-002: Second task
-- [x] T-003: Third task (done)
+- [ ] T-AUTH-001: First task
+- [ ] T-AUTH-002: Second task
+- [x] T-AUTH-003: Third task (done)
 `;
     const { dir, cleanup } = createPlan(content);
     try {

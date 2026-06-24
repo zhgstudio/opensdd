@@ -52,13 +52,18 @@ OpenSDD 使用三层编号体系实现从需求到任务的完整追溯链：
 
 | 层级 | 格式 | 所在文档 | 示例 |
 |------|------|----------|------|
-| 需求 | `REQ-{NNN}` | `SPEC.md` | `REQ-001` |
-| 特性 | `{NN}-F{NNN}` | `modules/{NN}-{name}/DESIGN.md` | `01-F001` |
-| 任务 | `T-{NNN}` | `PLAN.md` | `T-001` |
+| 需求 | `REQ-{DOMAIN}-{NNN}` | `SPEC.md` | `REQ-AUTH-001` |
+| 特性 | `{MODULE}-F{NNN}` | `modules/{NN}-{name}/DESIGN.md` | `AUTH-F001` |
+| 任务 | `T-{MODULE}-{NNN}` | `PLAN.md` | `T-AUTH-001` |
 
-追溯关系：`REQ-NNN` → 特性所在模块的 `{NN}-F{NNN}` → `T-{NNN}`。任务通过 `[NN-name/DESIGN.md#{NN}-F{NNN}]` 引用到具体特性，特性通过其模块归属关联到源头需求。
+追溯关系：`REQ-DOMAIN-NNN` → 特性所在模块的 `{MODULE}-F{NNN}` → `T-{MODULE}-{NNN}`。任务通过 `[module-name/DESIGN.md#{MODULE}-F{NNN}]` 引用到具体特性，特性通过其模块归属关联到源头需求。
 
-**编号范围能力上限**：三位数字编号（NNN）的容量为 000-999，即每个项目最多 999 条需求、最多 999 个任务、每个模块最多 999 个特性。此范围为能力上限，不支持更大编号——超大项目应拆分为多个子项目。
+**编号设计原则**：
+- **需求（REQ）**：`DOMAIN` 为业务领域缩写（大写，3-5 字符），与模块目录名解耦。同领域内编号稀疏递增（预留 5 位间隔，如 001, 005, 010），支持插入
+- **特性（Feature）**：`MODULE` 为模块目录名去除数字前缀后的名称（如 `01-auth` → `AUTH`）。模块内编号稀疏递增
+- **任务（Task）**：`MODULE` 与 Feature 一致，确保同一模块的任务可聚合。模块内编号稀疏递增
+
+**编号范围能力上限**：三位数字编号（NNN）的容量为 000-999，即每个领域最多 999 条需求、每个模块最多 999 个特性/任务。此范围为能力上限，不支持更大编号——超大项目应拆分为多个子项目。
 
 ### 文档语言
 
@@ -155,7 +160,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 4. **级联更新**：
    - `SPEC.md` 变更 → 评审是否需要更新 `ARCHITECTURE.md` → 受影响模块的 `API.md` / `DESIGN.md`
    - `ARCHITECTURE.md` 变更 → 评审各 `API.md` / `DESIGN.md` 是否需要同步更新
-   - `API.md` / `DESIGN.md` 变更 → 更新 `PLAN.md` 中的引用关系，确保 `[NN-name/DESIGN.md#{NN}-F{NNN}]` 可追溯链完整
+    - `API.md` / `DESIGN.md` 变更 → 更新 `PLAN.md` 中的引用关系，确保 `[module-name/DESIGN.md#{MODULE}-F{NNN}]` 可追溯链完整
    - `SKILL.md` 变更 → 同步更新 frontmatter 中的 `metadata.version` 字段
 5. **重新评审**：仅重新评审受影响的文档和模块
 

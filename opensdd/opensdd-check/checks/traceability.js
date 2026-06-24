@@ -16,11 +16,11 @@ const path = require('path');
 const { readFile } = require('../lib/read-file');
 
 /**
- * Extract all REQ-NNN identifiers from module design files.
+ * Extract all REQ-DOMAIN-NNN identifiers from module design files.
  * Each module's DESIGN.md may reference requirements via text mentions.
  *
  * @param {string} modulesDir - Absolute path to docs/modules/
- * @returns {Map<string, string[]>} reqToModules - Map of REQ-NNN → module names that reference it
+ * @returns {Map<string, string[]>} reqToModules - Map of REQ-DOMAIN-NNN → module names that reference it
  */
 function collectReqReferences(modulesDir) {
   const reqToModules = new Map();
@@ -34,7 +34,7 @@ function collectReqReferences(modulesDir) {
     return reqToModules;
   }
 
-  const reqRefRegex = /\bREQ-(\d+)\b/g;
+  const reqRefRegex = /\bREQ-([A-Z]+)-(\d+)\b/g;
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
@@ -43,7 +43,7 @@ function collectReqReferences(modulesDir) {
 
     let m;
     while ((m = reqRefRegex.exec(designContent)) !== null) {
-      const reqId = `REQ-${m[1]}`;
+      const reqId = `REQ-${m[1]}-${m[2]}`;
       if (!reqToModules.has(reqId)) {
         reqToModules.set(reqId, []);
       }
@@ -61,15 +61,15 @@ module.exports = function check(root) {
     return { name: 'TRACEABILITY', status: 'skip', messages: ['docs/SPEC.md not found, skipping'] };
   }
 
-  // Collect all REQ-NNN from SPEC.md
+  // Collect all REQ-DOMAIN-NNN from SPEC.md
   const reqIds = new Set();
-  const reqRegex = /\bREQ-(\d+)\b/g;
+  const reqRegex = /\bREQ-([A-Z]+)-(\d+)\b/g;
   let m;
   while ((m = reqRegex.exec(specContent)) !== null) {
-    reqIds.add(`REQ-${m[1]}`);
+    reqIds.add(`REQ-${m[1]}-${m[2]}`);
   }
 
-  // Collect all NN-FNNN from DESIGN.md files
+  // Collect all MODULE-FNNN from DESIGN.md files
   const featureIds = new Set();
   const modulesDir = path.join(root, 'docs', 'modules');
 
@@ -86,14 +86,14 @@ module.exports = function check(root) {
       const designContent = readFile(modulesDir, entry.name, 'DESIGN.md');
       if (designContent === null) continue;
 
-      const feRegex = /\b(\d{2}-F\d{3})\b/g;
+      const feRegex = /\b([A-Z]+-F\d{3})\b/g;
       while ((m = feRegex.exec(designContent)) !== null) {
         featureIds.add(m[1]);
       }
     }
   }
 
-  // Collect REQ-NNN references from DESIGN.md files
+  // Collect REQ-DOMAIN-NNN references from DESIGN.md files
   const reqToModules = collectReqReferences(modulesDir);
 
   const warnings = [];

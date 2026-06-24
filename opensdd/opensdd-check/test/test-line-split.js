@@ -47,7 +47,7 @@ describe('CRLF handling in checks', () => {
       fs.mkdirSync(path.join(dir, 'docs'), { recursive: true });
       fs.writeFileSync(
         path.join(dir, 'docs', 'PLAN.md'),
-        '# Plan\r\n\r\n- [ ] T-001: First task\r\n- [x] T-002: Second task\r\n',
+        '# Plan\r\n\r\n- [ ] T-AUTH-001: First task\r\n- [x] T-AUTH-002: Second task\r\n',
         'utf-8',
       );
       const check = require('../checks/plan');
