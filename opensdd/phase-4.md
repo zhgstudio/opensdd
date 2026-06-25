@@ -23,7 +23,7 @@
 2. **会话管理**：对于模块数量较多的项目，建议使用 sub-agent 隔离每个模块的任务规划——PM Agent 主会话负责跨模块一致性校验和最终整合，每个模块的任务拆分由独立的 sub-agent 会话完成，避免单会话中加载全部模块设计的认知负载过高
 3. 在 `docs/PLAN.md` 中生成**任务跟踪表**。每个任务须包含：
    - `[ ]` 未完成 / `[x]` 已完成
-    - 任务 ID（`T-{MODULE}-{NNN}`，MODULE 为模块目录名去除数字前缀后的大写形式）
+    - 任务 ID（`T-{MODULE}-{NNN}`，MODULE 为模块目录名去除数字前缀后的大写形式，如 `01-auth` → `AUTH`、`02-task-core` → `TASK-CORE`，目录名中的连字符保留为大写后的分隔符）
     - 任务描述（简述，**不涉及方案细节**——方案细节在 DESIGN.md 中）
     - **引用到 DESIGN.md 的具体章节**（格式：`[{NN}-module-name/DESIGN.md#{MODULE}-F{NNN}]`，其中 `{NN}-module-name` 为模块目录名）
     - 依赖关系（如有），使用 `depends: T-{MODULE}-{NNN}` 语法，多依赖以逗号分隔：`depends: T-AUTH-001, T-AUTH-005`

@@ -160,7 +160,7 @@ SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
 4. **级联更新**：
    - `SPEC.md` 变更 → 评审是否需要更新 `ARCHITECTURE.md` → 受影响模块的 `API.md` / `DESIGN.md`
    - `ARCHITECTURE.md` 变更 → 评审各 `API.md` / `DESIGN.md` 是否需要同步更新
-    - `API.md` / `DESIGN.md` 变更 → 更新 `PLAN.md` 中的引用关系，确保 `[module-name/DESIGN.md#{MODULE}-F{NNN}]` 可追溯链完整
+   - `API.md` / `DESIGN.md` 变更 → 更新 `PLAN.md` 中的引用关系，确保 `[module-name/DESIGN.md#{MODULE}-F{NNN}]` 可追溯链完整
    - `SKILL.md` 变更 → 同步更新 frontmatter 中的 `metadata.version` 字段
 5. **重新评审**：仅重新评审受影响的文档和模块
 

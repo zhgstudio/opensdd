@@ -37,7 +37,7 @@
    `DESIGN.md` 须包含：
    - 核心逻辑流程 / 状态机
    - 内部实现细节
-    - 该模块需要实现的功能特性列表（feature list），每条以 `### {MODULE}-F{NNN}` 编号（MODULE 为模块目录名去除数字前缀后的大写形式，如 `01-auth` → `AUTH`）
+    - 该模块需要实现的功能特性列表（feature list），每条以 `### {MODULE}-F{NNN}` 编号（MODULE 为模块目录名去除数字前缀后的大写形式，如 `01-auth` → `AUTH`、`02-task-core` → `TASK-CORE`，目录名中的连字符保留为大写后的分隔符）
 
     示例（DESIGN.md）：
     ```markdown

@@ -13,6 +13,7 @@ All notable changes to the OpenSDD Skill will be documented here.
 - **`{NN}-F{NNN}` → `{MODULE}-F{NNN}`**: Corrected 5 occurrences of the old `{NN}-F{NNN}` feature numbering term across README.md, README.zh.md, docs/DECISIONS.md, and opensdd/SKILL.md for consistency with the module prefix naming convention
 
 ### Fixed
+- **`.sddrc.json.example` regex sync**: Updated `taskRegex` example to include `(?:-[A-Z]+)*` pattern for multi-word MODULE name support (previously tracked only in code-defaults)
 - **SECURITY.md vulnerability disclosure**: Added private reporting guidance instead of only public issue tracker
 - **Frontmatter regex filter**: `.md` files without `---` frontmatter are now correctly skipped instead of parsing `---` from content body
 - **`strategies/index.js`**: Removed unreachable `fallback` variable assignment (dead code)
