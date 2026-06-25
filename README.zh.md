@@ -8,6 +8,8 @@
 [![CI](https://github.com/zhgstudio/opensdd/actions/workflows/ci.yml/badge.svg)](https://github.com/zhgstudio/opensdd/actions/workflows/ci.yml)
 [![skills.sh](https://skills.sh/b/zhgstudio/opensdd)](https://skills.sh/zhgstudio/opensdd)
 
+<!-- GitHub Topics: open-sdd, spec-driven-development, ai-coding, documentation-first, software-engineering, workflow -->
+
 ---
 
 ## 三大痛点
@@ -82,6 +84,23 @@ docs/
 | **Project Manager Agent**（项目经理） | 阶段四 | 全部已定稿文档 | `PLAN.md`、追加 `AGENTS.md` 任务规范 |
 
 每个角色启动新会话时只加载职责范围内的文件，每阶段末尾有人工评审门禁。
+
+---
+
+## 仓库结构说明
+
+本仓库包含两种 `AGENTS.md`：
+
+| 文件 | 范围 | 用途 |
+|------|------|------|
+| `AGENTS.md`（本仓库） | OpenSDD 技能开发 | 对**开发 opensdd 技能本身**的约束——已决设计决策、项目约定 |
+| `AGENTS.md`（下游项目） | 消费方项目 | 编码阶段入口指引——由 OpenSDD 各阶段生成、人类锁定、AI 自动加载 |
+
+根目录文件：
+- `opensdd/` — 技能源码：`SKILL.md` + `phase-1.md` ~ `phase-4.md` + `finalization.md`
+- `opensdd/opensdd-check/` — 项目结构校验工具（12 项检查）
+- `.github/` — CI 工作流、Issue/PR 模板
+- 根配置文件：`package.json`、`.npmrc`、`.gitignore`、`.lycheeignore`
 
 ---
 
@@ -173,7 +192,7 @@ node opensdd/opensdd-check/index.js --path /path/to/project
 
 > AI 智能体可在任意阶段主动执行验证——只需说"检查项目结构"、"检查是否满足opensdd规范"、"run validation"、"check compliance"等即可。
 
-`--json` 输出 JSON 供 CI 集成，`--strict` 将 Warning 视为 Error。
+`--json` 输出 JSON 供 CI 集成，`--strict` 将 Warning 视为 Error。使用 `--help` 列出所有检查项。
 
 工具支持通过项目根目录下的 `.sddrc.json` 进行自定义配置。参见 [`opensdd/opensdd-check/.sddrc.json.example`](opensdd/opensdd-check/.sddrc.json.example) 了解可用选项。
 

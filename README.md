@@ -2,11 +2,13 @@
 
 > **Stop coding blind. Start with specs.** A lightweight workflow for the pre-development specification phase. Formalizes 5 types of documents through 4 dedicated AI agent roles, producing contract-grade specs that guide subsequent AI autonomous coding.
 
-> **适用场景：** 适用于所有采用文档先行、规格驱动开发范式的软件项目——包括但不限于 IPD（集成产品开发）流程中的技术方案阶段。核心前提是项目在编码前需要完成需求、架构、模块设计、任务计划的规范化文档产出。
+> **Applicable scenarios:** All software projects that follow a documentation-first, spec-driven development paradigm — including the technical proposal phase in IPD (Integrated Product Development) processes. The core prerequisite is that the project requires standardized documentation output (requirements, architecture, module design, task plan) before any code is written.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/zhgstudio/opensdd/actions/workflows/ci.yml/badge.svg)](https://github.com/zhgstudio/opensdd/actions/workflows/ci.yml)
 [![skills.sh](https://skills.sh/b/zhgstudio/opensdd)](https://skills.sh/zhgstudio/opensdd)
+
+<!-- GitHub Topics: open-sdd, spec-driven-development, ai-coding, documentation-first, software-engineering, workflow -->
 
 ---
 
@@ -46,13 +48,13 @@ docs/
 
 ```
 ├── opensdd/
-│   ├── SKILL.md                  # 核心工作流 Skill（概览）
-│   ├── phase-1.md                # 阶段一：需求规格（PM Agent）
-│   ├── phase-2.md                # 阶段二：总体架构设计（Architect Agent）
-│   ├── phase-3.md                # 阶段三：模块详细设计（Designer Agent）
-│   ├── phase-4.md                # 阶段四：任务计划（Project Manager Agent）
-│   ├── finalization.md           # 最终定稿（人类）
-│   └── opensdd-check/            # OpenSDD 项目结构校验工具
+│   ├── SKILL.md                  # Core workflow overview
+│   ├── phase-1.md                # Stage 1: Requirements (PM Agent)
+│   ├── phase-2.md                # Stage 2: Architecture (Architect Agent)
+│   ├── phase-3.md                # Stage 3: Module design (Designer Agent)
+│   ├── phase-4.md                # Stage 4: Task plan (Project Manager Agent)
+│   ├── finalization.md           # Final review (Human)
+│   └── opensdd-check/            # Project structure validation tool
 │       ├── index.js
 │       ├── lib/
 │       └── checks/
@@ -137,6 +139,14 @@ SPEC.md     ARCHITECTURE.md  module       PLAN.md      locks all docs
 - Reviews all 5 document types for consistency
 - Locks `AGENTS.md` as the entry point for the coding phase
 - Git commit marks the OpenSDD phase complete
+
+## Change Propagation
+
+When changes are needed after the specification phase:
+
+1. Modify source documents (SPEC → ARCH → API/DESIGN → PLAN)
+2. Cascade update all cross-references to maintain traceability chain
+3. Escalate cross-module interface changes to human arbitration
 
 ---
 
