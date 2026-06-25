@@ -103,6 +103,6 @@ module.exports = function checkModuleContent(root, config) {
   return {
     name: 'MODULE_CONTENT',
     status: 'fail',
-    messages: issues,
+    messages: [...warnings, ...issues],
   };
 };
