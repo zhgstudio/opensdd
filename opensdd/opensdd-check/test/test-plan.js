@@ -138,6 +138,57 @@ describe('PLAN_FORMAT check', () => {
     }
   });
 
+  it('should pass with multi-word MODULE task IDs (e.g., T-TASK-CORE-001)', async () => {
+    const content = `# Plan
+
+- [ ] T-TASK-CORE-001: Setup task core
+- [ ] T-TASK-CORE-002: Implement task management
+- [ ] T-API-GATEWAY-001: Setup gateway
+`;
+    const { dir, cleanup } = createPlan(content);
+    try {
+      const result = await check(dir, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'pass');
+    } finally {
+      cleanup();
+    }
+  });
+
+  it('should pass with multi-word MODULE design refs (e.g., TASK-CORE-F001)', async () => {
+    const content = `# Plan
+
+- [ ] T-TASK-CORE-001: Create task [02-task-core/DESIGN.md#TASK-CORE-F001]
+`;
+    const { dir, cleanup } = createPlan(content);
+    try {
+      const modDir = path.join(dir, 'docs', 'modules', '02-task-core');
+      fs.mkdirSync(modDir, { recursive: true });
+      fs.writeFileSync(path.join(modDir, 'DESIGN.md'), '# 02-task-core DESIGN', 'utf-8');
+      const result = await check(dir, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'pass');
+    } finally {
+      cleanup();
+    }
+  });
+
+  it('should pass with depends: referencing multi-word MODULE task IDs', async () => {
+    const content = `# Plan
+
+- [ ] T-TASK-CORE-001: Setup core
+- [ ] T-TASK-CORE-002: Implement tasks [02-task-core/DESIGN.md#TASK-CORE-F001] depends: T-TASK-CORE-001
+`;
+    const { dir, cleanup } = createPlan(content);
+    try {
+      const modDir = path.join(dir, 'docs', 'modules', '02-task-core');
+      fs.mkdirSync(modDir, { recursive: true });
+      fs.writeFileSync(path.join(modDir, 'DESIGN.md'), '# 02-task-core DESIGN', 'utf-8');
+      const result = await check(dir, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'pass');
+    } finally {
+      cleanup();
+    }
+  });
+
   it('should count tasks correctly', async () => {
     const content = `# Plan
 

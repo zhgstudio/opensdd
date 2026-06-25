@@ -13,6 +13,8 @@ All notable changes to the OpenSDD Skill will be documented here.
 - **`{NN}-F{NNN}` → `{MODULE}-F{NNN}`**: Corrected 5 occurrences of the old `{NN}-F{NNN}` feature numbering term across README.md, README.zh.md, docs/DECISIONS.md, and opensdd/SKILL.md for consistency with the module prefix naming convention
 
 ### Fixed
+- **SKILL.md indentation**: Aligned indentation in code blocks and list continuations for consistent markdown rendering
+- **phase-3.md / phase-4.md multi-word MODULE examples**: Updated code examples to use multi-word MODULE names (e.g. `TASK-CORE-F001`, `T-TASK-CORE-001`) to match actual regex support
 - **`.sddrc.json.example` regex sync**: Updated `taskRegex` example to include `(?:-[A-Z]+)*` pattern for multi-word MODULE name support (previously tracked only in code-defaults)
 - **SECURITY.md vulnerability disclosure**: Added private reporting guidance instead of only public issue tracker
 - **Frontmatter regex filter**: `.md` files without `---` frontmatter are now correctly skipped instead of parsing `---` from content body
@@ -27,6 +29,7 @@ All notable changes to the OpenSDD Skill will be documented here.
 
 ### Infrastructure
 - **`.editorconfig` added**: Coding style consistency across editors (indent_style, charset, end_of_line)
+- **CHANGELOG v3.3.0 errata**: `detectLanguage()` improvement and `test-language.js` addition were announced in v3.3.0 but neither was ever implemented. The language consistency auto-check was later removed per DECISIONS.md. Corrections noted here for record transparency.
 
 ## [3.3.0] - 2026-06-19
 

@@ -50,7 +50,7 @@ describe('NO_TMP check', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-notmp-other-'));
     try {
       fs.mkdirSync(path.join(dir, 'docs', 'modules', '01-auth'), { recursive: true });
-      fs.mkdirSync(path.join(dir, 'docs', 'SPEC.md'));
+      fs.writeFileSync(path.join(dir, 'docs', 'SPEC.md'), '# SPEC', 'utf-8');
       const result = check(dir);
       assert.strictEqual(result.status, 'pass');
     } finally {

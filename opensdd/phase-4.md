@@ -32,8 +32,8 @@
     ```markdown
     ## 模块：01-auth
     - [ ] T-AUTH-001: 实现用户注册接口 [01-auth/DESIGN.md#AUTH-F001]
-- [ ] T-AUTH-005: 实现用户登录接口 [01-auth/DESIGN.md#AUTH-F005] depends: T-AUTH-001
-- [ ] T-AUTH-010: 实现用户注销接口 [01-auth/DESIGN.md#AUTH-F010] depends: T-AUTH-001, T-AUTH-005
+    - [ ] T-AUTH-005: 实现用户登录接口 [01-auth/DESIGN.md#AUTH-F005] depends: T-AUTH-001
+    - [ ] T-AUTH-010: 实现用户注销接口 [01-auth/DESIGN.md#AUTH-F010] depends: T-AUTH-001, T-AUTH-005
     ```
 
 4. **不涉及方案细节**——`PLAN.md` 是纯粹的任务跟踪，不写如何实现、不写技术细节
