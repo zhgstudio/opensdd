@@ -4,8 +4,17 @@ All notable changes to the OpenSDD Skill will be documented here.
 
 ## [Unreleased]
 
-### Added
-- (none)
+### Changed
+- **CI only tests Node 22** (ci.yml): Removed Node 18/20 from test matrix, fixed to Node 22 only (aligned with engines >=22)
+- **README.zh.md cleaned**: Removed `.npmrc` configuration reference from getting-started
+
+### Fixed
+- **Frontmatter regex filter**: `.md` files without `---` frontmatter are now correctly skipped instead of parsing `---` from content body
+- **`strategies/index.js`**: Removed unreachable `fallback` variable assignment (dead code)
+- **`.gitignore`**: Added `tmp/` entries for module temp directories to prevent accidental commits
+
+### Infrastructure
+- **`.editorconfig` added**: Coding style consistency across editors (indent_style, charset, end_of_line)
 
 ## [3.3.0] - 2026-06-19
 

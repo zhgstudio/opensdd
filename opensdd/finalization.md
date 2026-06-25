@@ -73,7 +73,7 @@
 | API_CONSISTENCY | 跨模块接口签名匹配 |
 | TBD_RESIDUAL | ARCHITECTURE.md 无残留 [TBD] 标记 |
 | FRONTMATTER | 技能文件含有效 frontmatter |
-| VERSION_CONSISTENCY | SKILL.md 版本号与 package.json 版本号一致 |
+| VERSION_CONSISTENCY | SKILL.md 版本号与根 package.json 及 opensdd-check/package.json 版本号一致（三项） |
 | DECISIONS_FORMAT | DECISIONS.md YAML frontmatter 格式有效（--- 边界正确） |
 | TRACEABILITY | SPEC.md 中 REQ-DOMAIN-NNN 与 DESIGN.md 中 MODULE-FNNN 的追溯一致性（无对应关系时仅 warn，不阻止） |
 
