@@ -90,7 +90,7 @@ Root-level files:
 - `opensdd/` — Skill source: `SKILL.md` (workflow overview) + `phase-1.md` through `phase-4.md` + `finalization.md`
 - `opensdd/opensdd-check/` — Project structure validation tool (12 checks)
 - `.github/` — CI workflows, issue/PR templates
-- Root configs: `package.json`, `.npmrc`, `.gitignore`, `.lycheeignore`
+- Root configs: `package.json`, `.gitignore`, `.lycheeignore`
 
 ---
 

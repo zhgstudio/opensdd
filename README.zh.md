@@ -100,7 +100,7 @@ docs/
 - `opensdd/` — 技能源码：`SKILL.md` + `phase-1.md` ~ `phase-4.md` + `finalization.md`
 - `opensdd/opensdd-check/` — 项目结构校验工具（12 项检查）
 - `.github/` — CI 工作流、Issue/PR 模板
-- 根配置文件：`package.json`、`.npmrc`、`.gitignore`、`.lycheeignore`
+- 根配置文件：`package.json`、`.gitignore`、`.lycheeignore`
 
 ---
 
