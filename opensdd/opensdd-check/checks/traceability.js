@@ -16,25 +16,26 @@ const path = require('path');
 const { readFile } = require('../lib/read-file');
 
 /**
- * Extract all REQ-DOMAIN-NNN identifiers from module design files.
- * Each module's DESIGN.md may reference requirements via text mentions.
+ * Read all DESIGN.md files once and extract both REQ references and feature IDs.
  *
  * @param {string} modulesDir - Absolute path to docs/modules/
- * @returns {Map<string, string[]>} reqToModules - Map of REQ-DOMAIN-NNN → module names that reference it
+ * @returns {{ reqToModules: Map<string, string[]>, featureIds: Set<string> }} Extracted references
  */
-function collectReqReferences(modulesDir) {
+function collectDesignRefs(modulesDir) {
   const reqToModules = new Map();
+  const featureIds = new Set();
 
-  if (!fs.existsSync(modulesDir)) return reqToModules;
+  if (!fs.existsSync(modulesDir)) return { reqToModules, featureIds };
 
   let entries;
   try {
     entries = fs.readdirSync(modulesDir, { withFileTypes: true });
   } catch {
-    return reqToModules;
+    return { reqToModules, featureIds };
   }
 
   const reqRefRegex = /\bREQ-([A-Z]+)-(\d+)\b/g;
+  const feRegex = /\b([A-Z]+-F\d{3})\b/g;
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
@@ -42,6 +43,7 @@ function collectReqReferences(modulesDir) {
     if (designContent === null) continue;
 
     let m;
+    reqRefRegex.lastIndex = 0;
     while ((m = reqRefRegex.exec(designContent)) !== null) {
       const reqId = `REQ-${m[1]}-${m[2]}`;
       if (!reqToModules.has(reqId)) {
@@ -49,9 +51,14 @@ function collectReqReferences(modulesDir) {
       }
       reqToModules.get(reqId).push(entry.name);
     }
+
+    feRegex.lastIndex = 0;
+    while ((m = feRegex.exec(designContent)) !== null) {
+      featureIds.add(m[1]);
+    }
   }
 
-  return reqToModules;
+  return { reqToModules, featureIds };
 }
 
 module.exports = function check(root) {
@@ -69,32 +76,10 @@ module.exports = function check(root) {
     reqIds.add(`REQ-${m[1]}-${m[2]}`);
   }
 
-  // Collect all MODULE-FNNN from DESIGN.md files
-  const featureIds = new Set();
   const modulesDir = path.join(root, 'docs', 'modules');
 
-  if (fs.existsSync(modulesDir)) {
-    let entries;
-    try {
-      entries = fs.readdirSync(modulesDir, { withFileTypes: true });
-    } catch {
-      entries = [];
-    }
-
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const designContent = readFile(modulesDir, entry.name, 'DESIGN.md');
-      if (designContent === null) continue;
-
-      const feRegex = /\b([A-Z]+-F\d{3})\b/g;
-      while ((m = feRegex.exec(designContent)) !== null) {
-        featureIds.add(m[1]);
-      }
-    }
-  }
-
-  // Collect REQ-DOMAIN-NNN references from DESIGN.md files
-  const reqToModules = collectReqReferences(modulesDir);
+  // Single pass: read each DESIGN.md once, extract both REQ refs and FEATURE IDs
+  const { reqToModules, featureIds } = collectDesignRefs(modulesDir);
 
   const warnings = [];
 

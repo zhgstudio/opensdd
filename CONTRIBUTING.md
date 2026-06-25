@@ -1,26 +1,46 @@
-# Contributing to OpenSDD Skill
+# Contributing to OpenSDD
 
 Thanks for your interest! Here's how to contribute.
 
-## How to contribute
+## Code of Conduct
 
-1. **Fork** the repo and create a branch from `main`
-2. **Make changes** — improve docs, fix issues, enhance the skill
-3. **Test** — ensure the skill loads correctly in your AI coding tool
-4. **Commit** with clear messages
-5. **Open a PR** describing what you changed and why
+This project follows [GitHub Community Guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines).
+Be respectful — we're all here to make AI-assisted development better.
 
-## Code of conduct
+## How to Contribute
 
-Be respectful. We're all here to make AI-assisted development better.
+1. **Browse existing issues** — check [open issues](https://github.com/zhgstudio/opensdd/issues) before creating new ones
+2. **Fork** the repo and create a branch from `main`
+3. **Make changes** — improve docs, fix issues, enhance the skill or tooling
+4. **Test your changes**:
+   - `npm test` — run all unit tests (171+ tests)
+   - `npm run lint` — ESLint enforcement
+   - `npm run format-check` — Prettier formatting check
+5. **Commit** with clear messages following [Conventional Commits](https://www.conventionalcommits.org/)
+6. **Open a PR** using the [pull request template](.github/PULL_REQUEST_TEMPLATE.md)
 
-## What needs help
+## Development Setup
+
+```bash
+git clone https://github.com/zhgstudio/opensdd.git
+cd opensdd
+npm install
+```
+
+The project has two `package.json` files:
+- Root (`./package.json`) — project-level scripts that delegate to `opensdd-check`
+- `opensdd/opensdd-check/package.json` — the checker tool itself (zero runtime dependencies)
+
+Run tests from root: `npm test`
+
+## What Needs Help
 
 - **Documentation** — examples, translations, clearer explanations
 - **Bug fixes** — broken links, typos, edge cases in the workflow
 - **Methodology** — new module types, better patterns
+- **Tooling** — opensdd-check improvements, new checks
 - **Community** — helping others in issues and discussions
 
-## Review process
+## Review Process
 
 Maintainers will review PRs within a few days. Feedback is constructive.
