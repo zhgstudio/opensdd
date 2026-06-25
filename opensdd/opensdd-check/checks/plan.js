@@ -18,9 +18,7 @@ const DEPENDS_RE = /\bdepends:\s*(T-[A-Z]+-\d+(?:\s*,\s*T-[A-Z]+-\d+)*)$/i;
  * @returns {string|null} Module name or null
  */
 function extractModuleFromRef(ref) {
-  const parts = ref.split('/');
-  if (parts.length >= 1) return parts[0];
-  return null;
+  return ref.split('/')[0] || null;
 }
 
 /**

@@ -51,7 +51,11 @@ docs/
 │   ├── phase-2.md                # 阶段二：总体架构设计（Architect Agent）
 │   ├── phase-3.md                # 阶段三：模块详细设计（Designer Agent）
 │   ├── phase-4.md                # 阶段四：任务计划（Project Manager Agent）
-│   └── finalization.md           # 最终定稿（人类）
+│   ├── finalization.md           # 最终定稿（人类）
+│   └── opensdd-check/            # OpenSDD 项目结构校验工具
+│       ├── index.js
+│       ├── lib/
+│       └── checks/
 ```
 
 ---

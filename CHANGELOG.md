@@ -22,7 +22,7 @@ All notable changes to the OpenSDD Skill will be documented here.
 - **.sddrc.json.example out of sync**: Removed "质量验收" section from `requiredAgentSections` (moved to SPEC.md in v3.2.0)
 
 ### Added
-- **VERSION_CONSISTENCY check**: New opensdd-check check that validates SKILL.md `metadata.version` matches root `package.json` and `tools/opensdd-check/package.json`. Fails on mismatch, warns on missing package.json files. Supports both dot-notation and nested YAML frontmatter formats.
+- **VERSION_CONSISTENCY check**: New opensdd-check check that validates SKILL.md `metadata.version` matches root `package.json` and `opensdd/opensdd-check/package.json`. Fails on mismatch, warns on missing package.json files. Supports both dot-notation and nested YAML frontmatter formats.
 - **phase-1.md quality acceptance checklist item**: Explicit review entry for quantifiable acceptance criteria in SPEC.md
 - **phase-1.md output validation step**: AI advised to run `opensdd-check` after generating SPEC.md
 - **.lycheeignore**: Replaced blanket `--exclude 'https://github.com'` with targeted exclusion list in CI

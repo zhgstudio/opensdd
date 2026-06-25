@@ -116,7 +116,7 @@ opensdd-check 是面向下游项目的结构合规性校验工具。本仓库 CI
 
 ### 版本一致性自动检查
 
-`VERSION_CONSISTENCY` 已作为 opensdd-check 的内置检查项。验证三项版本号完全一致：SKILL.md `metadata.version`、根 `package.json` version、`tools/opensdd-check/package.json` version。不一致时 fail；package.json 缺失时 warn；SKILL.md 不存在时 skip。支持点记法（`metadata.version: X.Y.Z`）和嵌套 YAML（`metadata:\n  version: X.Y.Z`）两种 frontmatter 格式。
+`VERSION_CONSISTENCY` 已作为 opensdd-check 的内置检查项。验证三项版本号完全一致：SKILL.md `metadata.version`、根 `package.json` version、`opensdd/opensdd-check/package.json` version。不一致时 fail；package.json 缺失时 warn；SKILL.md 不存在时 skip。支持点记法（`metadata.version: X.Y.Z`）和嵌套 YAML（`metadata:\n  version: X.Y.Z`）两种 frontmatter 格式。
 
 ### CRLF 兼容性统一处理
 
@@ -164,12 +164,12 @@ DECISIONS.md 的"理由"和"取消条件"是语义性的内容要求，不适合
 
 ### ESLint 8.x → 9.x 迁移
 
-已完成迁移：`.eslintrc.json`（旧格式）替换为 `eslint.config.js`（flat config），`eslint-plugin-jsdoc` 同步升级至兼容版本。详见 tools/opensdd-check/ 的 eslint.config.js。
+已完成迁移：`.eslintrc.json`（旧格式）替换为 `eslint.config.js`（flat config），`eslint-plugin-jsdoc` 同步升级至兼容版本。详见 opensdd/opensdd-check/ 的 eslint.config.js。
 
 ### Node.js 引擎最低版本更新至 22
 
 Node 18 已于 2025-04 终止生命周期（End of Life），根 `package.json` 的 `engines.node` 从 `>=18` 更新至 `>=22`。CI 已使用 Node 22。
-`tools/opensdd-check/package.json` 已于 2026-06-21 对齐为 `>=22`。
+`opensdd/opensdd-check/package.json` 已于 2026-06-21 对齐为 `>=22`。
 
 ### REQ→Feature 追溯的 warn-only 定位确认
 
