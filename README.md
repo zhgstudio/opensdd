@@ -111,7 +111,6 @@ SPEC.md     ARCHITECTURE.md  module       PLAN.md      locks all docs
 - Writes `docs/SPEC.md` from raw human input
 - Covers: business context, functional requirements, data needs, non-functional constraints
 
-
 ### Stage 2: Architecture (Architect Agent)
 
 - Reads `SPEC.md` (read-only), writes `docs/ARCHITECTURE.md`

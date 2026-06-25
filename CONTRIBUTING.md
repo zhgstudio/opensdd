@@ -13,7 +13,7 @@ Be respectful — we're all here to make AI-assisted development better.
 2. **Fork** the repo and create a branch from `main`
 3. **Make changes** — improve docs, fix issues, enhance the skill or tooling
 4. **Test your changes**:
-   - `npm test` — run all unit tests (171+ tests)
+   - `npm test` — run the full test suite
    - `npm run lint` — ESLint enforcement
    - `npm run format-check` — Prettier formatting check
 5. **Commit** with clear messages following [Conventional Commits](https://www.conventionalcommits.org/)
