@@ -36,7 +36,11 @@ module.exports = function check(root) {
     return { name: 'FRONTMATTER', status: 'fail', messages: [`Failed to read opensdd/ directory: ${err.message}`] };
   }
 
-  const files = fileList.filter((f) => f.endsWith('.md'));
+  const files = fileList
+    .filter((f) => f.endsWith('.md'))
+    .filter((f) => {
+      return f === 'SKILL.md' || (!/^phase-\d+\.md$/.test(f) && f !== 'finalization.md');
+    });
 
   for (const file of files) {
     const content = readFile(root, 'opensdd', file);
