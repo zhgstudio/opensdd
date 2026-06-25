@@ -7,11 +7,16 @@ All notable changes to the OpenSDD Skill will be documented here.
 ### Changed
 - **CI only tests Node 22** (ci.yml): Removed Node 18/20 from test matrix, fixed to Node 22 only (aligned with engines >=22)
 - **README.zh.md cleaned**: Removed `.npmrc` configuration reference from getting-started
+- **`{NN}-F{NNN}` → `{MODULE}-F{NNN}`**: Corrected 5 occurrences of the old `{NN}-F{NNN}` feature numbering term across README.md, README.zh.md, docs/DECISIONS.md, and opensdd/SKILL.md for consistency with the module prefix naming convention
 
 ### Fixed
 - **Frontmatter regex filter**: `.md` files without `---` frontmatter are now correctly skipped instead of parsing `---` from content body
 - **`strategies/index.js`**: Removed unreachable `fallback` variable assignment (dead code)
 - **`.gitignore`**: Added `tmp/` entries for module temp directories to prevent accidental commits
+- **`finalization.md` VERSION_CONSISTENCY description**: Clarified that the check validates version alignment across all three locations (root `package.json`, `opensdd-check/package.json`, and SKILL.md metadata)
+- **`README.md`**: Removed extraneous blank line in Stage 1 description
+- **`SKILL.md` exception path**: Changed ambiguous `tmp/` reference to explicit `docs/modules/{NN}-{name}/tmp/` to eliminate path ambiguity
+- **`CONTRIBUTING.md`**: Replaced hardcoded test count (`171+ tests`) with generic description
 
 ### Infrastructure
 - **`.editorconfig` added**: Coding style consistency across editors (indent_style, charset, end_of_line)
