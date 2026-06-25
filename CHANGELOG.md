@@ -5,11 +5,15 @@ All notable changes to the OpenSDD Skill will be documented here.
 ## [Unreleased]
 
 ### Changed
+- **AGENTS.md terminology**: "已决澄清" → "决策记录" aligned with DECISIONS.md
+- **SKILL.md MODULE naming clarified**: Hyphens in directory names are preserved in uppercase MODULE prefix
+- **plan.js/config.js regex support for multi-word MODULE names**: Updated all task ID, feature reference, and dependency regexes to support hyphens in MODULE names (e.g. `T-TASK-CORE-001`)
 - **CI only tests Node 22** (ci.yml): Removed Node 18/20 from test matrix, fixed to Node 22 only (aligned with engines >=22)
 - **README.zh.md cleaned**: Removed `.npmrc` configuration reference from getting-started
 - **`{NN}-F{NNN}` → `{MODULE}-F{NNN}`**: Corrected 5 occurrences of the old `{NN}-F{NNN}` feature numbering term across README.md, README.zh.md, docs/DECISIONS.md, and opensdd/SKILL.md for consistency with the module prefix naming convention
 
 ### Fixed
+- **SECURITY.md vulnerability disclosure**: Added private reporting guidance instead of only public issue tracker
 - **Frontmatter regex filter**: `.md` files without `---` frontmatter are now correctly skipped instead of parsing `---` from content body
 - **`strategies/index.js`**: Removed unreachable `fallback` variable assignment (dead code)
 - **`.gitignore`**: Added `tmp/` entries for module temp directories to prevent accidental commits

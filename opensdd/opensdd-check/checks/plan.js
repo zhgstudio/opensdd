@@ -6,10 +6,11 @@ const { readFile } = require('../lib/read-file');
 const { splitLines } = require('../lib/line-split');
 
 // Optional reference at end: [module-name/DESIGN.md#MODULE-FNNN] where NNN is 3 digits per SKILL.md
-const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#[A-Z]+-F\d{3})\]/;
+const REF_RE = /\[([a-zA-Z0-9]+-[a-zA-Z0-9_-]+\/DESIGN\.md#[A-Z]+(?:-[A-Z]+)*-F\d{3})\]/;
 
 // Dependency syntax: depends: T-MODULE-NNN or depends: T-MODULE-NNN, T-MODULE-NNN (comma-separated)
-const DEPENDS_RE = /\bdepends:\s*(T-[A-Z]+-\d+(?:\s*,\s*T-[A-Z]+-\d+)*)$/i;
+// Supports multi-word MODULE names with hyphens (e.g. T-TASK-CORE-001)
+const DEPENDS_RE = /\bdepends:\s*(T-[A-Z]+(?:-[A-Z]+)*-\d+(?:\s*,\s*T-[A-Z]+(?:-[A-Z]+)*-\d+)*)$/i;
 
 /**
  * Extract module name from the ref path (e.g., "auth" from "auth/DESIGN.md#AUTH-F001").
@@ -68,7 +69,7 @@ module.exports = function check(root, config) {
       issues.push(`line ${i + 1}: invalid status "[${status}]", expected " " or "x"`);
     }
 
-    if (!/^T-[A-Z]+-\d+$/.test(taskId)) {
+    if (!/^T-[A-Z]+(?:-[A-Z]+)*-\d+$/.test(taskId)) {
       issues.push(`line ${i + 1}: invalid task ID "${taskId}", expected T-{MODULE}-{NNN}`);
     }
 
@@ -94,7 +95,7 @@ module.exports = function check(root, config) {
     if (dependsMatch) {
       const deps = dependsMatch[1].split(',').map((d) => d.trim());
       for (const dep of deps) {
-        if (!/^T-[A-Z]+-\d+$/.test(dep)) {
+        if (!/^T-[A-Z]+(?:-[A-Z]+)*-\d+$/.test(dep)) {
           issues.push(`line ${i + 1}: invalid dependency "${dep}", expected T-{MODULE}-{NNN}`);
         } else {
           depRefs.push({ line: i + 1, dep });
