@@ -1,7 +1,7 @@
 {
   "requiredFiles": ["docs/SPEC.md", "docs/ARCHITECTURE.md", "docs/PLAN.md", "AGENTS.md"],
   "requiredAgentSections": [
-    { "keywords": ["文件操作范围", "file operation scope", "file access scope", "文件访问范围", "读写范围", "目录范围"] },
+    { "heading": "文件/目录权限" },
     { "keywords": ["提交规范", "commit specification", "commit convention", "commit message", "git 规范", "提交约定", "commit 格式"] },
     { "keywords": ["测试要求", "test requirement", "test coverage", "测试覆盖", "测试规范", "testing", "单元测试"] },
     { "keywords": ["升级条件", "escalation condition", "human介入", "human intervention", "pause and ask", "请求人类", "上报条件", "升级规则", "暂停条件", "人工介入"] },

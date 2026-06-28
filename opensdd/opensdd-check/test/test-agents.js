@@ -24,8 +24,8 @@ describe('AGENTS_SECTIONS check', () => {
   it('should pass when all required sections have matching headings', async () => {
     const agentsContent = `# AGENTS.md
 
-## 文件操作范围
-Defines file operation scope for the agent.
+## 文件/目录权限
+Defines file/directory permissions for the agent.
 
 ## 提交规范
 Commit conventions and message format.
@@ -39,7 +39,13 @@ Human intervention and escalation conditions.
 ## 跨模块规则
 Cross-module interaction rules.
 
-## 任务规范
+## 决策记录机制
+Decision record mechanism.
+
+## 模块目录说明
+Module directory structure.
+
+## PLAN.md 任务规范
 Task planning conventions and PLAN.md references.
 `;
     fs.writeFileSync(path.join(tmpDir, 'AGENTS.md'), agentsContent, 'utf-8');

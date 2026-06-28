@@ -5,7 +5,7 @@ const path = require('path');
 
 /**
  * @typedef {object} AgentSection
- * @property {string[]} keywords - List of keywords to match against headings
+ * @property {string} heading - Required section heading (exact match)
  */
 
 /**
@@ -26,46 +26,14 @@ const path = require('path');
 const DEFAULT_CONFIG = {
   requiredFiles: ['docs/SPEC.md', 'docs/ARCHITECTURE.md', 'docs/PLAN.md', 'AGENTS.md'],
   requiredAgentSections: [
-    { keywords: ['文件操作范围', 'file operation scope', 'file access scope', '文件访问范围', '读写范围', '目录范围'] },
-    {
-      keywords: [
-        '提交规范',
-        'commit specification',
-        'commit convention',
-        'commit message',
-        'git 规范',
-        '提交约定',
-        'commit 格式',
-      ],
-    },
-    { keywords: ['测试要求', 'test requirement', 'test coverage', '测试覆盖', '测试规范', 'testing', '单元测试'] },
-    {
-      keywords: [
-        '升级条件',
-        'escalation condition',
-        'human介入',
-        'human intervention',
-        'pause and ask',
-        '请求人类',
-        '上报条件',
-        '升级规则',
-        '暂停条件',
-        '人工介入',
-      ],
-    },
-    { keywords: ['跨模块规则', 'cross-module rule', 'cross module rule', '模块间', '跨模块', '模块依赖', '模块通信'] },
-    {
-      keywords: [
-        'plan.md',
-        '任务规范',
-        'task convention',
-        '任务标记',
-        '任务格式',
-        '任务约定',
-        'task format',
-        '任务追踪',
-      ],
-    },
+    { heading: '文件/目录权限' },
+    { heading: '提交规范' },
+    { heading: '测试要求' },
+    { heading: '升级条件' },
+    { heading: '跨模块规则' },
+    { heading: '决策记录机制' },
+    { heading: '模块目录说明' },
+    { heading: 'PLAN.md 任务规范' },
   ],
   taskRegex: '^\\-\\s+\\[([ x])\\]\\s+(T-[A-Z]+(?:-[A-Z]+)*-\\d+)\\s*:\\s*(.+)$',
   moduleDirPattern: '^\\d{2}-[a-zA-Z0-9_-]+$',

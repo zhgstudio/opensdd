@@ -20,14 +20,14 @@ module.exports = function check(root, config) {
 
   const headings = splitLines(content)
     .filter((line) => line.trimStart().startsWith('## '))
-    .map((line) => line.trim().toLowerCase());
+    .map((line) => line.trim().replace(/^##\s+/, '').toLowerCase());
 
   const missing = [];
 
   for (const section of config.requiredAgentSections) {
-    const found = section.keywords.some((kw) => headings.some((h) => h.includes(kw.toLowerCase())));
+    const found = headings.some((h) => h === section.heading.toLowerCase());
     if (!found) {
-      missing.push(section.keywords[0]);
+      missing.push(section.heading);
     }
   }
 

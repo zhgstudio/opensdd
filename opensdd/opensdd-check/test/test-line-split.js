@@ -62,7 +62,7 @@ describe('CRLF handling in checks', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdd-test-crlf-agents-'));
     try {
       const agentsContent =
-        '# AGENTS.md\r\n\r\n## 文件操作范围\r\nContent\r\n\r\n## 提交规范\r\nContent\r\n\r\n## 测试要求\r\nContent\r\n\r\n## 升级条件\r\nContent\r\n\r\n## 跨模块规则\r\nContent\r\n\r\n## 任务规范\r\nContent\r\n';
+        '# AGENTS.md\r\n\r\n## 文件/目录权限\r\nContent\r\n\r\n## 提交规范\r\nContent\r\n\r\n## 测试要求\r\nContent\r\n\r\n## 升级条件\r\nContent\r\n\r\n## 跨模块规则\r\nContent\r\n\r\n## 决策记录机制\r\nContent\r\n\r\n## 模块目录说明\r\nContent\r\n\r\n## PLAN.md 任务规范\r\nContent\r\n';
       fs.writeFileSync(path.join(dir, 'AGENTS.md'), agentsContent, 'utf-8');
       const check = require('../checks/agents');
       const result = await check(dir, DEFAULT_CONFIG);

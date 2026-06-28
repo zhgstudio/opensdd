@@ -90,7 +90,7 @@ function parseModuleTable(content) {
     const trimmed = raw.trim();
 
     // detect heading (Chinese or English keywords for reference table)
-    if (/^#{1,6}\s*(模块引用表|module reference table)/i.test(trimmed)) {
+    if (/^#{1,6}\s*(?:\d+[.\u3001]\s*)?(模块引用表|module reference table)/i.test(trimmed)) {
       inTable = true;
       continue;
     }
@@ -154,7 +154,7 @@ function parseDependencyMatrix(content) {
     const trimmed = raw.trim();
 
     // detect heading (Chinese or English)
-    if (/^#{1,6}\s*(模块依赖矩阵|模块依赖|module dep|dependency matrix)/i.test(trimmed)) {
+    if (/^#{1,6}\s*(?:\d+[.\u3001]\s*)?(模块依赖矩阵|模块依赖|module dep|dependency matrix)/i.test(trimmed)) {
       inMatrix = true;
       continue;
     }
