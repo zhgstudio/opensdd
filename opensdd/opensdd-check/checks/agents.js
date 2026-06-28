@@ -20,7 +20,12 @@ module.exports = function check(root, config) {
 
   const headings = splitLines(content)
     .filter((line) => line.trimStart().startsWith('## '))
-    .map((line) => line.trim().replace(/^##\s+/, '').toLowerCase());
+    .map((line) =>
+      line
+        .trim()
+        .replace(/^##\s+/, '')
+        .toLowerCase(),
+    );
 
   const missing = [];
 

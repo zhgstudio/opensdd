@@ -21,13 +21,15 @@ describe('TBD_RESIDUAL check', () => {
   }
 
   it('should pass when ARCHITECTURE.md has no [TBD] markers', () => {
-    const dir = createProject([
-      '# Architecture',
-      '## 模块依赖矩阵',
-      '| 模块 | 依赖 | 所需接口 |',
-      '|------|------|----------|',
-      '| 02-task-core | 01-auth | POST /auth/verify |',
-    ].join('\n'));
+    const dir = createProject(
+      [
+        '# Architecture',
+        '## 模块依赖矩阵',
+        '| 模块 | 依赖 | 所需接口 |',
+        '|------|------|----------|',
+        '| 02-task-core | 01-auth | POST /auth/verify |',
+      ].join('\n'),
+    );
     try {
       const result = check(dir, config);
       assert.strictEqual(result.status, 'pass');
@@ -38,13 +40,15 @@ describe('TBD_RESIDUAL check', () => {
   });
 
   it('should fail when ARCHITECTURE.md contains [TBD] markers', () => {
-    const dir = createProject([
-      '# Architecture',
-      '## 模块依赖矩阵',
-      '| 模块 | 依赖 | 所需接口 |',
-      '|------|------|----------|',
-      '| 02-task-core | 01-auth | POST /auth/verify, [TBD: 角色鉴权接口] |',
-    ].join('\n'));
+    const dir = createProject(
+      [
+        '# Architecture',
+        '## 模块依赖矩阵',
+        '| 模块 | 依赖 | 所需接口 |',
+        '|------|------|----------|',
+        '| 02-task-core | 01-auth | POST /auth/verify, [TBD: 角色鉴权接口] |',
+      ].join('\n'),
+    );
     try {
       const result = check(dir, config);
       assert.strictEqual(result.status, 'fail');
@@ -66,14 +70,16 @@ describe('TBD_RESIDUAL check', () => {
   });
 
   it('should fail on multiple [TBD] markers in different sections', () => {
-    const dir = createProject([
-      '# Architecture',
-      '## 模块依赖矩阵',
-      '| 模块 | 依赖 | 所需接口 |',
-      '|------|------|----------|',
-      '| 02-task-core | 01-auth | [TBD: 鉴权接口] |',
-      '| 03-api-gateway | 02-task-core | [TBD: 路由接口] |',
-    ].join('\n'));
+    const dir = createProject(
+      [
+        '# Architecture',
+        '## 模块依赖矩阵',
+        '| 模块 | 依赖 | 所需接口 |',
+        '|------|------|----------|',
+        '| 02-task-core | 01-auth | [TBD: 鉴权接口] |',
+        '| 03-api-gateway | 02-task-core | [TBD: 路由接口] |',
+      ].join('\n'),
+    );
     try {
       const result = check(dir, config);
       assert.strictEqual(result.status, 'fail');

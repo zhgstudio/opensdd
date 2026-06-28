@@ -25,11 +25,12 @@ Be respectful — we're all here to make AI-assisted development better.
 git clone https://github.com/zhgstudio/opensdd.git
 cd opensdd
 npm install
+npm --prefix opensdd/opensdd-check install
 ```
 
 The project has two `package.json` files:
 - Root (`./package.json`) — project-level scripts that delegate to `opensdd-check`
-- `opensdd/opensdd-check/package.json` — the checker tool itself (zero runtime dependencies)
+- `opensdd/opensdd-check/package.json` — the checker tool itself. Zero runtime dependencies; devDependencies (ESLint, Prettier) are needed for lint/format checks only
 
 Run tests from root: `npm test`
 

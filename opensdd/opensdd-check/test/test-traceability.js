@@ -42,7 +42,9 @@ describe('TRACEABILITY', () => {
 
   afterEach(() => {
     for (const d of tmpDirs) {
-      try { fs.rmSync(d, { recursive: true, force: true }); } catch {}
+      try {
+        fs.rmSync(d, { recursive: true, force: true });
+      } catch {}
     }
     tmpDirs.length = 0;
   });
