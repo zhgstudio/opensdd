@@ -92,7 +92,7 @@ OpenSDD 使用三层编号体系实现从需求到任务的完整追溯链：
 |------|------|----|----|
 | **PM Agent**（产品经理） | 阶段一 | — | `docs/SPEC.md` |
 | **Architect Agent**（架构师） | 阶段二 | `SPEC.md`（只读） | `docs/ARCHITECTURE.md`、写入 `AGENTS.md` 主体 |
-| **Designer Agent**（模块设计师） × N | 阶段三 | `ARCHITECTURE.md` + `SPEC.md` + 所依赖模块的 `API.md`（只读） | `docs/modules/{NN}-{name}/API.md` + `DESIGN.md` |
+| **Designer Agent**（模块设计师） × N | 阶段三 | `ARCHITECTURE.md` + `SPEC.md` + 所依赖模块的 `API.md`（只读，由主会话传递） | `docs/modules/{NN}-{name}/API.md` + `DESIGN.md`（由 subagent 执行） |
 | **Project Manager Agent**（项目经理） | 阶段四 | 全部已定稿设计文档 | `docs/PLAN.md`、追加 `AGENTS.md` 任务规范 |
 
 每个角色启动新的 AI 会话，只加载职责范围内的文件。每阶段产物经人类评审定稿后，才能进入下一阶段。
@@ -104,7 +104,7 @@ OpenSDD 使用三层编号体系实现从需求到任务的完整追溯链：
 各角色的行为边界由其读写范围自然界定：
 - **PM Agent** 聚焦业务需求，不介入技术方案讨论
 - **Architect Agent** 只做整体架构与公共设计，不深入模块内部设计
-- **Designer Agent** 只设计当前模块，不写代码，不读取所依赖模块的 `DESIGN.md`
+- **Designer Agent** 只设计当前模块（由 subagent 执行），不写代码，不读取所依赖模块的 `DESIGN.md`
 - **Project Manager Agent** 只做任务跟踪，不修改设计内容
 
 此外，各阶段执行中还应遵守：
@@ -120,16 +120,15 @@ OpenSDD 使用三层编号体系实现从需求到任务的完整追溯链：
 ```
 阶段一 ───→ 阶段二 ───→ 阶段三 ───→ 阶段四 ───→ 定稿
 PM Agent    Architect   Designer     PM Agent     人类审查
-SPEC.md     ARCHITECTURE.md  模块 API+   PLAN.md      锁定全部文档
-             AGENTS.md   DESIGN      追加 AGENTS    AGENTS.md
-                        (见下方约束)                   最终定稿
+SPEC.md     ARCHITECTURE.md  模块(全量)   PLAN.md      锁定全部文档
+             AGENTS.md   API.md+DESIGN.md   追加 AGENTS    AGENTS.md
+                         全部一次性完成                最终定稿
 ```
 
 ### 核心约束
 
 - 每个阶段以人类明确回复"定稿"为晋级条件
-- 阶段三中：所有模块严格按依赖顺序串行推进——所依赖模块设计定稿后，才能开始依赖它的模块
-- 一个模块产出设计文件后即进入人类评审，不等所有模块完成
+- 阶段三中：每个模块由独立的 subagent 按依赖顺序串行完成设计，全部模块一次性完成，每个模块之间不穿插人类评审。全部模块设计完成后，由人类评审
 - 所有文档使用人类指定的统一语言
 
 ---
