@@ -62,12 +62,16 @@ module.exports = function check(root, config) {
     taskCount++;
     const taskId = match[2];
     const descriptionPart = match[3];
-    taskIds.add(taskId);
 
     if (taskId === undefined) {
       issues.push(`line ${i + 1}: malformed — could not extract task ID from match`);
       continue;
     }
+
+    if (taskIds.has(taskId)) {
+      issues.push(`line ${i + 1}: duplicate task ID "${taskId}"`);
+    }
+    taskIds.add(taskId);
 
     if (!/^T-[A-Z]+(?:-[A-Z]+)*-\d+$/.test(taskId)) {
       issues.push(`line ${i + 1}: invalid task ID "${taskId}", expected T-{MODULE}-{NNN}`);

@@ -52,12 +52,17 @@ function parseArgs(args) {
 
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
-      case '--path':
-        opts.root = args[++i] || '.';
-        if (opts.root === '.') {
+      case '--path': {
+        const next = args[++i];
+        if (next === undefined || next.startsWith('-')) {
+          opts.root = '.';
           console.warn('Warning: --path flag requires a directory argument, defaulting to current directory');
+          if (next !== undefined) i--; // let the next iteration handle the flag
+        } else {
+          opts.root = next;
         }
         break;
+      }
       case '--json':
         opts.json = true;
         break;
