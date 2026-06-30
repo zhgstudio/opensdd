@@ -56,6 +56,7 @@ docs/
 │   ├── finalization.md           # Final review (Human)
 │   └── opensdd-check/            # Project structure validation tool
 │       ├── index.js
+│       ├── config.js
 │       ├── lib/
 │       └── checks/
 ```
