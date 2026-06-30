@@ -73,10 +73,6 @@ module.exports = function check(root, config) {
     }
     taskIds.add(taskId);
 
-    if (!/^T-[A-Z]+(?:-[A-Z]+)*-\d+$/.test(taskId)) {
-      issues.push(`line ${i + 1}: invalid task ID "${taskId}", expected T-{MODULE}-{NNN}`);
-    }
-
     if (descriptionPart === undefined) continue;
 
     // Check for DESIGN.md reference

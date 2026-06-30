@@ -51,7 +51,15 @@ function parseArgs(args) {
   const opts = { root: '.', json: false, strict: false };
 
   for (let i = 0; i < args.length; i++) {
-    switch (args[i]) {
+    const raw = args[i];
+
+    // Support --path=value syntax
+    if (raw.startsWith('--path=')) {
+      opts.root = raw.slice(7);
+      continue;
+    }
+
+    switch (raw) {
       case '--path': {
         const next = args[++i];
         if (next === undefined || next.startsWith('-')) {
@@ -73,6 +81,10 @@ function parseArgs(args) {
       case '-h':
         printHelp();
         process.exit(0);
+      default:
+        if (raw.startsWith('--')) {
+          console.warn(`Warning: Unknown flag "${raw}" ignored`);
+        }
     }
   }
 
