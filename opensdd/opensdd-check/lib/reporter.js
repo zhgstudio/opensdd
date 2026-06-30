@@ -34,7 +34,7 @@ function terminalReport(results, strict, root) {
     const messages = r.messages || [];
     const icon = statusIcon(r.status);
     const msg = messages[0] || '';
-    const summary = `${icon}  ${r.name.padEnd(16)} ${msg}`;
+    const summary = `${icon}  ${r.name.padEnd(20)} ${msg}`;
     console.log(summary);
 
     for (let i = 1; i < messages.length; i++) {
