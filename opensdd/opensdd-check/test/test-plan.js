@@ -104,6 +104,22 @@ describe('PLAN_FORMAT check', () => {
     }
   });
 
+  it('should detect duplicate task IDs', async () => {
+    const content = `# Plan
+
+- [ ] T-AUTH-001: First task
+- [ ] T-AUTH-001: Duplicate task ID
+`;
+    const { dir, cleanup } = createPlan(content);
+    try {
+      const result = await check(dir, DEFAULT_CONFIG);
+      assert.strictEqual(result.status, 'fail');
+      assert.ok(result.messages.some((m) => m.includes('duplicate')));
+    } finally {
+      cleanup();
+    }
+  });
+
   it('should pass with depends: syntax referencing valid task IDs', async () => {
     const content = `# Plan
 

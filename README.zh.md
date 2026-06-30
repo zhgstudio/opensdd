@@ -50,6 +50,7 @@ docs/
 <summary><b>本仓库实际结构</b>（点击展开）</summary>
 
 ```
+├── AGENTS.md                 # OpenSDD 技能开发约束（AI 智能体入口指引）
 ├── opensdd/
 │   ├── SKILL.md              # 核心工作流 Skill（概览）
 │   ├── phase-1.md            # 阶段一：需求规格（PM Agent）
@@ -57,17 +58,30 @@ docs/
 │   ├── phase-3.md            # 阶段三：模块详细设计（Designer Agent）
 │   ├── phase-4.md            # 阶段四：任务计划（Project Manager Agent）
 │   ├── finalization.md       # 最终定稿（人类）
-│   └── opensdd-check/            # OpenSDD 项目结构校验工具
+│   └── opensdd-check/        # OpenSDD 项目结构校验工具
 │       ├── index.js
+│       ├── config.js
 │       ├── lib/
-│       └── checks/
+│       ├── checks/
+│       └── test/
+├── docs/
+│   └── DECISIONS.md           # 决策记录
+├── .github/
+│   ├── CODEOWNERS
+│   ├── FUNDING.yml
+│   ├── ISSUE_TEMPLATE/
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── workflows/ci.yml
+├── package.json
+├── .editorconfig
+├── .gitignore
+├── .lycheeignore
 ├── README.md
 ├── README.zh.md
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
-├── LICENSE
-└── .github/
-    └── workflows/ci.yml
+├── SECURITY.md
+└── LICENSE
 ```
 
 </details>

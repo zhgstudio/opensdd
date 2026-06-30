@@ -9,7 +9,7 @@ function readFile(root, ...segments) {
     if (fs.existsSync(fp)) {
       let content = fs.readFileSync(fp, 'utf-8');
       // Strip UTF-8 BOM (\uFEFF) if present, so frontmatter detection works
-      if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
+      if (content.charCodeAt(0) === 0xfeff) content = content.slice(1);
       return content;
     }
   } catch (err) {
