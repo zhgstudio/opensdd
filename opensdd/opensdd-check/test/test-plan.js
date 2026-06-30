@@ -86,16 +86,19 @@ describe('PLAN_FORMAT check', () => {
     }
   });
 
-  it('should handle tasks with design references', async () => {
+  it('should pass with design references when DESIGN.md exists', async () => {
     const content = `# Plan
 
-- [ ] T-AUTH-001: Setup [auth/DESIGN.md#AUTH-F001]
+- [ ] T-AUTH-001: Setup [01-auth/DESIGN.md#AUTH-F001]
 `;
     const { dir, cleanup } = createPlan(content);
     try {
+      const modDir = path.join(dir, 'docs', 'modules', '01-auth');
+      fs.mkdirSync(modDir, { recursive: true });
+      fs.writeFileSync(path.join(modDir, 'DESIGN.md'), '# 01-auth DESIGN', 'utf-8');
       const result = await check(dir, DEFAULT_CONFIG);
-      // Should pass or fail depending on whether DESIGN.md exists
-      assert.ok(result.status === 'pass' || result.status === 'fail');
+      assert.strictEqual(result.status, 'pass');
+      assert.ok(result.messages[0].includes('1 tasks'));
     } finally {
       cleanup();
     }
